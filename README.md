@@ -36,7 +36,7 @@ HUAWEI Audio Editor Kit provides a wide range of audio editing capabilities, inc
 ## Running Procedure
 - Clone the code base to the local host.
 
-- If you haven't already registered as a developer, register and create an app on [AppGalleryConnect] (https://developer.huawei.com/consumer/cn/service/josp/agc/index.html).
+- If you haven't already registered as a developer, register and create an app on [AppGalleryConnect](https://developer.huawei.com/consumer/cn/service/josp/agc/index.html).
 - Compile and run on an Android device or emulator.
 
 ## Supported Environment
