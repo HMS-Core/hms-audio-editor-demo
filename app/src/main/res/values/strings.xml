@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><resources><string name="app_name">Audio Editor Kit</string>
+    <string name="start_tv">Start creating</string>
+    <string name="edit_draft">Clip Draft</string>
+    <string name="no_draft">No draft...</string>
+    <string name="version">Version:</string>
+    <string name="setting">Setting</string>
+    <string name="permission">The sample application requires the storage permission.</string>
+    <string name="cancels">cancel</string>
+    <string name="select_none_video">No video selected</string>
+    <string name="extract_success">Audio extraction succeeded: %s</string>
+    <string name="extract_fail">Audio extraction failed.</string>
+    <string name="main_extract">Audio extraction</string>
+    <string name="main_format">Format conversion</string>
+    <string name="main_withdraw">Audio extraction</string>
+    <string name="file_not_avable">This file is not available</string>
+    <string name="dm_extract_cancel">cancel</string>
+    <string name="main_separat">Vocal separation</string>
+    <string name="select_none_audio">No audio selected</string>
+    <string name="separat_success">Voice separation succeeded: %s</string>
+    <string name="separat_fail">Voice separation failure</string>
+
+    <string name="audio_format_mp3">MP3</string>
+    <string name="audio_format_wav">WAV</string>
+    <string name="audio_format_m4a">M4A</string>
+    <string name="audio_format_aac">AAC</string>
+    <string name="transfer_btn">Transform</string>
+    <string name="format_title">Audio format conversion</string>
+    <string name="save_path">Saved to %s.</string>
+</resources>
