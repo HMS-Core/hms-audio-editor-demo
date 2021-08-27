@@ -1,14 +1,9 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2021-2021. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
  */
 
 package com.huawei.hms.audioeditor.demo.util;
 
-/**
- * 常量类
- *
- * @since 2021/06/25
- */
 public class SampleConstant {
     public static final String CHOOSE_AUDIO_ACTION = "com.huawei.hms.audioeditor.chooseaudio";
     public static final String EXTRA_SELECT_RESULT = "select_result";
@@ -21,6 +16,5 @@ public class SampleConstant {
     public static final String AUDIO_TYPE_MP3 = "mp3";
 
     public static final String AUDIO_TYPE_WAV = "wav";
-    public static final String AUDIO_TYPE_M4A = "m4a";
-    public static final String AUDIO_TYPE_AAC = "aac";
+    public static final String AUDIO_TYPE_FLAC = "flac";
 }

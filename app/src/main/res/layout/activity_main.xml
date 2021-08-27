@@ -61,9 +61,56 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="@dimen/dp_10"
-            android:fontFamily="HuaweiSans"
             android:gravity="center"
             android:text="@string/main_format"
+            android:textColor="#FFFFFFFF"
+            android:textSize="@dimen/dp_14"
+            app:drawableTopCompat="@mipmap/icon_home_format"
+            tools:ignore="SpUsage" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/change_sound"
+        android:layout_width="@dimen/dp_90"
+        android:layout_height="@dimen/dp_90"
+        android:layout_below="@id/start_edit"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp_24"
+        android:background="@drawable/bg_main_withdraw"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/dp_10"
+            android:gravity="center"
+            android:text="@string/main_change_sound"
+            android:textColor="#FFFFFFFF"
+            android:textSize="@dimen/dp_14"
+            app:drawableTopCompat="@mipmap/icon_home_format"
+            tools:ignore="SpUsage" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/eq_main"
+        android:layout_width="@dimen/dp_90"
+        android:layout_height="@dimen/dp_90"
+        android:layout_below="@id/format_main"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="@dimen/dp_24"
+        android:background="@drawable/bg_main_withdraw"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/dp_10"
+            android:fontFamily="HuaweiSans"
+            android:gravity="center"
+            android:text="@string/file_api_title"
             android:textColor="#FFFFFFFF"
             android:textSize="@dimen/dp_14"
             app:drawableTopCompat="@mipmap/icon_home_format"
@@ -86,7 +133,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="@dimen/dp_10"
-            android:fontFamily="HuaweiSans"
             android:gravity="center"
             android:text="@string/main_withdraw"
             android:textColor="#FFFFFFFF"

@@ -1,0 +1,32 @@
+{
+"status": "success",
+"errorMsg": "",
+"defects":
+[{
+  "buggyFilePath": "app/src/main/java/com/huawei/hms/audioeditor/demo/util/FileUtils.java",
+  "bugId": "5093101e-8f64-40a0-9970-66924ca2413d",
+  "defectType": "LocalVariableNamingConventions",
+  "analyzerName": "pmd",
+  "description": "The local variable name \u0027column_index\u0027 doesn\u0027t match \u0027[a-z][a-zA-Z0-9]*\u0027",
+  "mainBuggyLine": 69,
+  "mainBuggyCode": "int column_index \u003d cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);\n",
+  "codeContextStartLine": 67,
+  "column": 0,
+  "codeContext": "\n        if (cursor !\u003d null) {\n            int column_index \u003d cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);\n            cursor.moveToFirst();\n            result \u003d cursor.getString(column_index);",
+  "fixCode": [
+    {
+      "startingLineNumber": 69,
+      "endLineNumber": 69,
+      "startCharacter": 17,
+      "endCharacter": 0,
+      "beforeFixCode": "",
+      "afterFixCode": "",
+      "filePath": "",
+      "type": "NONE",
+      "desc": ""
+    }
+  ],
+  "extra": "",
+  "language": "java"
+} ]
+}

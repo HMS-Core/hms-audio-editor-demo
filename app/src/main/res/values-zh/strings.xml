@@ -15,6 +15,7 @@
 
     <string name="main_format">格式转换</string>
     <string name="main_withdraw">音频提取</string>
+    <string name="main_effect">特效</string>
     <string name="file_not_avable">该文件不可用</string>
     <string name="dm_extract_cancel">取消</string>
     <string name="main_separat">人声分离</string>
@@ -26,7 +27,31 @@
     <string name="audio_format_wav">WAV</string>
     <string name="audio_format_m4a">M4A</string>
     <string name="audio_format_aac">AAC</string>
+    <string name="audio_format_flac">FLAC</string>
     <string name="transfer_btn">转换</string>
     <string name="format_title">音频格式转换</string>
     <string name="save_path">存储至 %s</string>
+    <string name="main_change_sound">流式接口</string>
+    <string name="flow_api_title">流式接口</string>
+    <string name="change_sound_title">变声</string>
+    <string name="sound_uncle">大叔</string>
+    <string name="sound_lori">萝莉</string>
+    <string name="sound_female">女声</string>
+    <string name="sound_male">男声</string>
+    <string name="sound_monsters">怪物</string>
+    <string name="begin_change">开始变声</string>
+    <string name="pcm_file_not_exists">PCM文件不存在</string>
+    <string name="change_sound_pcm_path">请输入变声的pcm文件路径</string>
+    <string name="begin_reduction">开始降噪</string>
+    <string name="begin_play">播放原始声音</string>
+    <string name="begin_env">开始环境选择</string>
+    <string name="begin_sound_ground">开始声场</string>
+    <string name="begin_eq">开始均衡</string>
+    <string name="file_api_title">文件接口</string>
+    <string name="begin_choice_file">选择音频文件</string>
+    <string name="in_progress">转换中</string>
+    <string name="begin_speed_pitch">开始变调变速</string>
+    <string name="begin_space_render">开始空间渲染</string>
+    <string name="begin_text_to_audio">开始转化</string>
+
 </resources>

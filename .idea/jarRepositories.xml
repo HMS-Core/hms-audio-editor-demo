@@ -47,6 +47,21 @@
       <option name="url" value="http://szg1.artifactory.inhuawei.com/artifactory/Product-Cloud3rdPartyTemp-release" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="maven11" />
+      <option name="name" value="maven11" />
+      <option name="url" value="http://cmc.centralrepo.rnd.huawei.com/maven" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven13" />
+      <option name="name" value="maven13" />
+      <option name="url" value="http://language.cloudartifact.dgg.dragon.tools.huawei.com/artifactory/product_maven/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven12" />
+      <option name="name" value="maven12" />
+      <option name="url" value="http://dgg.maven.repo.cmc.tools.huawei.com/artifactory/sz-maven-public" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="BintrayJCenter" />
       <option name="name" value="BintrayJCenter" />
       <option name="url" value="https://jcenter.bintray.com/" />

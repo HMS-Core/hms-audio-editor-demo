@@ -53,9 +53,10 @@
                 android:id="@+id/radio_button_3_fragment_audio_format"
                 style="@style/audio_format_type_rb"
                 android:layout_marginStart="@dimen/dp_16"
-                android:text="@string/audio_format_m4a" />
+                android:text="@string/audio_format_flac" />
 
             <RadioButton
+                android:visibility="gone"
                 android:id="@+id/radio_button_4_fragment_audio_format"
                 style="@style/audio_format_type_rb"
                 android:layout_marginStart="@dimen/dp_16"

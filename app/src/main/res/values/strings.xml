@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><resources><string name="app_name">Audio Editor Kit</string>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audio Editor Kit</string>
     <string name="start_tv">Start creating</string>
     <string name="edit_draft">Clip Draft</string>
     <string name="no_draft">No draft...</string>
@@ -11,6 +13,7 @@
     <string name="extract_fail">Audio extraction failed.</string>
     <string name="main_extract">Audio extraction</string>
     <string name="main_format">Format conversion</string>
+    <string name="main_effect">Effects</string>
     <string name="main_withdraw">Audio extraction</string>
     <string name="file_not_avable">This file is not available</string>
     <string name="dm_extract_cancel">cancel</string>
@@ -18,12 +21,34 @@
     <string name="select_none_audio">No audio selected</string>
     <string name="separat_success">Voice separation succeeded: %s</string>
     <string name="separat_fail">Voice separation failure</string>
-
     <string name="audio_format_mp3">MP3</string>
     <string name="audio_format_wav">WAV</string>
     <string name="audio_format_m4a">M4A</string>
     <string name="audio_format_aac">AAC</string>
+    <string name="audio_format_flac">FLAC</string>
     <string name="transfer_btn">Transform</string>
     <string name="format_title">Audio format conversion</string>
     <string name="save_path">Saved to %s.</string>
+    <string name="main_change_sound">Streaming interface</string>
+    <string name="flow_api_title">Flow interface</string>
+    <string name="change_sound_title">Change sound</string>
+    <string name="sound_uncle">Seasoned</string>
+    <string name="sound_lori">Cute</string>
+    <string name="sound_female">Female</string>
+    <string name="sound_male">Male</string>
+    <string name="sound_monsters">Monster</string>
+    <string name="begin_change">Start Voice FX</string>
+    <string name="pcm_file_not_exists">PCM file does not exist</string>
+    <string name="change_sound_pcm_path">Please enter the path of the pcm file</string>
+    <string name="begin_reduction">Start noise reduction</string>
+    <string name="begin_play">Play original sound</string>
+    <string name="begin_env">Start Scene</string>
+    <string name="begin_sound_ground">Start sound field</string>
+    <string name="begin_eq">Start Equilibration</string>
+    <string name="file_api_title">File interface</string>
+    <string name="begin_choice_file">Select Audio File</string>
+    <string name="in_progress">Converting</string>
+    <string name="begin_speed_pitch">Start Tempo/Pitch</string>
+    <string name="begin_space_render">Start Orientation</string>
+    <string name="begin_text_to_audio">Start conversion</string>
 </resources>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2021-2021. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
  */
 
 package com.huawei.hms.audioeditor.demo;
@@ -7,7 +7,6 @@ package com.huawei.hms.audioeditor.demo;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -60,6 +59,7 @@ public class AudioFormatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_audio_format);
         initView();
         initData(savedInstanceState);
@@ -69,6 +69,7 @@ public class AudioFormatActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState");
         if (mAudioList != null && mAudioList.size() > 0) {
             outState.putString(AUDIO_PATH, mAudioList.get(0));
             outState.putString(AUDIO_NAME, audioName.getText().toString());
@@ -116,6 +117,10 @@ public class AudioFormatActivity extends AppCompatActivity {
             // 示例代码一 传输入音频 和 输出音频的路径
             // 只支持任务串行，不支持多任务
             transformAudio(filePath);
+
+            /** 示例代码二  只传输入音频和 输出音频格式（如MP3），输出文件到默认路径
+             * // 只支持任务串行，不支持多任务
+             * // transformAudioByForm(filePath); */
         }
     }
 
@@ -125,14 +130,14 @@ public class AudioFormatActivity extends AppCompatActivity {
         int end = srcFile.lastIndexOf(".");
         String name = srcFile.substring(start, end);
         String outPutPath = FileUtil.getAudioFormatStorageDirectory(getBaseContext()) + name + "." + transferFormat;
-        // Transfer the source file path and target file path.
-        // The path of the input file is as follows:/sdcard/AudioEdit/audio/music.mp3
-        // Path of the output file (audio format (such as aac) as the suffix)，/sdcard/AudioEdit/format/music.aac
+        // 传源文件路径 和 目标文件路径
+        // 输入文件的路径 如/sdcard/AudioEdit/audio/music.mp3
+        // 输出的文件的路径(音频格式（如aac）作为后缀名)，如/sdcard/AudioEdit/format/music.aac
         HAEAudioExpansion.getInstance()
                 .transformAudio(
-                        getBaseContext(),//上下文
-                        srcFile,//输入文件的路径，如/sdcard/AudioEdit/format/audio/music.mp3。
-                        outPutPath,//输出的文件的路径（后缀为目标格式），音频格式如aac作为后缀名，输出的文件路径为/sdcard/AudioEdit/format/music.aac。
+                        getBaseContext(),
+                        srcFile,
+                        outPutPath,
                         new OnTransformCallBack() {
                             @Override
                             public void onProgress(int progress) {
@@ -214,9 +219,7 @@ public class AudioFormatActivity extends AppCompatActivity {
                     } else if (checkedId == R.id.radio_button_2_fragment_audio_format) {
                         transferFormat = SampleConstant.AUDIO_TYPE_WAV;
                     } else if (checkedId == R.id.radio_button_3_fragment_audio_format) {
-                        transferFormat = SampleConstant.AUDIO_TYPE_M4A;
-                    } else if (checkedId == R.id.radio_button_4_fragment_audio_format) {
-                        transferFormat = SampleConstant.AUDIO_TYPE_AAC;
+                        transferFormat = SampleConstant.AUDIO_TYPE_FLAC;
                     }
                 });
 

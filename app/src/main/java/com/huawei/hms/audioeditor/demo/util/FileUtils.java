@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2021-2021. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
  */
 
 package com.huawei.hms.audioeditor.demo.util;
@@ -17,14 +17,21 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.huawei.hms.audioeditor.sdk.util.SmartLog;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 
 /**
  * 获取文件路径工具类
  *
- * @since 2021/05/10
+ * @since 2021-05-10
  */
 public class FileUtils {
+    private static final String TAG = "FileUtils";
+
     public static String getFileName(String fullPath) {
         if (TextUtils.isEmpty(fullPath)) {
             return fullPath;
@@ -59,9 +66,9 @@ public class FileUtils {
         Cursor cursor = cursorLoader.loadInBackground();
 
         if (cursor != null) {
-            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
-            result = cursor.getString(columnIndex);
+            result = cursor.getString(column_index);
             cursor.close();
         }
         return result;
@@ -107,14 +114,9 @@ public class FileUtils {
                         return id;
                     }
                 }
-                long uriId = -1;
-                try {
-                    uriId = Long.parseLong(id);
-                } catch (NumberFormatException e) {
-                    Log.e("Err", e.getMessage());
-                }
+
                 final Uri contentUri =
-                        ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), uriId);
+                        ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
                 return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider
@@ -161,7 +163,9 @@ public class FileUtils {
                 return cursor.getString(index);
             }
         } finally {
-            if (cursor != null) cursor.close();
+            if (cursor != null) {
+                cursor.close();
+            }
         }
         return null;
     }
@@ -177,20 +181,139 @@ public class FileUtils {
                 return cursor.getString(index);
             }
         } finally {
-            if (cursor != null) cursor.close();
+            if (cursor != null) {
+                cursor.close();
+            }
         }
         return null;
     }
 
+    /**
+     * isExternalStorageDocument
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is ExternalStorageProvider.
+     */
     public static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
+    /**
+     * isDownloadsDocument
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is DownloadsProvider.
+     */
     public static boolean isDownloadsDocument(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
+    /**
+     * isMediaDocument
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is MediaProvider.
+     */
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * Writes data stream to the file.
+     * @param buffer 待写入的缓存
+     * @param strFilePath 目标保存文件地址
+     * @param append 是否以追加方式写入
+     */
+    public static void writeBufferToFile(byte[] buffer, String strFilePath, boolean append) {
+        File file = new File(strFilePath);
+        RandomAccessFile randomAccessFile = null;
+        FileOutputStream fileOutputStream = null;
+        try {
+            if (append) {
+                // Appending write mode.
+                randomAccessFile = new RandomAccessFile(file, "rw");
+                randomAccessFile.seek(file.length());
+                randomAccessFile.write(buffer);
+            } else {
+                // Overwrite mode.
+                fileOutputStream = new FileOutputStream(file);
+                fileOutputStream.write(buffer);
+                fileOutputStream.flush();
+            }
+        } catch (IOException e) {
+            SmartLog.e(TAG, e.getMessage());
+        } finally {
+            try {
+                if (randomAccessFile != null) {
+                    randomAccessFile.close();
+                }
+                if (fileOutputStream != null) {
+                    fileOutputStream.close();
+                }
+            } catch (IOException e) {
+                SmartLog.e("Failed to close stream.", e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Create a directory to store the voice files generated by the TTS.
+     * @param context context
+     * @return filePath
+     */
+    public static String initFile(Context context) {
+        String filePath = context.getExternalFilesDir("wav").getPath();
+        File file = new File(filePath);
+        if (!file.exists()) {
+            boolean mkdirs = file.mkdirs();
+            Log.i("initFile", "Create a directory to store the voice files generated by the TTS." + mkdirs);
+        }
+        return filePath;
+    }
+
+    /**
+     * 删除文件
+     * @param filePath 文件路径
+     */
+    public static void deleteFile(String filePath) {
+        if (TextUtils.isEmpty(filePath)) {
+            return;
+        }
+        deleteFile(new File(filePath));
+    }
+
+    /**
+     * 删除文件夹所有内容
+     * @param file 文件
+     */
+    public static void deleteFile(File file) {
+        if (file != null && file.exists()) { // 判断文件是否存在
+            if (file.isDirectory()) { // 否则如果它是一个目录
+                File[] files = file.listFiles(); // 声明目录下所有的文件 files[];
+                if (files != null) {
+                    for (File childFile : files) { // 遍历目录下所有的文件
+                        deleteFile(childFile); // 把每个文件 用这个方法进行迭代
+                    }
+                }
+            }
+
+            // 安全删除文件
+            deleteFileSafely(file);
+        }
+    }
+
+    /**
+     * 安全删除文件.防止删除后重新创建文件，报错 open failed: EBUSY (Device or resource busy)
+     * @param file 文件
+     * @return true 成功 false：失败
+     */
+    public static boolean deleteFileSafely(File file) {
+        if (file != null) {
+            String tmpPath = file.getParent() + File.separator + System.currentTimeMillis();
+            File tmp = new File(tmpPath);
+            boolean renameTo = file.renameTo(tmp);
+            if (!renameTo) {
+                SmartLog.e(TAG, "deleteFileSafely file.renameTo fail!");
+            }
+            return tmp.delete();
+        }
+        return false;
     }
 }

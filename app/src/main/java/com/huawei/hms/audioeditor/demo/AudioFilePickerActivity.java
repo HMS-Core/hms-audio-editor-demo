@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2021-2021. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
  */
 
 package com.huawei.hms.audioeditor.demo;
@@ -48,7 +48,7 @@ public class AudioFilePickerActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQUEST_CODE: {
+            case REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     List<Uri> uris = new ArrayList<>();
                     // 当单选选了一个文件后返回
@@ -67,9 +67,6 @@ public class AudioFilePickerActivity extends AppCompatActivity {
                     handleSelectedAudios(uris);
                 }
                 finish();
-                break;
-            }
-            default:
                 break;
         }
     }

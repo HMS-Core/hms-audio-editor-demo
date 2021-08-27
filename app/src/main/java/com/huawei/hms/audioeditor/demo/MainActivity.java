@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2021-2021. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
  */
 
 package com.huawei.hms.audioeditor.demo;
@@ -19,11 +19,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.huawei.hms.audioeditor.common.agc.HAEApplication;
 import com.huawei.hms.audioeditor.demo.util.FileUtils;
 import com.huawei.hms.audioeditor.demo.util.PermissionUtils;
 import com.huawei.hms.audioeditor.demo.widget.ProgressDialog;
 import com.huawei.hms.audioeditor.sdk.AudioExtractCallBack;
 import com.huawei.hms.audioeditor.sdk.HAEAudioExpansion;
+import com.huawei.hms.audioeditor.sdk.util.FileUtil;
 import com.huawei.hms.audioeditor.ui.api.AudioExportCallBack;
 import com.huawei.hms.audioeditor.ui.api.AudioInfo;
 import com.huawei.hms.audioeditor.ui.api.HAEUIManager;
@@ -38,24 +40,33 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_FOR_SELECT_VIDEO = 1000;
 
     // 编辑
-    private final int PERMISSION_TYPE_EDIT = 1;
+    private static final int PERMISSION_TYPE_EDIT = 1;
 
     // 提取
-    private final int PERMISSION_TYPE_EXTRACT = 2;
+    private static final int PERMISSION_TYPE_EXTRACT = 2;
 
     // 格式转化
-    private final int PERMISSION_TYPE_FORMAT = 3;
+    private static final int PERMISSION_TYPE_FORMAT = 3;
+
+    // 文件
+    private static final int PERMISSION_TYPE_FILE = 4;
+
+    // 流式
+    private static final int PERMISSION_TYPE_FLOW = 5;
 
     // 当前权限请求类型
     private int currentPermissionType = PERMISSION_TYPE_EDIT;
     public ProgressDialog fragmentDialog;
     private LinearLayout startEdit;
     private LinearLayout extractAudio;
+    private LinearLayout changeSound;
     private LinearLayout formatMain;
+    private LinearLayout eqMain;
     private ImageView mSetting;
     private Context mContext;
     private final String[] PERMISSIONS =
             new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initView();
         initEvent();
+        // 设置SDK的apikey
+        HAEApplication.getInstance()
+                .setApiKey(
+                        "CwEAAAAAXFybAXyoaI1/2+iQSHBdQU0CW8oCSbD2jWTr6pfvtGUwoRhZUQRXO/3Y2RqkjG30ch0uIAZrmWkpVpItE6ZewOqJcmA=");
     }
 
     // 请求权限
@@ -80,6 +95,10 @@ public class MainActivity extends AppCompatActivity {
                             extractAudio();
                         } else if (currentPermissionType == PERMISSION_TYPE_FORMAT) {
                             startFormatActivity();
+                        } else if (currentPermissionType == PERMISSION_TYPE_FILE) {
+                            startFileApiActivity();
+                        } else if (currentPermissionType == PERMISSION_TYPE_FLOW) {
+                            startFlowApiActivity();
                         }
                     }
 
@@ -111,6 +130,11 @@ public class MainActivity extends AppCompatActivity {
                     currentPermissionType = PERMISSION_TYPE_FORMAT;
                     requestPermission();
                 });
+        eqMain.setOnClickListener(
+                v -> {
+                    currentPermissionType = PERMISSION_TYPE_FILE;
+                    requestPermission();
+                });
 
         mSetting.setOnClickListener(
                 v -> {
@@ -122,11 +146,19 @@ public class MainActivity extends AppCompatActivity {
                     currentPermissionType = PERMISSION_TYPE_EXTRACT;
                     requestPermission();
                 });
+
+        changeSound.setOnClickListener(
+                v -> {
+                    currentPermissionType = PERMISSION_TYPE_FLOW;
+                    requestPermission();
+                });
     }
 
     private void initView() {
         startEdit = findViewById(R.id.start_edit);
         formatMain = findViewById(R.id.format_main);
+        changeSound = findViewById(R.id.change_sound);
+        eqMain = findViewById(R.id.eq_main);
         mSetting = findViewById(R.id.setting);
         extractAudio = findViewById(R.id.extract_main);
     }
@@ -134,16 +166,30 @@ public class MainActivity extends AppCompatActivity {
     // The default UI is displayed.
 
     /**
-     * Import audio and enter the audio editing interface management class.
+     * 导入音频，进入音频编辑主界面管理类
      */
     private void startUIActivity() {
         HAEUIManager.getInstance().launchEditorActivity(this);
     }
 
-    // Start the audio format conversion page.
+    // 启动音频格式转换页面
     private void startFormatActivity() {
         Intent safeIntent = new Intent(new Intent());
         safeIntent.setClass(this, AudioFormatActivity.class);
+        startActivity(safeIntent);
+    }
+
+    // 启动文件接口页面
+    private void startFileApiActivity() {
+        Intent safeIntent = new Intent(new Intent());
+        safeIntent.setClass(this, FileApiActivity.class);
+        startActivity(safeIntent);
+    }
+
+    // 启动流式接口页面
+    private void startFlowApiActivity() {
+        Intent safeIntent = new Intent(new Intent());
+        safeIntent.setClass(this, StreamApiActivity.class);
         startActivity(safeIntent);
     }
 
@@ -186,6 +232,10 @@ public class MainActivity extends AppCompatActivity {
                                 startUIActivity();
                             } else if (currentPermissionType == PERMISSION_TYPE_EXTRACT) {
                                 extractAudio();
+                            } else if (currentPermissionType == PERMISSION_TYPE_FILE) {
+                                startFileApiActivity();
+                            } else if (currentPermissionType == PERMISSION_TYPE_FLOW) {
+                                startFlowApiActivity();
                             }
                         }
 
@@ -214,20 +264,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Extracting Audio Files from Videos Through Video File Paths
+     * 通过视频文件路径提取视频中的音频文件
      *
-     * @param path Full path of the video file
+     * @param path 视频文件完整路径
      */
     private void beginExtractAudio(String path) {
         fragmentDialog = ProgressDialog.newInstance("提取中");
         fragmentDialog.show(getSupportFragmentManager(), "ProgressDialogFragment");
+        String outPutDir = FileUtil.getAudioExtractStorageDirectory(this);
+        String name = "audio_extract_" + System.currentTimeMillis();
+        if (path != null) {
+            int slashIndex = path.lastIndexOf("/");
+            if (slashIndex == -1) {
+                name = path;
+            } else {
+                name = path.substring(slashIndex + 1);
+            }
+            int dotIndex = name.lastIndexOf(".");
+            if (dotIndex >= 0) {
+                name = name.substring(0, dotIndex) + "_" + System.currentTimeMillis();
+            }
+        }
         // 开始提取音频
         HAEAudioExpansion.getInstance()
                 .extractAudio(
-                        this,//上下文
-                        path,//要提取的视频文件全路径。不可为空
-                        null,//提取出的音频保存的文件夹路径。若为空，将默认保存在“/sdcard/AudioEdit/extract”文件夹里。
-                        null,//提取出的音频名称。不带后缀，若为空，将默认当前日期加时间戳，如：2021-05-10-1620609599567。
+                        this,
+                        path,
+                        outPutDir,
+                        name,
                         new AudioExtractCallBack() {
                             @Override
                             public void onSuccess(String audioPath) {
