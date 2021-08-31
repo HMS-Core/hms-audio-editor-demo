@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         // 设置SDK的apikey
         HAEApplication.getInstance()
                 .setApiKey(
-                        "CwEAAAAAXFybAXyoaI1/2+iQSHBdQU0CW8oCSbD2jWTr6pfvtGUwoRhZUQRXO/3Y2RqkjG30ch0uIAZrmWkpVpItE6ZewOqJcmA=");
+                        "set your apiKey");
     }
 
     // 请求权限

@@ -39,6 +39,7 @@
  - 将本代码库克隆到本地。
 
  - 如果您还没有注册成为开发者，请在[AppGalleryConnect上注册并创建应用](https://developer.huawei.com/consumer/cn/service/josp/agc/index.html)。
+ - 替换工程中的sample-agconnect-services.json文件。
  - 编译并且在安卓设备或模拟器上运行。
 
 ## 要求环境
@@ -50,10 +51,15 @@
 
 如果您对使用HMS示例代码有疑问，请尝试：
 
-- 开发过程遇到问题上[Stack Overflow](https://stackoverflow.com/questions/tagged/huawei-mobile-services)，在\[huawei-mobile-services]标签下提问，有华为研发专家在线一对一解决您的问题。
+- 开发过程遇到问题上[Stack Overflow](https://stackoverflow.com/questions/tagged/huawei-mobile-services?tab=Votes)，在\[huawei-mobile-services]标签下提问，有华为研发专家在线一对一解决您的问题。
 - 到[华为开发者论坛](https://developer.huawei.com/consumer/cn/forum/blockdisplay?fid=18) HMS Core板块与其他开发者进行交流。
 
 如果您在尝试示例代码中遇到问题，请向仓库提交[issue](https://github.com/HMS-Core/hms-audio-editor-demo/issues)，也欢迎您提交[Pull Request](https://github.com/HMS-Core/hms-audio-editor-demo/pulls)。
+
+注意：
+
+该项目中的package name不能用于申请agconnect-services.json，您可以使用自定义package name来申请agconnect-services.json。
+您只需将应用级build.gradle中的applicationId修改为与所申请的agconnect-services.json相同的package name，即可体验Audio Editor Kit云侧服务。
 
 ##  许可证
 

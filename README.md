@@ -40,6 +40,7 @@ HUAWEI Audio Editor Kit provides a wide range of audio editing capabilities, inc
 - Clone the code base to the local host.
 
 - If you haven't already registered as a developer, register and create an app on [AppGalleryConnect](https://developer.huawei.com/consumer/cn/service/josp/agc/index.html).
+- Replacing the sample-agconnect-services.json File in the Project
 - Compile and run on an Android device or emulator.
 
 ## Supported Environment
@@ -50,11 +51,16 @@ If you want to evaluate more about HMS Core,
 [r/HMSCore on Reddit](https://www.reddit.com/r/HuaweiDevelopers/) is for you to keep up with latest news about HMS Core, and to exchange insights with other developers.
 
 If you have questions about how to use HMS samples, try the following options:
-- [Stack Overflow](https://stackoverflow.com/questions/tagged/huawei-mobile-services) is the best place for any programming questions. Be sure to tag your question with 
+- [Stack Overflow](https://stackoverflow.com/questions/tagged/huawei-mobile-services?tab=Votes) is the best place for any programming questions. Be sure to tag your question with 
   `huawei-mobile-services`.
 - [Huawei Developer Forum](https://forums.developer.huawei.com/forumPortal/en/home?fid=0101187876626530001) HMS Core Module is great for general questions, or seeking recommendations and opinions.
 
 If you run into a bug in our samples, please submit an [issue](https://github.com/HMS-Core/hms-audio-editor-demo/issues) to the Repository. Even better you can submit a [Pull Request](https://github.com/HMS-Core/hms-audio-editor-demo/pulls) with a fix.
+
+Note：
+
+The package name in this project cannot be used to apply for agconnect-services.json. You can use a customized package name to apply for agconnect-services.json.
+You only need to change applicationId in application-level build.gradle to the same package name as the applied agconnect-services.json to experience the Audio Editor Kit cloud-side service.
 
 ## License
 
