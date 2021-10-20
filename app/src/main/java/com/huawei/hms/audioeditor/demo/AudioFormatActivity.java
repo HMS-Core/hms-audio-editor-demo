@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,7 +60,7 @@ public class AudioFormatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate");
+        Log.d(TAG,"onCreate");
         setContentView(R.layout.activity_audio_format);
         initView();
         initData(savedInstanceState);
@@ -69,10 +70,10 @@ public class AudioFormatActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(TAG, "onSaveInstanceState");
-        if (mAudioList != null && mAudioList.size() > 0) {
-            outState.putString(AUDIO_PATH, mAudioList.get(0));
-            outState.putString(AUDIO_NAME, audioName.getText().toString());
+        Log.d(TAG,"onSaveInstanceState");
+        if(mAudioList!=null && mAudioList.size()>0){
+            outState.putString(AUDIO_PATH,mAudioList.get(0));
+            outState.putString(AUDIO_NAME,audioName.getText().toString());
         }
     }
 
@@ -87,14 +88,14 @@ public class AudioFormatActivity extends AppCompatActivity {
 
     private void initData(Bundle savedInstanceState) {
         mAudioList = new ArrayList<>();
-        if (savedInstanceState != null) {
+        if(savedInstanceState != null){
             String oldAudioPath = savedInstanceState.getString(AUDIO_PATH);
             String oldAudioName = savedInstanceState.getString(AUDIO_NAME);
-            if (!TextUtils.isEmpty(oldAudioPath)) {
+            if(!TextUtils.isEmpty(oldAudioPath)){
                 mAudioList.add(oldAudioPath);
             }
-            audioName.setText(TextUtils.isEmpty(oldAudioName) ? "" : oldAudioName);
-        } else {
+            audioName.setText(TextUtils.isEmpty(oldAudioName)?"":oldAudioName);
+        }else{
             try {
                 Intent intent = new Intent(SampleConstant.CHOOSE_AUDIO_ACTION);
                 startActivityForResult(intent, SELECT_AUDIOS_REQUEST_CODE);
@@ -118,9 +119,9 @@ public class AudioFormatActivity extends AppCompatActivity {
             // 只支持任务串行，不支持多任务
             transformAudio(filePath);
 
-            /** 示例代码二  只传输入音频和 输出音频格式（如MP3），输出文件到默认路径
-             * // 只支持任务串行，不支持多任务
-             * // transformAudioByForm(filePath); */
+            // 示例代码二  只传输入音频和 输出音频格式（如MP3），输出文件到默认路径
+            // 只支持任务串行，不支持多任务
+            // transformAudioByForm(filePath);
         }
     }
 

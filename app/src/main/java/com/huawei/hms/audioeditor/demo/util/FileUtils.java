@@ -1,8 +1,9 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
- */
-
 package com.huawei.hms.audioeditor.demo.util;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
@@ -19,11 +20,6 @@ import android.util.Log;
 
 import com.huawei.hms.audioeditor.sdk.util.SmartLog;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
 /**
  * 获取文件路径工具类
  *
@@ -31,7 +27,6 @@ import java.io.RandomAccessFile;
  */
 public class FileUtils {
     private static final String TAG = "FileUtils";
-
     public static String getFileName(String fullPath) {
         if (TextUtils.isEmpty(fullPath)) {
             return fullPath;
@@ -43,7 +38,6 @@ public class FileUtils {
             return fullPath.substring(slashIndex + 1);
         }
     }
-
     public static String getRealPath(Context context, Uri fileUri) {
         String realPath;
         // SDK < 19
@@ -56,6 +50,7 @@ public class FileUtils {
         }
         return realPath;
     }
+
 
     @SuppressLint("NewApi")
     public static String getRealPathFromURI_BelowAPI19(Context context, Uri contentUri) {
@@ -74,8 +69,10 @@ public class FileUtils {
         return result;
     }
 
+
     @SuppressLint("NewApi")
     public static String getRealPathFromURI_API19(final Context context, final Uri uri) {
+
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
         // DocumentProvider
@@ -110,13 +107,11 @@ public class FileUtils {
                 if (id.startsWith("raw:")) {
                     id = id.replaceFirst("raw:", "");
                     File file = new File(id);
-                    if (file.exists()) {
+                    if (file.exists())
                         return id;
-                    }
                 }
 
-                final Uri contentUri =
-                        ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
                 return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider
@@ -135,7 +130,9 @@ public class FileUtils {
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {split[1]};
+                final String[] selectionArgs = new String[]{
+                        split[1]
+                };
 
                 return getDataColumn(context, contentUri, selection, selectionArgs);
             }
@@ -151,45 +148,52 @@ public class FileUtils {
         return null;
     }
 
-    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+    public static String getDataColumn(Context context, Uri uri, String selection,
+                                       String[] selectionArgs) {
+
         Cursor cursor = null;
         final String column = "_data";
-        final String[] projection = {column};
+        final String[] projection = {
+                column
+        };
 
         try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+                    null);
             if (cursor != null && cursor.moveToFirst()) {
                 final int index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(index);
             }
         } finally {
-            if (cursor != null) {
+            if (cursor != null)
                 cursor.close();
-            }
         }
         return null;
     }
 
+
     public static String getFilePath(Context context, Uri uri) {
+
         Cursor cursor = null;
-        final String[] projection = {MediaStore.MediaColumns.DISPLAY_NAME};
+        final String[] projection = {
+                MediaStore.MediaColumns.DISPLAY_NAME
+        };
 
         try {
-            cursor = context.getContentResolver().query(uri, projection, null, null, null);
+            cursor = context.getContentResolver().query(uri, projection, null, null,
+                    null);
             if (cursor != null && cursor.moveToFirst()) {
                 final int index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
                 return cursor.getString(index);
             }
         } finally {
-            if (cursor != null) {
+            if (cursor != null)
                 cursor.close();
-            }
         }
         return null;
     }
 
     /**
-     * isExternalStorageDocument
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
@@ -198,7 +202,6 @@ public class FileUtils {
     }
 
     /**
-     * isDownloadsDocument
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
      */
@@ -207,7 +210,6 @@ public class FileUtils {
     }
 
     /**
-     * isMediaDocument
      * @param uri The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
      */
@@ -254,16 +256,16 @@ public class FileUtils {
     }
 
     /**
-     * Create a directory to store the voice files generated by the TTS.
+     * Create a directory to store the voice files generated by the AiDubbing.
+     *
      * @param context context
-     * @return filePath
      */
     public static String initFile(Context context) {
         String filePath = context.getExternalFilesDir("wav").getPath();
         File file = new File(filePath);
         if (!file.exists()) {
-            boolean mkdirs = file.mkdirs();
-            Log.i("initFile", "Create a directory to store the voice files generated by the TTS." + mkdirs);
+            file.mkdirs();
+            Log.i("initFile", "Create a directory to store the voice files generated by the AIDubbing.");
         }
         return filePath;
     }

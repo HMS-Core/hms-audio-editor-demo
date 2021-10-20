@@ -20,27 +20,31 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.huawei.hms.audioeditor.demo.util.FileUtils;
+import com.huawei.hms.audioeditor.demo.widget.EditDialogFragment;
 import com.huawei.hms.audioeditor.sdk.AudioParameters;
 import com.huawei.hms.audioeditor.sdk.AudioSeparationCallBack;
 import com.huawei.hms.audioeditor.sdk.ChangeSoundCallback;
+import com.huawei.hms.audioeditor.sdk.ChangeVoiceOption;
 import com.huawei.hms.audioeditor.sdk.HAEAudioSeparationFile;
 import com.huawei.hms.audioeditor.sdk.HAEChangeVoiceFile;
 import com.huawei.hms.audioeditor.sdk.HAEEqualizerFile;
+import com.huawei.hms.audioeditor.sdk.HAEErrorCode;
 import com.huawei.hms.audioeditor.sdk.HAENoiseReductionFile;
 import com.huawei.hms.audioeditor.sdk.HAESceneFile;
 import com.huawei.hms.audioeditor.sdk.HAESoundFieldFile;
 import com.huawei.hms.audioeditor.sdk.HAESpaceRenderFile;
 import com.huawei.hms.audioeditor.sdk.HAETempoPitch;
-import com.huawei.hms.audioeditor.sdk.SoundType;
 import com.huawei.hms.audioeditor.sdk.materials.network.SeparationCloudCallBack;
 import com.huawei.hms.audioeditor.sdk.materials.network.inner.bean.SeparationBean;
 
@@ -84,10 +88,6 @@ public class FileApiActivity extends AppCompatActivity
     private CheckBox rbPiano;
     private CheckBox rbBass;
     private CheckBox rbDrums;
-    private EditText etX;
-    private EditText etY;
-    private EditText etZ;
-    private Button beginSpaceRender;
 
     private volatile boolean isProcessing;
 
@@ -104,6 +104,13 @@ public class FileApiActivity extends AppCompatActivity
     private List<String> instruments;
     private ProgressDialog progressDialog;
 
+    private RadioButton mRbMan;
+    private RadioButton mRbWoman;
+    private RadioButton mRbFemale;
+    private RadioButton mRbMale;
+
+    private String currentName = "";
+
     String outputPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 
     private ChangeSoundCallback callBack =
@@ -115,9 +122,7 @@ public class FileApiActivity extends AppCompatActivity
                                 Toast.makeText(FileApiActivity.this, "Success: " + outAudioPath, Toast.LENGTH_SHORT)
                                         .show();
                                 isProcessing = false;
-                                if (progressDialog != null) {
-                                    progressDialog.hide();
-                                }
+                                hideProgress();
                             });
                 }
 
@@ -136,10 +141,24 @@ public class FileApiActivity extends AppCompatActivity
                     runOnUiThread(
                             () -> {
                                 isProcessing = false;
-                                Toast.makeText(FileApiActivity.this, "ErrorCode : " + errorCode, Toast.LENGTH_SHORT)
-                                        .show();
-                                if (progressDialog != null) {
-                                    progressDialog.hide();
+                                hideProgress();
+                                if (errorCode == HAEErrorCode.FAIL_FILE_EXIST) {
+                                    Toast.makeText(
+                                            FileApiActivity.this,
+                                            getResources().getString(R.string.file_exists),
+                                            Toast.LENGTH_LONG)
+                                            .show();
+                                    EditDialogFragment.newInstance(
+                                            "",
+                                            currentName,
+                                            (newName, dialog) -> {
+                                                realDealAudioFile(newName);
+                                                dialog.dismiss();
+                                            })
+                                            .show(getSupportFragmentManager(), "EditDialogFragment");
+                                } else {
+                                    Toast.makeText(FileApiActivity.this, "ErrorCode : " + errorCode, Toast.LENGTH_SHORT)
+                                            .show();
                                 }
                             });
                 }
@@ -150,12 +169,16 @@ public class FileApiActivity extends AppCompatActivity
                             () -> {
                                 isProcessing = false;
                                 Toast.makeText(FileApiActivity.this, "Cancel !", Toast.LENGTH_SHORT).show();
-                                if (progressDialog != null) {
-                                    progressDialog.hide();
-                                }
+                                hideProgress();
                             });
                 }
             };
+
+    private void hideProgress() {
+        if (progressDialog != null) {
+            progressDialog.hide();
+        }
+    }
 
     private String filePath = "";
 
@@ -168,6 +191,8 @@ public class FileApiActivity extends AppCompatActivity
     // 最大的倍速值
     private static final float MAX_SPEED_VALUE = 10.0f;
     private static final int MAX_SPEED_PROGRESS_VALUE = 100;
+
+    private ChangeVoiceOption changeVoiceOption;
 
     // 最小的倍速值
     private static final float MIN_SPEED_VALUE = 0.5f;
@@ -182,17 +207,43 @@ public class FileApiActivity extends AppCompatActivity
     private HAETempoPitch haeTempoPitch;
     private HAEAudioSeparationFile haeAudioSeparationFile;
     private HAENoiseReductionFile haeNoiseReductionFile;
-    private HAESpaceRenderFile haeSpaceRenderFile;
 
     private int REQUEST_CODE_FOR_SELECT_AUDIO = 1000;
 
     private ConstraintLayout constraintLayout;
     private LinearLayout separationDivider;
 
+    //改
+    private RadioGroup rgSoundSex;
+    private RadioGroup rgSoundPart;
+    private SeekBar mSbTones;
+    private SeekBar mSbFundamentalFrequency;
+    private SeekBar mSbFormants;
+    private TextView mTvSeekValue1;
+    private TextView mTvSeekValue2;
+    private TextView mTvSeekValue3;
+
+    private float[] malePitch = {0.8f, 0.7f, 2.3f, 1.9f, 1.2f};
+    private float[] femalePitch = {0.5f, 0.4f, 1.4f, 0.6f, 1.0f};
+
+    public static final int UNCLE = 1;
+    public static final int LORI = 2;
+    public static final int MONSTERS = 3;
+    public static final int FEMALE = 4;
+    public static final int MALE = 5;
+    private int currentVoiceType = UNCLE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_api);
+        initView();
+        initAllAbility();
+        initProgress();
+        initSeekBar();
+    }
+
+    private void initView() {
         constraintLayout = findViewById(R.id.constraintLayout);
         fileBack = findViewById(R.id.back);
         fileBack.setOnClickListener(this);
@@ -225,16 +276,98 @@ public class FileApiActivity extends AppCompatActivity
         beginFileSpeedPitch.setOnClickListener(this);
         beginFileReduction = findViewById(R.id.begin_reduction);
         beginFileReduction.setOnClickListener(this);
-        etX = findViewById(R.id.x);
-        etY = findViewById(R.id.y);
-        etZ = findViewById(R.id.z);
-        beginSpaceRender = findViewById(R.id.begin_space_render);
-        beginSpaceRender.setOnClickListener(this);
         beginDevide = findViewById(R.id.begin_devide);
         beginDevide.setOnClickListener(this);
 
+        rgSoundSex = findViewById(R.id.rg_sound_sex);
+        rgSoundSex.setOnCheckedChangeListener(this);
+        rgSoundPart = findViewById(R.id.rg_sound_part);
+        rgSoundPart.setOnCheckedChangeListener(this);
+
+        mSbTones = findViewById(R.id.sb_tones);
+        mSbFundamentalFrequency = findViewById(R.id.sb_fundamental_frequency);
+        mSbFormants = findViewById(R.id.sb_formants);
+        // 0.3-3
+        mSbTones.setMax(54);
+        // 0-1.5
+        mSbFundamentalFrequency.setMax(15);
+        // 0.5-3
+        mSbFormants.setMax(25);
+
+        mTvSeekValue1 = findViewById(R.id.tv_value_1);
+        mTvSeekValue2 = findViewById(R.id.tv_value_2);
+        mTvSeekValue3 = findViewById(R.id.tv_value_3);
+        mTvSeekValue1.setText(0.3 + "");
+        mTvSeekValue2.setText(0 + "");
+        mTvSeekValue3.setText(0.5 + "");
+        mSbTones.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                float val = (float) (i + 6) / 20;
+                mTvSeekValue1.setText(val + "");
+                changeVoiceOption.setPitch(val);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        mSbFundamentalFrequency.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                float val = (float) i / 10f;
+                mTvSeekValue2.setText(val + "");
+                changeVoiceOption.setPitchRangeFactor(val);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        mSbFormants.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                float val = (float) (i + 5) / 10;
+                mTvSeekValue3.setText(val + "");
+                changeVoiceOption.setFormatFactor(val);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        mRbMan = findViewById(R.id.rb_man);
+        mRbWoman = findViewById(R.id.rb_woman);
+        mRbFemale = findViewById(R.id.rb_female);
+        mRbMale = findViewById(R.id.rb_male);
+    }
+
+    private void initAllAbility() {
         haeChangeVoiceFile = new HAEChangeVoiceFile();
-        haeChangeVoiceFile.changeSoundTypeOfFile(SoundType.AUDIO_TYPE_SEASONED);
+        changeVoiceOption = new ChangeVoiceOption();
+        changeVoiceOption.setSpeakerSex(ChangeVoiceOption.SpeakerSex.MALE);
+        changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.CUTE);
+        haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
+        resetpitch();
 
         haeSceneFile = new HAESceneFile();
         haeSceneFile.setTypeOfFile(AudioParameters.ENVIRONMENT_TYPE_BROADCAST);
@@ -258,9 +391,6 @@ public class FileApiActivity extends AppCompatActivity
                     public void onFinish(List<SeparationBean> response) {
                         if (response != null && !response.isEmpty()) {
                             for (SeparationBean separationBean : response) {
-                                if (!separationBean.getInstrument().equalsIgnoreCase("accomp")) {
-                                    continue;
-                                }
                                 CheckBox cb = new CheckBox(FileApiActivity.this);
                                 cb.setText(separationBean.getDesc());
                                 cb.setTextColor(getResources().getColor(R.color.white));
@@ -287,14 +417,10 @@ public class FileApiActivity extends AppCompatActivity
                     }
 
                     @Override
-                    public void onError(int errorCode) {}
+                    public void onError(int errorCode) {
+                    }
                 });
 
-        haeSpaceRenderFile = new HAESpaceRenderFile();
-        haeSpaceRenderFile.setSpacePoint(0, 0, 0);
-
-        initProgress();
-        initSeekBar();
     }
 
     private void initSeekBar() {
@@ -328,10 +454,12 @@ public class FileApiActivity extends AppCompatActivity
                         }
 
                         @Override
-                        public void onStartTrackingTouch(SeekBar seekBar) {}
+                        public void onStartTrackingTouch(SeekBar seekBar) {
+                        }
 
                         @Override
-                        public void onStopTrackingTouch(SeekBar seekBar) {}
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+                        }
                     });
         }
 
@@ -353,10 +481,12 @@ public class FileApiActivity extends AppCompatActivity
                     }
 
                     @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {}
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                    }
 
                     @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {}
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                    }
                 });
     }
 
@@ -419,9 +549,6 @@ public class FileApiActivity extends AppCompatActivity
             case R.id.begin_reduction:
                 beginDealAudioFile(TYPE_REDUCTION);
                 break;
-            case R.id.begin_space_render:
-                beginDealAudioFile(TYPE_SPACE_RENDER);
-                break;
             case R.id.choice_file:
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -441,9 +568,7 @@ public class FileApiActivity extends AppCompatActivity
         if (!isProcessing) {
             return;
         }
-        if (progressDialog != null) {
-            progressDialog.hide();
-        }
+        hideProgress();
         if (currentType == TYPE_CHANGE_SOUND) {
             haeChangeVoiceFile.cancel();
         } else if (currentType == TYPE_ENV) {
@@ -456,9 +581,7 @@ public class FileApiActivity extends AppCompatActivity
             haeTempoPitch.cancel();
         } else if (currentType == TYPE_REDUCTION) {
             haeNoiseReductionFile.cancel();
-        } else if (currentType == TYPE_SPACE_RENDER) {
-            haeSpaceRenderFile.cancel();
-        } else if (currentType == TYPE_DIVIDE) {
+        }else if (currentType == TYPE_DIVIDE) {
             haeAudioSeparationFile.cancel();
         }
     }
@@ -470,28 +593,31 @@ public class FileApiActivity extends AppCompatActivity
             Toast.makeText(this, getResources().getString(R.string.select_none_audio), Toast.LENGTH_SHORT).show();
             return;
         }
+        String name = getOrgName() + "_AudioDivide";
+        realDivideAudio(name);
+    }
 
+    private void realDivideAudio(String name) {
+        showProgress();
         haeAudioSeparationFile.setInstruments(instruments);
         haeAudioSeparationFile.startSeparationTasks(
                 filePath,
                 outputPath,
-                "AudioDivide",
+                name,
                 new AudioSeparationCallBack() {
                     @Override
                     public void onResult(SeparationBean separationBean) {
                         runOnUiThread(
                                 () -> {
                                     Toast.makeText(
-                                                    FileApiActivity.this,
-                                                    separationBean.getInstrument()
-                                                            + " Success: "
-                                                            + separationBean.getOutAudioPath(),
-                                                    Toast.LENGTH_SHORT)
+                                            FileApiActivity.this,
+                                            separationBean.getInstrument()
+                                                    + " Success: "
+                                                    + separationBean.getOutAudioPath(),
+                                            Toast.LENGTH_SHORT)
                                             .show();
                                     isProcessing = false;
-                                    if (progressDialog != null) {
-                                        progressDialog.hide();
-                                    }
+                                    hideProgress();
                                 });
                     }
 
@@ -500,9 +626,7 @@ public class FileApiActivity extends AppCompatActivity
                         runOnUiThread(
                                 () -> {
                                     isProcessing = false;
-                                    if (progressDialog != null) {
-                                        progressDialog.hide();
-                                    }
+                                    hideProgress();
                                 });
                     }
 
@@ -510,11 +634,26 @@ public class FileApiActivity extends AppCompatActivity
                     public void onFail(int errorCode) {
                         runOnUiThread(
                                 () -> {
+
                                     isProcessing = false;
-                                    Toast.makeText(FileApiActivity.this, "ErrorCode : " + errorCode, Toast.LENGTH_SHORT)
-                                            .show();
-                                    if (progressDialog != null) {
-                                        progressDialog.hide();
+                                    hideProgress();
+                                    if (errorCode != HAEErrorCode.FAIL_FILE_EXIST) {
+                                        Toast.makeText(FileApiActivity.this, "ErrorCode : " + errorCode, Toast.LENGTH_SHORT)
+                                                .show();
+                                    } else {
+                                        Toast.makeText(
+                                                FileApiActivity.this,
+                                                getResources().getString(R.string.file_exists),
+                                                Toast.LENGTH_LONG)
+                                                .show();
+                                        EditDialogFragment.newInstance(
+                                                "",
+                                                name,
+                                                (newName, dialog) -> {
+                                                    realDivideAudio(newName);
+                                                    dialog.dismiss();
+                                                })
+                                                .show(getSupportFragmentManager(), "EditDialogFragment");
                                     }
                                 });
                     }
@@ -525,15 +664,20 @@ public class FileApiActivity extends AppCompatActivity
                                 () -> {
                                     isProcessing = false;
                                     Toast.makeText(FileApiActivity.this, "Cancel !", Toast.LENGTH_SHORT).show();
-                                    if (progressDialog != null) {
-                                        progressDialog.hide();
-                                    }
+                                    hideProgress();
                                 });
                     }
                 });
+    }
 
+    private void showProgress() {
         if (progressDialog != null) {
-            progressDialog.setProgress(0);
+            initProgress();
+            if (currentType == TYPE_DIVIDE) {
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            } else {
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            }
             progressDialog.show();
         }
     }
@@ -547,40 +691,41 @@ public class FileApiActivity extends AppCompatActivity
             return;
         }
         currentType = type;
+        String name = getOrgName();
+        realDealAudioFile(name);
+    }
 
-        isProcessing = true;
-        if (progressDialog != null) {
-            progressDialog.setProgress(0);
-            progressDialog.show();
+    private String getOrgName() {
+        String name = "fileApi";
+        int lastIndexOf = filePath.lastIndexOf("/");
+        if (lastIndexOf > -1) {
+            name = filePath.substring(lastIndexOf + 1);
         }
+        int dotIndex = name.lastIndexOf(".");
+        if (dotIndex > -1) {
+            name = name.substring(0, dotIndex);
+        }
+        return name;
+    }
+
+    private void realDealAudioFile(String name) {
+        isProcessing = true;
+        showProgress();
+        currentName = name;
         if (currentType == TYPE_CHANGE_SOUND) {
-            haeChangeVoiceFile.applyAudioFile(filePath, outputPath, "ChangeSound", callBack);
+            haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
+            haeChangeVoiceFile.applyAudioFile(filePath, outputPath, currentName, callBack);
         } else if (currentType == TYPE_ENV) {
-            haeSceneFile.applyAudioFile(filePath, outputPath, "EnvironmentChoice", callBack);
+            haeSceneFile.applyAudioFile(filePath, outputPath, currentName, callBack);
         } else if (currentType == TYPE_SOUND_GROUND) {
-            haeSoundFieldFile.applyAudioFile(filePath, outputPath, "SoundGround", callBack);
+            haeSoundFieldFile.applyAudioFile(filePath, outputPath, currentName, callBack);
         } else if (currentType == TYPE_EQ) {
-            haeEqualizerFile.applyAudioFile(filePath, outputPath, "Equalizer", callBack);
+            haeEqualizerFile.applyAudioFile(filePath, outputPath, currentName, callBack);
         } else if (currentType == TYPE_SPEED_PITCH) {
             haeTempoPitch.changeTempoAndPitchOfFile(speed, pitch);
-            haeTempoPitch.applyAudioFile(filePath, outputPath, "SpeedPitch", callBack);
+            haeTempoPitch.applyAudioFile(filePath, outputPath, currentName, callBack);
         } else if (currentType == TYPE_REDUCTION) {
-            haeNoiseReductionFile.applyAudioFile(filePath, outputPath, "NoiseReduction", callBack);
-        } else if (currentType == TYPE_SPACE_RENDER) {
-            if (etX != null && etY != null && etZ != null) {
-                float x = 0;
-                float y = 0;
-                float z = 0;
-                try {
-                    x = Float.parseFloat(etX.getText().toString());
-                    y = Float.parseFloat(etY.getText().toString());
-                    z = Float.parseFloat(etZ.getText().toString());
-                } catch (NumberFormatException e) {
-                    Log.e(TAG, e.getMessage());
-                }
-                haeSpaceRenderFile.setSpacePoint(x, y, z);
-            }
-            haeSpaceRenderFile.applyAudioFile(filePath, outputPath, "SpaceRender", callBack);
+            haeNoiseReductionFile.applyAudioFile(filePath, outputPath, currentName, callBack);
         }
     }
 
@@ -588,19 +733,34 @@ public class FileApiActivity extends AppCompatActivity
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
             case R.id.rb_uncle:
-                haeChangeVoiceFile.changeSoundTypeOfFile(SoundType.AUDIO_TYPE_SEASONED);
+                currentVoiceType = UNCLE;
+                changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.SEASONED);
+                haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
+                resetpitch();
                 break;
             case R.id.rb_lori:
-                haeChangeVoiceFile.changeSoundTypeOfFile(SoundType.AUDIO_TYPE_CUTE);
+                currentVoiceType = LORI;
+                changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.CUTE);
+                haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
+                resetpitch();
                 break;
             case R.id.rb_female:
-                haeChangeVoiceFile.changeSoundTypeOfFile(SoundType.AUDIO_TYPE_FEMALE);
+                currentVoiceType = FEMALE;
+                changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.FEMALE);
+                haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
+                resetpitch();
                 break;
             case R.id.rb_male:
-                haeChangeVoiceFile.changeSoundTypeOfFile(SoundType.AUDIO_TYPE_MALE);
+                currentVoiceType = MALE;
+                changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.MALE);
+                haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
+                resetpitch();
                 break;
             case R.id.rb_monsters:
-                haeChangeVoiceFile.changeSoundTypeOfFile(SoundType.AUDIO_TYPE_MONSTER);
+                currentVoiceType = MONSTERS;
+                changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.MONSTER);
+                haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
+                resetpitch();
                 break;
             case R.id.rb_gb:
                 haeSceneFile.setTypeOfFile(AudioParameters.ENVIRONMENT_TYPE_BROADCAST);
@@ -650,6 +810,25 @@ public class FileApiActivity extends AppCompatActivity
             case R.id.rb_chinese_style:
                 haeEqualizerFile.setEqValueOfFile(AudioParameters.EQUALIZER_CHINESE_STYLE_VALUE);
                 break;
+            case R.id.rb_man:
+                changeVoiceOption.setSpeakerSex(ChangeVoiceOption.SpeakerSex.MALE);
+                haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
+                resetpitch();
+                break;
+            case R.id.rb_woman:
+                changeVoiceOption.setSpeakerSex(ChangeVoiceOption.SpeakerSex.FEMALE);
+                haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
+                resetpitch();
+                break;
+            case R.id.rb_high:
+                changeVoiceOption.setVocalPart(ChangeVoiceOption.VocalPart.HIGH);
+                break;
+            case R.id.rb_center:
+                changeVoiceOption.setVocalPart(ChangeVoiceOption.VocalPart.MIDDLE);
+                break;
+            case R.id.rb_low:
+                changeVoiceOption.setVocalPart(ChangeVoiceOption.VocalPart.LOW);
+                break;
             default:
                 break;
         }
@@ -686,5 +865,44 @@ public class FileApiActivity extends AppCompatActivity
         BigDecimal b1 = new BigDecimal(Float.toString(v1));
         BigDecimal b2 = new BigDecimal(Float.toString(v2));
         return b1.multiply(b2).floatValue();
+    }
+
+    private float getDefaultPitch() {
+        float[] pitch;
+        if (mRbMan.isChecked()) {
+            pitch = malePitch;
+        } else {
+            pitch = femalePitch;
+        }
+        if (currentVoiceType == UNCLE) {
+            return pitch[0];
+        } else if (currentVoiceType == MONSTERS) {
+            return pitch[1];
+        } else if (currentVoiceType == LORI) {
+            return pitch[2];
+        } else if (currentVoiceType == MALE || currentVoiceType == FEMALE) {
+            if(mRbMan.isChecked()){
+                if(currentVoiceType == MALE){
+                    return pitch[4];
+                }else{
+                    return pitch[3];
+                }
+            }else{
+                if(currentVoiceType == MALE){
+                    return pitch[3];
+                }else{
+                    return pitch[4];
+                }
+            }
+        }
+        return 0;
+    }
+
+    private void resetpitch() {
+        int pitchProgress = pitchToProgress(getDefaultPitch());
+        mSbTones.setProgress(pitchProgress);
+    }
+    private int pitchToProgress(float pitch) {
+        return (int) (pitch * 20-6);
     }
 }

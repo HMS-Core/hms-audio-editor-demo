@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="#262331">
+
+        <TextView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@mipmap/setting_icon_back"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_14" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/material_tag"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_17" />
+    </androidx.appcompat.widget.Toolbar>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="0dp"
+        android:background="#262331"
+        android:orientation="vertical">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout_father"
+            style="@style/MyTablayoutstyle"
+            app:tabTextColor="@color/white"
+            android:textSize="@dimen/dp_18"
+            app:tabMode="scrollable"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"/>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout_father_second"
+            style="@style/MyTablayoutstyle"
+            app:tabTextColor="@color/white"
+            android:textSize="@dimen/dp_18"
+            app:tabMode="scrollable"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"/>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            style="@style/MyTablayoutstyle"
+            app:tabTextColor="@color/white"
+            app:tabMode="scrollable"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"/>
+        <include layout="@layout/materials_page" />
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

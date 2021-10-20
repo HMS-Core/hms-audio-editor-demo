@@ -1,7 +1,3 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
- */
-
 package com.huawei.hms.audioeditor.demo;
 
 import android.app.Activity;

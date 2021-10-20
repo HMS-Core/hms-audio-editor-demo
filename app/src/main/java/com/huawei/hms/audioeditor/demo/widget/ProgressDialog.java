@@ -42,12 +42,8 @@ public class ProgressDialog extends DialogFragment implements View.OnClickListen
     }
 
     public void setProgress(int progress) {
-        if (rd_progress != null) {
-            rd_progress.setProgress(progress);
-        }
-        if (tv_progress != null) {
-            tv_progress.setText(progress + "%");
-        }
+        rd_progress.setProgress(progress);
+        tv_progress.setText(progress + "%");
     }
 
     @Nullable

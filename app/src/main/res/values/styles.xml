@@ -62,4 +62,30 @@
         <item name="android:paddingEnd">20dp</item>
         <item name="android:layoutDirection">locale</item>
     </style>
+
+    <style name="MyTablayoutstyle" parent="Base.Widget.Design.TabLayout">
+        <item name="tabBackground">@color/main_background</item>
+        <item name="tabIndicatorColor">@color/white</item>
+        <item name="tabIndicatorHeight">0dp</item>
+        <item name="tabSelectedTextColor">@color/blue</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="space_render_position_tit">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textColor">#E6FFFFFF</item>
+        <item name="android:textSize">@dimen/dp_12</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textDirection">locale</item>
+    </style>
+    <style name="style_space_render_ll">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/dp_16</item>
+        <item name="android:layout_marginEnd">@dimen/dp_16</item>
+        <item name="android:padding">@dimen/dp_12</item>
+    </style>
 </resources>

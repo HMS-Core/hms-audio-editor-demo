@@ -1,7 +1,3 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
- */
-
 package com.huawei.hms.audioeditor.demo.util;
 
 public class SampleConstant {
@@ -10,11 +6,12 @@ public class SampleConstant {
     public static final String TRANS_AUDIO_FORMAT_TYPE = "transferFormat";
     public static final int RESULT_CODE = 200;
 
+
     /**
      * 音频转换格式
      */
     public static final String AUDIO_TYPE_MP3 = "mp3";
-
     public static final String AUDIO_TYPE_WAV = "wav";
     public static final String AUDIO_TYPE_FLAC = "flac";
+
 }

@@ -213,4 +213,14 @@
         <!--刻度值-->
         <attr name="anim_degreeCount" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="SpaceRenderPositionView">
+        <attr name="srp_center_bitmap" format="reference"/>
+        <attr name="srp_view_type" format="enum">
+            <enum name="front" value="1"/>
+            <enum name="top" value="2"/>
+        </attr>
+        <attr name="srp_active_color" format="color"/>
+        <attr name="srp_point_radius" format="dimension"/>
+    </declare-styleable>
 </resources>
