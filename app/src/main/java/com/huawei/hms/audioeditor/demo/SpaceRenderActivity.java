@@ -34,10 +34,8 @@ import com.huawei.hms.audioeditor.sdk.SpaceRenderRotationParams;
 import com.huawei.hms.audioeditor.sdk.DownloadCallback;
 
 /**
- * 内容：
+ * 内容：空间渲染
  *
- * @author Zwx1040641
- * @date 2021/9/14
  * @since 2021/9/14
  */
 public class SpaceRenderActivity extends AppCompatActivity

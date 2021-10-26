@@ -13,10 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * 内容：
- *
- * @author Zwx1040641
- * @date 2021/8/10
+ * 适配器
  * @since 2021/8/10
  */
 public class AiDubbingStyleAdapter extends RecyclerView.Adapter<AiDubbingStyleAdapter.LanguageViewHolder> {

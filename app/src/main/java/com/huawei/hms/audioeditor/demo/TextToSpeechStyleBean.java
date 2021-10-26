@@ -8,10 +8,7 @@ import com.huawei.hms.audioeditor.sdk.engine.dubbing.HAEAiDubbingSpeaker;
 
 /**
  * 内容：文字转语音
- *
- * @author Zwx1040641
- * @date 2021/7/7
- * @since 2021/7/7
+ * @since 2021/8/10
  */
 public class TextToSpeechStyleBean {
     private HAEAiDubbingSpeaker speaker;

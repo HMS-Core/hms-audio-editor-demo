@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         initView();
         initEvent();
         // 设置SDK的apikey
-        HAEApplication.getInstance().setApiKey("CwEAAAAAgcZ0VHghjbgMNepCshMBYMrI2gz95T5FaZxi3uLwCelE1mHjKDMFG12FU10eqCo89KLyreLfXk6winssUXdvwYgh7LQ=");
+        HAEApplication.getInstance().setApiKey("Set your APIKey");
     }
 
     // 请求权限

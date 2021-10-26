@@ -17,15 +17,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        release {
-            storeFile file("./mlkit.jks")
-            storePassword 'hwmlkit'
-            keyAlias 'mlkit'
-            keyPassword 'hwmlkit'
-        }
-    }
-
     buildTypes {
         release {
             minifyEnabled false

@@ -31,7 +31,7 @@ import static com.huawei.hms.audioeditor.sdk.materials.network.response.Material
 import static com.huawei.hms.audioeditor.sdk.materials.network.response.MaterialsCutContent.UNDOWNLOAD;
 
 /**
- * @author xwx882936
+ * 素材适配器
  * @since 2021/1/16
  */
 public class MaterialAdapter extends RCommandAdapter<MaterialsCutContent> {
