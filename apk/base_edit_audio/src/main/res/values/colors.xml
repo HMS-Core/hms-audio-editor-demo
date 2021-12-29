@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="blue">#6555E6</color>
+    <color name="teal_200">#FF6555E6</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="button_background">#5CACEE</color>
+    <color name="secondary_text_color">#626262</color>
+    <color name="primary_background">#f2f2f2</color>
+    <color name="main_background">#262331</color>
+    <color name="divide">#262331</color>
+    <color name="color_module_select_red">#FF2332</color>
+    <color name="export_seek_color">#6555E6</color>
+    <color name="seekbar_bg_color">#50ffffff</color>
+    <color name="import_button_search">#6555E6</color>
+    <color name="pure_black">#FF000000</color>
+    <color name="colorPrimary">#3C3F41</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="transparent">#00000000</color>
+</resources>

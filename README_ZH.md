@@ -26,19 +26,20 @@
 ## 工程目录结构
 
 ```
-|-- com.huawei.audioeditor.demo
+|-- com.huawei.audioeditor.demo.apk
     |-- Activity
         |-- MainActivity // Audio Editor UI SDK 入口,格式转换入口,音频提取入口
 	    |-- AudioFormatActivity  // Demo格式转换
 		|-- AudioFilePickerActivity  // Demo选择音频文件、列表
 		|-- FileApiActivity  // demo 各功能文件接口
 		|-- StreamApiActivity  // demo 各功能流式接口
+	    |-- AudioBaseActivity  // demo 基础功能集成
 ```
 
 ## 运行步骤
  - 将本代码库克隆到本地。
 
- - 如果您还没有注册成为开发者，请在[AppGalleryConnect上注册并创建应用](https://developer.huawei.com/consumer/cn/service/josp/agc/index.html)。
+ - 如果您还没有注册成为开发者，请在[AppGalleryConnect上注册并创建应用](https://developer.huawei.com/consumer/cn/service/josp/agc/index.html?ha_source=hms1)。
  - 替换工程中的sample-agconnect-services.json文件。
  - 编译并且在安卓设备或模拟器上运行。
 
@@ -52,7 +53,7 @@
 如果您对使用HMS示例代码有疑问，请尝试：
 
 - 开发过程遇到问题上[Stack Overflow](https://stackoverflow.com/questions/tagged/huawei-mobile-services?tab=Votes)，在\[huawei-mobile-services]标签下提问，有华为研发专家在线一对一解决您的问题。
-- 到[华为开发者论坛](https://developer.huawei.com/consumer/cn/forum/blockdisplay?fid=18) HMS Core板块与其他开发者进行交流。
+- 到[华为开发者论坛](https://developer.huawei.com/consumer/cn/forum/blockdisplay?fid=18?ha_source=hms1) HMS Core板块与其他开发者进行交流。
 
 如果您在尝试示例代码中遇到问题，请向仓库提交[issue](https://github.com/HMS-Core/hms-audio-editor-demo/issues)，也欢迎您提交[Pull Request](https://github.com/HMS-Core/hms-audio-editor-demo/pulls)。
 

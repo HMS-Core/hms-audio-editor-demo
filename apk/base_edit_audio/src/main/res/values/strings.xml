@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Audio Editor Kit</string>
+    <string name="title_audio_base">Basic Functions</string>
+    <string name="begin_import_file">Import</string>
+    <string name="base_export">Export</string>
+    <string name="get_wave_data">Obtaining Waveform Data</string>
+    <string name="asset_splits">Splits</string>
+    <string name="asset_del">DELETE</string>
+    <string name="asset_splits1">Split\n(Example is split in half)</string>
+    <string name="audio_play">Playback</string>
+    <string name="audio_stop">Paused</string>
+    <string name="audio_resume_play">Resume playback</string>
+    <string name="asset_volume">Volume</string>
+    <string name="asset_speed_pitch">Sonic Pitch</string>
+    <string name="asset_speed">Sonic</string>
+    <string name="asset_pitch">Pitch</string>
+    <string name="asset_fade_in">Fade In</string>
+    <string name="asset_fade_out">Fade Out</string>
+    <string name="asset_fade">Fade in and out</string>
+    <string name="get_wave_data_tip">Obtain waveform data\n (default original audio, display data length):</string>
+    <string name="delete_tip">Delete\n(Example deletes the first audio)</string>
+    <string name="play_delay">Play the file after the export is complete.</string>
+    <string name="title_progress">Progress</string>
+</resources>
