@@ -32,7 +32,7 @@ import com.huawei.hms.audioeditor.sdk.asset.HAEAudioAsset;
 import com.huawei.hms.audioeditor.sdk.asset.HAEAudioVolumeCallback;
 import com.huawei.hms.audioeditor.sdk.bean.HAEAudioProperty;
 import com.huawei.hms.audioeditor.sdk.bean.HAEAudioVolumeObject;
-import com.huawei.hms.audioeditor.sdk.engine.audio.thumbnail.ThumbnailManager;
+import com.huawei.hms.audioeditor.sdk.engine.audio.thumbnail.WaveformManager;
 import com.huawei.hms.audioeditor.sdk.lane.HAEAudioLane;
 
 import java.util.ArrayList;
@@ -478,7 +478,7 @@ public class AudioBaseActivity extends AppCompatActivity
                 .start();
     }
     private void updateAudioCache(final List<String> validPath, CountDownLatch latchCountdown) {
-        ThumbnailManager.getInstance().generateWaveThumbnailCache(validPath, latchCountdown);
+        WaveformManager.getInstance().generateWaveThumbnailCache(validPath, latchCountdown);
     }
 
     //获取波形数据
@@ -551,8 +551,7 @@ public class AudioBaseActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ThumbnailManager.getInstance().cleanWaveThumbnailCache(validPath);
-        mEditor.interruptVideoExport();
+        WaveformManager.getInstance().cleanWaveThumbnailCache(validPath);
         mEditor.stopEditor();
     }
     private void showProgress() {
