@@ -26,23 +26,27 @@ HUAWEI Audio Editor Kit provides a wide range of audio editing capabilities, inc
 ## Project directory structure
 
 ```
-|-- com.huawei.audioeditor.demo
-    |-- Activity
-    	|-- MainActivity // Audio Editor UI SDK entry, format conversion entry, and audio extraction entry
-	    |-- AudioFormatActivity  // Demo Format conversion
-		|-- AudioFilePickerActivity  // Demo Select Audio Files, Lists
-		|-- FileApiActivity  // demo Function File Interfaces
-		|-- StreamApiActivity  // demo Streaming Interfaces of Each Function
-		|-- AudioBaseActivity  // demo Basic function integration
+|-- apk
+    |-- app
+	    |-- com.huawei.audioeditor.demo.apk
+		    |-- MainActivity // Audio Editor UI SDK entry, format conversion entry, and audio extraction entry
+	        |-- AudioFormatActivity  // Demo Format Conversion
+		    |-- AudioFilePickerActivity  // Select the audio file and list for the demo.
+		    |-- FileApiActivity  // Interfaces of Demo Function Files
+		    |-- StreamApiActivity  // Streaming Interfaces of Demo Functions
+	        |-- AudioBaseActivity  // Integration of basic demo functions
+	|-- base_edit_audio
+	    |-- com.huawei.audioeditor.demo.apk
+	        |-- AudioBaseActivity  // Integration of basic demo functions
 ```
 
 
 ## Running Procedure
 - Clone the code base to the local host.
 
-- If you haven't already registered as a developer, register and create an app on [AppGalleryConnect](https://developer.huawei.com/consumer/cn/service/josp/agc/index.html?ha_source=hms1).
+- If you haven't already registered as a developer, register and create an app on [AppGalleryConnect](https://developer.huawei.com/consumer/cn/service/josp/agc/index.html).
 - Replacing the sample-agconnect-services.json File in the Project
-- Compile and run on an Android device or emulator.
+- Compile and run on an Android device.
 
 ## Supported Environment
 Android SDK 21 or later and JDK 1.8 or later are recommended.
@@ -54,7 +58,7 @@ If you want to evaluate more about HMS Core,
 If you have questions about how to use HMS samples, try the following options:
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/huawei-mobile-services?tab=Votes) is the best place for any programming questions. Be sure to tag your question with 
   `huawei-mobile-services`.
-- [Huawei Developer Forum](https://forums.developer.huawei.com/forumPortal/en/home?fid=0101187876626530001?ha_source=hms1) HMS Core Module is great for general questions, or seeking recommendations and opinions.
+- [Huawei Developer Forum](https://forums.developer.huawei.com/forumPortal/en/home?fid=0101187876626530001) HMS Core Module is great for general questions, or seeking recommendations and opinions.
 
 If you run into a bug in our samples, please submit an [issue](https://github.com/HMS-Core/hms-audio-editor-demo/issues) to the Repository. Even better you can submit a [Pull Request](https://github.com/HMS-Core/hms-audio-editor-demo/pulls) with a fix.
 
