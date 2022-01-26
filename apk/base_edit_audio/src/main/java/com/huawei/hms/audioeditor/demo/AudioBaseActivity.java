@@ -343,6 +343,7 @@ public class AudioBaseActivity extends AppCompatActivity
         mFadeIn = findViewById(R.id.tv7);
         mFadeOut = findViewById(R.id.tv8);
         mBtnFade = findViewById(R.id.asset_fade);
+        mBtnFade.setOnClickListener(this);
         mSbFadeIn.setMax(100);
         mSbFadeOut.setMax(100);
     }

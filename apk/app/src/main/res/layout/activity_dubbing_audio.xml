@@ -368,16 +368,4 @@
 
         </RelativeLayout>
     </ScrollView>
-
-    <TextView
-        android:id="@+id/tips"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:text="@string/asr_mark"
-        android:textColor="@color/secondary_text_color"
-        android:textSize="@dimen/text_size_12sp"></TextView>
 </RelativeLayout>
