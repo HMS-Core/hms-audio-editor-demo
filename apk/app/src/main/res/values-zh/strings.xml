@@ -152,5 +152,9 @@
     <string name="play_delay">请等待导出完成后播放</string>
     <string name="title_progress">进度</string>
     <string name="error_1007">模型下载失败</string>
+    <string name="no_delete_audio">无可删音频</string>
+    <string name="wait_for_wave">等待波形数据</string>
+    <string name="input_name_hint">请输入名称</string>
+
 </resources>
 

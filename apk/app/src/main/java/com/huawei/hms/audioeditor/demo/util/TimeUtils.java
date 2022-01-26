@@ -29,19 +29,19 @@ public class TimeUtils {
         String durationFormat = context.getString(R.string.media_duration_format2);
         sFormatBuilder.setLength(0);
         final Object[] timeArgs = S_TIME_ARGS;
-        timeArgs[0] = secs / 60; // 分钟数
-        timeArgs[1] = secs % 60; // 基于分钟的基础上, 剩余秒数
+        timeArgs[0] = secs / 60; // Number of minutes
+        timeArgs[1] = secs % 60; // Remaining seconds based on minutes
         return sFormatter.format(durationFormat, timeArgs).toString();
     }
 
     /**
-     * 毫秒转成秒, 向下取整
+     * Convert milliseconds into seconds, rounding down
      *
-     * @param milliSecs 时间
-     * @return 返回秒
+     * @param milliSecs time
+     * @return Returned Seconds
      */
     public static int milli2Secs(long milliSecs) {
-        // 向下取整
+        // Round Down
         return (int) Math.floor(BigDecimalUtils.div(milliSecs, 1000f));
     }
 }

@@ -49,40 +49,40 @@ import com.huawei.hms.audioeditor.ui.api.HAEUIManager;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
-    // 权限请求码
+    // Permission Request Code
     private static final int PERMISSION_REQUESTS = 1;
 
-    // 选择视频的请求码
+    // Request code for selecting a video
     private static final int REQUEST_CODE_FOR_SELECT_VIDEO = 1000;
 
-    // 编辑
+    // edits
     private final int PERMISSION_TYPE_EDIT = 1;
 
-    // 提取
+    // extract
     private final int PERMISSION_TYPE_EXTRACT = 2;
 
-    // 格式转化
+    // Format conversion
     private final int PERMISSION_TYPE_FORMAT = 3;
 
-    // 文件
+    // file
     private final int PERMISSION_TYPE_FILE = 4;
 
-    // 流式
+    // streamed
     private final int PERMISSION_TYPE_FLOW = 5;
 
-    // 文字转语音
+    // ai dubbing
     private final int PERMISSION_TYPE_TEXT_TO_AUDIO = 6;
 
-    // 空间渲染
+    // Spatial Rendering
     private final int PERMISSION_TYPE_SPACE = 8;
 
-    // 素材下载
+    // Material download
     private final int PERMISSION_MATERIAL = 7;
 
-    // 基础功能
+    // Basic Functions
     private final int PERMISSION_BASE = 9;
 
-    // 当前权限请求类型
+    // Current Permission Request Type
     private int currentPermissionType = PERMISSION_TYPE_EDIT;
     public ProgressDialog fragmentDialog;
     private LinearLayout startEdit;
@@ -107,14 +107,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initView();
         initEvent();
-        // 设置SDK的apikey
+        // Setting the APIkey of the SDK
         HAEApplication.getInstance().setApiKey("Set your APIKey");
     }
 
-    // 请求权限
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            // 先判断有没有权限
             if (!Environment.isExternalStorageManager()) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
                 intent.setData(Uri.parse("package:" + this.getPackageName()));
@@ -245,56 +243,56 @@ public class MainActivity extends AppCompatActivity {
     // The default UI is displayed.
 
     /**
-     * 导入音频，进入音频编辑主界面管理类
+     * Import audio and enter the audio editing interface management class.
      */
     private void startUIActivity() {
         HAEUIManager.getInstance().launchEditorActivity(this);
         HAEUIManager.getInstance().setCallback(callBack);
     }
 
-    // 启动音频格式转换页面
+    // Start the audio format conversion page.
     private void startFormatActivity() {
         Intent safeIntent = new Intent(new Intent());
         safeIntent.setClass(this, AudioFormatActivity.class);
         startActivity(safeIntent);
     }
 
-    // 启动文件接口页面
+    // Launching the File Interface Page
     private void startFileApiActivity() {
         Intent safeIntent = new Intent(new Intent());
         safeIntent.setClass(this, FileApiActivity.class);
         startActivity(safeIntent);
     }
 
-    // 启动流式接口页面
+    // Launching the Streaming Interface Page
     private void startFlowApiActivity() {
         Intent safeIntent = new Intent(new Intent());
         safeIntent.setClass(this, StreamApiActivity.class);
         startActivity(safeIntent);
     }
 
-    // 启动文字转语音页面
+    // Start the text-to-speech page.
     private void startAiDubbingActivity() {
         Intent safeIntent = new Intent(new Intent());
         safeIntent.setClass(this, AiDubbingAudioActivity.class);
         startActivity(safeIntent);
     }
 
-    // 启动素材下载页面
+    // Start the material download page.
     private void startMaterialActivity() {
         Intent safeIntent = new Intent(new Intent());
         safeIntent.setClass(this, MaterialsActivity.class);
         startActivity(safeIntent);
     }
 
-    // 启动空间渲染
+    // Start Space Rendering
     private void startSpaceActivity() {
         Intent safeIntent = new Intent(new Intent());
         safeIntent.setClass(this, SpaceRenderActivity.class);
         startActivity(safeIntent);
     }
 
-    // 基础功能
+    // Basic Functions
     private void startAudioBaseActivity() {
         Intent safeIntent = new Intent(new Intent());
         safeIntent.setClass(this, AudioBaseActivity.class);
@@ -365,25 +363,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 提取音频操作
+     * Extract Audio Operation
      */
     private void extractAudio() {
-        // 获取视频文件
+        // Obtaining Video Files
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
         intent.setType("video/*");
-        // 取得视频后返回本画面
+        // Return to this screen after obtaining the video.
         startActivityForResult(intent, REQUEST_CODE_FOR_SELECT_VIDEO);
     }
 
     /**
-     * 通过视频文件路径提取视频中的音频文件
+     * Extracting audio files from videos through video file paths
      *
-     * @param path 视频文件完整路径
+     * @param path Full path of the video file
      */
     private void beginExtractAudio(String path) {
-        fragmentDialog = ProgressDialog.newInstance("提取中");
+        fragmentDialog = ProgressDialog.newInstance("Extracting");
         fragmentDialog.show(getSupportFragmentManager(), "ProgressDialogFragment");
         String outPutDir = FileUtil.getAudioExtractStorageDirectory(this);
         String name = "audio_extract";
@@ -403,7 +401,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void realExtractAudio(String path, String outPutDir, String name) {
-        // 开始提取音频
+        // Start fetching audio
         HAEAudioExpansion.getInstance()
                 .extractAudio(
                         this,

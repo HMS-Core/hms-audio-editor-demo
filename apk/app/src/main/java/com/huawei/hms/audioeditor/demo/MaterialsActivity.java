@@ -83,7 +83,7 @@ public class MaterialsActivity extends AppCompatActivity
                     @Override
                     public void onDownloadClick(int position, final int dataPosition) {
                         MaterialsCutContent content = mList.get(dataPosition);
-                            // 下载url改为根据素材id动态获取
+                            // The download URL is dynamically obtained based on the material ID.
                             materialsManageFile.getDownLoadUrlById(
                                     content.getContentId(),
                                     new MaterialsCallBack<String>() {
@@ -188,7 +188,7 @@ public class MaterialsActivity extends AppCompatActivity
                 new TabLayout.OnTabSelectedListener() {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
-                        // 获取子栏目
+                        // Obtaining a Subcategory
                         initBottomTab(mColumnsList, fatherId);
                         if (mMediaPlayer != null) {
                             if (mMediaPlayer.isPlaying()) {
@@ -208,7 +208,7 @@ public class MaterialsActivity extends AppCompatActivity
                 new TabLayout.OnTabSelectedListener() {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
-                        // 获取素材列表
+                        // Obtaining the Material List
                         getMaterials(fatherId,(String) tab.getTag());
 
                         if (mMediaPlayer != null) {

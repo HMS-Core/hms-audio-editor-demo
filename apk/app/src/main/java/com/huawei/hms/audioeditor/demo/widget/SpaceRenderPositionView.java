@@ -22,7 +22,7 @@ import com.huawei.hms.audioeditor.demo.R;
 import androidx.annotation.Nullable;
 
 /**
- * 显示空间方位的view
+ * View showing spatial orientation
  *
  * @since 2021/7/6
  */
@@ -163,7 +163,7 @@ public class SpaceRenderPositionView extends View {
                     currentY = event.getY();
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    // 处理嵌套滑动
+                    // Working with Nested Slides
                     if(parent != null){
                         parent.requestDisallowInterceptTouchEvent(true);
                     }
@@ -180,7 +180,7 @@ public class SpaceRenderPositionView extends View {
                     if (brother != null) {
                         brother.setActionable(true);
                     }
-                    // 处理此时的位置是否需要回到原点
+                    // Handle whether the position needs to be returned to the origin.
                     currentX = event.getX();
                     currentY = event.getY();
                     handleActionUp();

@@ -23,7 +23,7 @@ import androidx.fragment.app.DialogFragment;
 import com.huawei.hms.audioeditor.demo.R;
 
 /**
- * 带编辑框的弹窗
+ * Pop-up window with edit box
  * @since 2021/9/9
  */
 public class EditDialogFragment extends DialogFragment implements View.OnClickListener {
@@ -52,9 +52,10 @@ public class EditDialogFragment extends DialogFragment implements View.OnClickLi
     public View onCreateView(
             @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Dialog dialog = getDialog();
-        /* *  设置Dialog没有标题。需在setContentView之前设置，在之后设置会报错  * */
+        /* *  The dialog does not have a title.This parameter needs to be set before setContentView.
+        An error will be reported after setContentView.  * */
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        /* *  设置Dialog背景透明效果  * */
+        /* *  Setting the Dialog Background Transparency Effect  * */
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
@@ -83,7 +84,7 @@ public class EditDialogFragment extends DialogFragment implements View.OnClickLi
 
     @Override
     public void onStart() {
-        /* *  设置宽度为屏宽、位置在屏幕中间  * */
+        /* *  Set the width to the screen width and position to the middle of the screen.  * */
         Window window = getDialog().getWindow();
         window.setBackgroundDrawableResource(R.color.transparent);
         WindowManager.LayoutParams wlp = window.getAttributes();
@@ -95,7 +96,7 @@ public class EditDialogFragment extends DialogFragment implements View.OnClickLi
     }
 
     /**
-     * 绑定点击事件
+     * Bind a click event.
      **/
     private void initListener() {
         tvCancel.setOnClickListener(this);
@@ -104,9 +105,9 @@ public class EditDialogFragment extends DialogFragment implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.tv_cancel) { // 取消
+        if (v.getId() == R.id.tv_cancel) {
             dismiss();
-        } else if (v.getId() == R.id.tv_confirm) { // 确认
+        } else if (v.getId() == R.id.tv_confirm) {
             String name = etName.getText().toString();
             if (TextUtils.isEmpty(name)) {
                 Toast.makeText(

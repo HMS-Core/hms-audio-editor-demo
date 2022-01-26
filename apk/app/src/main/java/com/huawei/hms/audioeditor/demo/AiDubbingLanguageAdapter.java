@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * 适配器
+ * adapters
  * @since 2021/8/10
  */
 public class AiDubbingLanguageAdapter extends RecyclerView.Adapter<AiDubbingLanguageAdapter.LanguageViewHolder>{

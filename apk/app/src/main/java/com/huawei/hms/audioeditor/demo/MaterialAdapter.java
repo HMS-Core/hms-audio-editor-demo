@@ -127,26 +127,26 @@ public class MaterialAdapter extends RCommandAdapter<MaterialsCutContent> {
 
     public interface OnItemClickListener {
         /**
-         * 点击
+         * click
          *
-         * @param aPosition     ui位置
-         * @param aDataPosition 数据位置
+         * @param aPosition     UI Location
+         * @param aDataPosition Data Location
          */
         void onItemClick(int aPosition, int aDataPosition);
 
         /**
          * 下载
          *
-         * @param aPosition     ui位置
-         * @param aDataPosition 数据位置
+         * @param aPosition     UI Location
+         * @param aDataPosition Data Location
          */
         void onDownloadClick(int aPosition, int aDataPosition);
 
         /**
          * 使用点击
          *
-         * @param aPosition     ui位置
-         * @param aDataPosition 数据位置
+         * @param aPosition     UI Location
+         * @param aDataPosition Data Location
          */
         void onPlayClick(int aPosition, int aDataPosition);
     }

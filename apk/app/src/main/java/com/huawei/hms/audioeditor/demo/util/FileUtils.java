@@ -21,7 +21,7 @@ import android.util.Log;
 import com.huawei.hms.audioeditor.sdk.util.SmartLog;
 
 /**
- * 获取文件路径工具类
+ * Tool class for obtaining the file path
  *
  * @since 2021-05-10
  */
@@ -219,9 +219,9 @@ public class FileUtils {
 
     /**
      * Writes data stream to the file.
-     * @param buffer 待写入的缓存
-     * @param strFilePath 目标保存文件地址
-     * @param append 是否以追加方式写入
+     * @param buffer Cache to be written
+     * @param strFilePath Destination Save File Address
+     * @param append Indicates whether to write in append mode.
      */
     public static void writeBufferToFile(byte[] buffer, String strFilePath, boolean append) {
         File file = new File(strFilePath);
@@ -271,8 +271,8 @@ public class FileUtils {
     }
 
     /**
-     * 删除文件
-     * @param filePath 文件路径
+     * Delete a file.
+     * @param filePath File path
      */
     public static void deleteFile(String filePath) {
         if (TextUtils.isEmpty(filePath)) {
@@ -282,29 +282,29 @@ public class FileUtils {
     }
 
     /**
-     * 删除文件夹所有内容
-     * @param file 文件
+     * Delete all contents of the folder
+     * @param file File
      */
     public static void deleteFile(File file) {
-        if (file != null && file.exists()) { // 判断文件是否存在
-            if (file.isDirectory()) { // 否则如果它是一个目录
-                File[] files = file.listFiles(); // 声明目录下所有的文件 files[];
+        if (file != null && file.exists()) { // Check whether the file exists.
+            if (file.isDirectory()) { // Otherwise if it's a directory
+                File[] files = file.listFiles(); // Declares all files in the directory. files[];
                 if (files != null) {
-                    for (File childFile : files) { // 遍历目录下所有的文件
-                        deleteFile(childFile); // 把每个文件 用这个方法进行迭代
+                    for (File childFile : files) { // Traverse all files in the directory.
+                        deleteFile(childFile); // Use this method to iterate each file.
                     }
                 }
             }
 
-            // 安全删除文件
+            // Safely delete files
             deleteFileSafely(file);
         }
     }
 
     /**
-     * 安全删除文件.防止删除后重新创建文件，报错 open failed: EBUSY (Device or resource busy)
-     * @param file 文件
-     * @return true 成功 false：失败
+     * Safely delete files.Prevents the system from reporting an error when a file is re-created after being deleted. open failed: EBUSY (Device or resource busy)
+     * @param file File
+     * @return true  false
      */
     public static boolean deleteFileSafely(File file) {
         if (file != null) {

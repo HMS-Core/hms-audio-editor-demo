@@ -52,7 +52,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 /**
- * 文件接口
+ * File Interface
  *
  * @since 2021/7/30
  */
@@ -100,10 +100,10 @@ public class FileApiActivity extends AppCompatActivity
     private static final int TYPE_DIVIDE = 8;
     private int currentType = TYPE_NONE;
 
-    // 云侧版本音源分离，分离类型
+    // Cloud-side audio source separation, separation type
     private List<String> instruments;
 
-    // 端侧版本音源分离，分离类型
+    // Device-side audio source separation, separation type
     private List<String> localInstruments;
     private ProgressDialog progressDialog;
 
@@ -185,19 +185,19 @@ public class FileApiActivity extends AppCompatActivity
 
     private String filePath = "";
 
-    // 倍速
+    // double speed
     private float speed = 1.0F;
 
-    // 音调
+    // tones
     private float pitch = 1.0F;
 
-    // 最大的倍速值
+    // Maximum speed
     private static final float MAX_SPEED_VALUE = 10.0f;
     private static final int MAX_SPEED_PROGRESS_VALUE = 100;
 
     private ChangeVoiceOption changeVoiceOption;
 
-    // 最小的倍速值
+    // Minimum value of multiple speed
     private static final float MIN_SPEED_VALUE = 0.5f;
     private static final int MIN_SPEED_PROGRESS_VALUE = 0;
     private final float PROGRESS_SPEED_INTERVAL =
@@ -218,7 +218,6 @@ public class FileApiActivity extends AppCompatActivity
     private ConstraintLayout constraintLayout;
     private LinearLayout separationDivider;
 
-    //改
     private RadioGroup rgSoundSex;
     private RadioGroup rgSoundPart;
     private SeekBar mSbTones;
@@ -265,6 +264,8 @@ public class FileApiActivity extends AppCompatActivity
         beginFileEvn.setOnClickListener(this);
         rgFileSoundGround = findViewById(R.id.rg_sound_ground_type);
         rgFileSoundGround.setOnCheckedChangeListener(this);
+        rgFileEq = findViewById(R.id.rg_eq_type);
+        rgFileEq.setOnCheckedChangeListener(this);
         beginFileSoundGround = findViewById(R.id.begin_sound_ground);
         beginFileSoundGround.setOnClickListener(this);
         beginFileEq = findViewById(R.id.begin_eq);
@@ -660,13 +661,13 @@ public class FileApiActivity extends AppCompatActivity
                 });
     }
 
-    // 端测版本的 人声分离功能
+    // Voice separation function of the terminal test version
     private void realLocalDivideAudio(String name) {
         showProgress();
         audioSeparationFile =new HAELocalAudioSeparationFile();
 
         localInstruments = new ArrayList<>();
-        // 当前版本只支持人声分离
+        // The current version supports only voice separation.
         localInstruments.add(AudioParameters.VOCALS);
         audioSeparationFile.setInstruments(localInstruments);
         audioSeparationFile.startSeparationTask(filePath, outputPath, name, new AudioSeparationCallBack() {

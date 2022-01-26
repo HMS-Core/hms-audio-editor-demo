@@ -109,7 +109,8 @@ public class AudioBaseActivity extends AppCompatActivity
 
     private final String[] PERMISSIONS =
             new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    // 权限请求码
+
+    // Permission Request Code
     private static final int PERMISSION_REQUESTS = 1;
 
     private ProgressDialog progressDialog;
@@ -167,7 +168,7 @@ public class AudioBaseActivity extends AppCompatActivity
                 if (isThumbNailTaskEnd){
                     getWaveData();
                 }else {
-                    Toast.makeText(this,"等待波形缓存",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.wait_for_wave),Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.get_splits_data:
@@ -183,7 +184,7 @@ public class AudioBaseActivity extends AppCompatActivity
                     audioLane.removeAsset(haeAsset.getIndex());
                     mTvAssetLength1.setText(audioLane.getAssets().size()+"");
                 }else {
-                    Toast.makeText(this,"无可删音频",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.no_delete_audio),Toast.LENGTH_SHORT).show();
                 }
                break;
             case R.id.btn_export:
@@ -197,12 +198,12 @@ public class AudioBaseActivity extends AppCompatActivity
                 showProgress();
                 musicPath = Environment.getExternalStorageDirectory().getPath() + "/export"+System.currentTimeMillis()+ ".mp3";
                 HuaweiAudioEditor.getInstance().setExportAudioCallback(exportAudioCallback);
-                // 设置音频属性
+                // Setting Audio Attributes
                 HAEAudioProperty audioProperty = new HAEAudioProperty();
                 audioProperty.setEncodeFormat(audioFormat);
                 audioProperty.setSampleRate(audioRate);
                 audioProperty.setChannels(audioChannel);
-                // 导出音频文件（耗时操作，建议在子线程中处理）
+                // Exporting an Audio File (Time-consuming operation. You are advised to process it in a subthread.)
                 new Thread(
                         () -> {
                             HuaweiAudioEditor.getInstance().exportAudio(audioProperty, musicPath);
@@ -236,19 +237,19 @@ public class AudioBaseActivity extends AppCompatActivity
                     volumeValue = mProgress_volume * 0.01f;
                 }
                 boolean success = audioAsset.setVolume(volumeValue);
-                // 获取音量
+                // Obtain the volume.
                 float volume = audioAsset.getVolume();
                 break;
             case R.id.asset_speed_pitch:
                 boolean success1 = audioLane.changeAssetSpeed(audioAsset.getIndex(), mProgress_speed, mProgress_pitch);
-                // 获取音速，音调
+                // Acquiring the speed of sound, pitch
                 float speed = audioLane.getSpeed(audioAsset.getIndex());
                 float pitch = audioLane.getPitch(audioAsset.getIndex());
                 break;
             case R.id.asset_fade:
-                // 设置淡入淡出
+                // Set Fade-in and Fade-out
                 boolean success2 = audioLane.setAudioAssetFade(audioAsset.getIndex(), fadeInTime, fadeOutTime);
-                 // 获取淡入淡出
+                 // Get Fade-In and Fade-Out
                 int inTime = audioAsset.getFadeInTimeMs();
                 int outTime = audioAsset.getFadeOutTimeMs();
                 break;

@@ -49,7 +49,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Ai 配音
+ * Ai Dubbing
  * @since 2021/8/10
  */
 public class AiDubbingAudioActivity extends AppCompatActivity
@@ -88,7 +88,7 @@ public class AiDubbingAudioActivity extends AppCompatActivity
 
     private Map<String, String> languageMap = new HashMap<>();
     private int[] playModeResources = new int[] {R.string.queuing_mode, R.string.clear_mode};
-    private boolean isFlush = false; // 顺序还是排队播放。
+    private boolean isFlush = false; // Sequence or queued playback.
     private boolean isPause = false;
 
     private int speedVal = 100;
@@ -164,7 +164,7 @@ public class AiDubbingAudioActivity extends AppCompatActivity
                         int i,
                         Pair<Integer, Integer> pair,
                         Bundle bundle) {
-                    // 开始接收文件，保存成文件。
+                    // Start to receive files and save them as files.
                     String pcmFile = getAudioFileNameByTask(taskId, PCM_EXT);
                     FileUtils.writeBufferToFile(HAEAiDubbingAudioInfo.getAudioData(), pcmFile, true);
                 }
@@ -210,7 +210,7 @@ public class AiDubbingAudioActivity extends AppCompatActivity
                             aiDubbingLanguageAdapter.setList(languageDescList);
                         }
                     }
-                    // 网络获取回来数据 刷新
+                    // Update the data obtained from the network.
                     if (aiDubbingStyleAdapter != null) {
                         speakerCodeList.clear();
                         speakerTypeList.clear();
@@ -528,7 +528,7 @@ public class AiDubbingAudioActivity extends AppCompatActivity
                 isSaveSpeechToFile = false;
                 HAEAiDubbingConfig mConfig = generateConfig();
                 initAiDubbing(mConfig);
-                // 调用Ai 配音，进行转语音
+                // Invoke Ai to perform voice conversion.
                 String text = editText.getText().toString();
                 if (TextUtils.isEmpty(text)) {
                     Toast.makeText(
@@ -551,7 +551,7 @@ public class AiDubbingAudioActivity extends AppCompatActivity
                     return;
                 }
                 String s = editText.getText().toString();
-                // 调用Ai 配音，进行转语音
+                // Invoke Ai to perform voice conversion.
                 if (TextUtils.isEmpty(s)) {
                     Toast.makeText(
                                     AiDubbingAudioActivity.this,
@@ -710,7 +710,7 @@ public class AiDubbingAudioActivity extends AppCompatActivity
         if (defaultLanguageCode.equals("")){
             List<String> languageList = mEngine.getLanguages();
             List<String> languageListDesc = mEngine.getLanguagesDesc();
-            // 默认取第一个语言的发言人列表
+            // The speaker list in the first language is used by default.
             if (languageList.size() < 1) {
                 SmartLog.e(TAG, "can't get speaker list!");
                 return;
@@ -742,8 +742,8 @@ public class AiDubbingAudioActivity extends AppCompatActivity
         return filePath;
     }
 
-    private boolean isSpeechNoPreview = false; // 是否预览播放返回的语音流
-    private boolean isSaveSpeechToFile = true; // 是否需要保存成文件。
+    private boolean isSpeechNoPreview = false; // Whether to preview and play the returned voice streams.
+    private boolean isSaveSpeechToFile = true; // Indicates whether to save the file.
     private int aiMode;
 
     private void initAiDubbing(HAEAiDubbingConfig mConfig) {

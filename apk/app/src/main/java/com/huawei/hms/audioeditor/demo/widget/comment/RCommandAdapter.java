@@ -11,10 +11,10 @@ import com.huawei.hms.audioeditor.ui.common.adapter.comment.RViewHolder;
 import java.util.List;
 
 /**
- * 单视图 RecyclerView 适配器
+ * Single View RecyclerView Adapter
  *
  * @since 2020/02/03
- * @param <T> a
+ * @param <T> generics
  *
  */
 public abstract class RCommandAdapter<T> extends RMCommandAdapter<T> {
@@ -44,9 +44,9 @@ public abstract class RCommandAdapter<T> extends RMCommandAdapter<T> {
      * convert
      *
      * @param holder ViewHolder
-     * @param t 泛型
-     * @param dataPosition 数据索引
-     * @param position 索引
+     * @param t generics
+     * @param dataPosition dataPosition
+     * @param position position
      */
     protected abstract void convert(RViewHolder holder, T t, int dataPosition, int position);
 }

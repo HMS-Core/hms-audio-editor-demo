@@ -38,7 +38,8 @@ import java.io.IOException;
 import java.util.Locale;
 
 /**
- * 演示将采样率为44100，位深为16，声道数为2的pcm数据进行变声、降噪等处理
+ * Demonstrate that PCM data with sampling rate of 44100, bit depth of 16 and channel number of
+ * 2 can be processed, such as noise change and noise reduction.
  *
  * @since 2021/7/15
  */
@@ -79,7 +80,7 @@ public class StreamApiActivity extends AppCompatActivity
     private static final int BUFFER_SIZE = 7056;
     private static final int CHANGE_VOICE_BUFFER_SIZE = 88200;
 
-    // 是否保存到文件
+    // Save to File
     private boolean saveToFile = true;
     private String saveToFilePath = "/sdcard/cachePcm/changeSound-saved";
     private FileOutputStream saveToFileStream = null;
@@ -92,7 +93,6 @@ public class StreamApiActivity extends AppCompatActivity
 
     private ChangeVoiceOption changeVoiceOption;
 
-    // 改
     private RadioGroup rgSoundSex;
     private RadioGroup rgSoundPart;
     private SeekBar mSbTones;
@@ -357,7 +357,7 @@ public class StreamApiActivity extends AppCompatActivity
                                 playPcm(buffer);
                             }
 
-                            // 保存到文件
+                            // Save to File
                             if (saveToFile && resultByte != null) {
                                 saveToFileStream.write(resultByte);
                             }

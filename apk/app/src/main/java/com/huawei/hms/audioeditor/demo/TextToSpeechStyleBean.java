@@ -7,7 +7,7 @@ package com.huawei.hms.audioeditor.demo;
 import com.huawei.hms.audioeditor.sdk.engine.dubbing.HAEAiDubbingSpeaker;
 
 /**
- * 内容：文字转语音
+ * Content: text-to-speech
  * @since 2021/8/10
  */
 public class TextToSpeechStyleBean {

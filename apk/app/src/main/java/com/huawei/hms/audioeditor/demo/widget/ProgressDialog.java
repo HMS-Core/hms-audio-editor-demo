@@ -50,9 +50,10 @@ public class ProgressDialog extends DialogFragment implements View.OnClickListen
     public View onCreateView(
             @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Dialog dialog = getDialog();
-        /* *  设置Dialog没有标题。需在setContentView之前设置，在之后设置会报错  * */
+        /* *  The dialog does not have a title.This parameter needs to be set before setContentView.
+        An error will be reported after setContentView.  * */
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        /* *  设置Dialog背景透明效果  * */
+        /* *  Setting the Dialog Background Transparency Effect  * */
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
@@ -76,7 +77,7 @@ public class ProgressDialog extends DialogFragment implements View.OnClickListen
 
     @Override
     public void onStart() {
-        /* *  设置宽度为屏宽、位置在屏幕中间  * */
+        /* *  Set the width to the screen width and position to the middle of the screen.  * */
         Window window = getDialog().getWindow();
         window.setBackgroundDrawableResource(R.color.transparent);
         WindowManager.LayoutParams wlp = window.getAttributes();

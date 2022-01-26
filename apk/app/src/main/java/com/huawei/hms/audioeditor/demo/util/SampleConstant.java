@@ -8,7 +8,7 @@ public class SampleConstant {
 
 
     /**
-     * 音频转换格式
+     * Audio Conversion Format
      */
     public static final String AUDIO_TYPE_MP3 = "mp3";
     public static final String AUDIO_TYPE_WAV = "wav";

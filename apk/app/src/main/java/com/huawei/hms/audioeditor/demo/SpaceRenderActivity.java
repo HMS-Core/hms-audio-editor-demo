@@ -32,7 +32,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
- * 内容：
+ * content：
  *
  * @date 2021/9/14
  * @since 2021/9/14
@@ -141,46 +141,37 @@ public class SpaceRenderActivity extends AppCompatActivity
 
     private void initEvents() {
         mFixedPositioning.setOnCheckedChangeListener(
-                new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        if (b) {
-                            mLlPosition.setVisibility(View.VISIBLE);
-                            mSwitchDT.setChecked(false);
-                            mSwitchKZ.setChecked(false);
-                        } else {
-                            mLlPosition.setVisibility(View.GONE);
-                        }
+                (compoundButton, b) -> {
+                    if (b) {
+                        mLlPosition.setVisibility(View.VISIBLE);
+                        mSwitchDT.setChecked(false);
+                        mSwitchKZ.setChecked(false);
+                    } else {
+                        mLlPosition.setVisibility(View.GONE);
                     }
                 });
         mSwitchDT.setOnCheckedChangeListener(
-                new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        if (b) {
-                            mLlDT.setVisibility(View.VISIBLE);
-                            mLlSeekbar.setVisibility(View.VISIBLE);
-                            mRgClock.setVisibility(View.VISIBLE);
-                            mFixedPositioning.setChecked(false);
-                            mSwitchKZ.setChecked(false);
-                        } else {
-                            mLlDT.setVisibility(View.GONE);
-                            mLlSeekbar.setVisibility(View.GONE);
-                            mRgClock.setVisibility(View.GONE);
-                        }
+                (compoundButton, b) -> {
+                    if (b) {
+                        mLlDT.setVisibility(View.VISIBLE);
+                        mLlSeekbar.setVisibility(View.VISIBLE);
+                        mRgClock.setVisibility(View.VISIBLE);
+                        mFixedPositioning.setChecked(false);
+                        mSwitchKZ.setChecked(false);
+                    } else {
+                        mLlDT.setVisibility(View.GONE);
+                        mLlSeekbar.setVisibility(View.GONE);
+                        mRgClock.setVisibility(View.GONE);
                     }
                 });
         mSwitchKZ.setOnCheckedChangeListener(
-                new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        if (b) {
-                            mLlKZ.setVisibility(View.VISIBLE);
-                            mSwitchDT.setChecked(false);
-                            mFixedPositioning.setChecked(false);
-                        } else {
-                            mLlKZ.setVisibility(View.GONE);
-                        }
+                (compoundButton, b) -> {
+                    if (b) {
+                        mLlKZ.setVisibility(View.VISIBLE);
+                        mSwitchDT.setChecked(false);
+                        mFixedPositioning.setChecked(false);
+                    } else {
+                        mLlKZ.setVisibility(View.GONE);
                     }
                 });
         mSbSurround.setOnSeekBarChangeListener(
@@ -309,7 +300,7 @@ public class SpaceRenderActivity extends AppCompatActivity
             new ChangeSoundCallback() {
                 @Override
                 public void onSuccess(String outAudioPath) {
-                    // 处理成功
+                    // success
                     runOnUiThread(
                             () -> {
                                 Toast.makeText(SpaceRenderActivity.this, outAudioPath, Toast.LENGTH_SHORT).show();
@@ -321,7 +312,7 @@ public class SpaceRenderActivity extends AppCompatActivity
 
                 @Override
                 public void onProgress(int progress) {
-                    // 进度回调处理
+                    // Progress callback processing
                     runOnUiThread(
                             () -> {
                                 if (progressDialog != null) {
@@ -332,7 +323,7 @@ public class SpaceRenderActivity extends AppCompatActivity
 
                 @Override
                 public void onFail(int errorCode) {
-                    // 处理失败
+                    // Processing failed.
                     runOnUiThread(
                             () -> {
                                 isProcessing = false;
@@ -371,7 +362,7 @@ public class SpaceRenderActivity extends AppCompatActivity
 
                 @Override
                 public void onCancel() {
-                    // 取消处理
+                    // Cancel processing
                     runOnUiThread(
                             () -> {
                                 isProcessing = false;

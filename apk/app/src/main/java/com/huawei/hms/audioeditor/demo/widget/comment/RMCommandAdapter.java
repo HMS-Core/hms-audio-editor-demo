@@ -17,7 +17,7 @@ import java.util.List;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * 多视图 RecyclerView 适配器
+ *  RecyclerView adapter
  *
  * @since 20200202
  */
@@ -37,42 +37,6 @@ public class RMCommandAdapter<T> extends RecyclerView.Adapter<RViewHolder> {
         mContext = context;
         mList = list;
         mItemViewDelegateManager = new ItemViewDelegateManager();
-    }
-
-    public void addHeaderView(View view) {
-        // 判断给View对象是否还没有处在mHeaders数组里面
-        if (mHeaders.indexOfValue(view) < 0) {
-            mHeaders.put(BASE_ITEM_TYPE_HEADER++, view);
-            notifyDataSetChanged();
-        }
-    }
-
-    public void addFooterView(View view) {
-        // 判断给View对象是否还没有处在mFooters数组里面
-        if (mFooters.indexOfValue(view) < 0) {
-            mFooters.put(BASE_ITEM_TYPE_FOOTER++, view);
-            notifyDataSetChanged();
-        }
-    }
-
-    // 移除头部
-    public void removeHeaderView(View view) {
-        int index = mHeaders.indexOfValue(view);
-        if (index < 0) {
-            return;
-        }
-        mHeaders.removeAt(index);
-        notifyDataSetChanged();
-    }
-
-    // 移除底部
-    public void removeFooterView(View view) {
-        int index = mFooters.indexOfValue(view);
-        if (index < 0) {
-            return;
-        }
-        mFooters.removeAt(index);
-        notifyDataSetChanged();
     }
 
     public int getHeaderCount() {

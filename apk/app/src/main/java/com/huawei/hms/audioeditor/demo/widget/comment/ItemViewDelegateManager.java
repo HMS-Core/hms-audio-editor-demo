@@ -17,9 +17,9 @@ public class ItemViewDelegateManager<T> {
     }
 
     /**
-     * 仅适用于2种视图
-     * @param delegate 视图代理
-     * @return 视图代理管理器
+     * Available in 2 views only
+     * @param delegate View Proxy
+     * @return View Agent Manager
      */
     public ItemViewDelegateManager<T> addDelegate(ItemViewDelegate<T> delegate) {
         int viewType = delegates.size();

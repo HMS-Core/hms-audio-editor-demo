@@ -36,7 +36,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
- * 音频格式转换
+ * Audio Format Conversion
  */
 public class AudioFormatActivity extends AppCompatActivity {
     private static final String TAG = "AudioFormatActivity";
@@ -54,7 +54,7 @@ public class AudioFormatActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private String transferFormat = "";
 
-    // 格式转换任务是否进行中
+    // Whether the format conversion task is in progress
     private boolean isTansforming = false;
 
     private List<String> mAudioList;
@@ -105,20 +105,20 @@ public class AudioFormatActivity extends AppCompatActivity {
                 // "can't find the choose audio activity"
             }
         }
-        /* *  获取存储路径  * */
+        /* *  Obtaining the Storage Path  * */
         pathAudioFormat.setText(
                 String.format(
                         Locale.ROOT, getString(R.string.save_path), FileUtil.getAudioFormatStorageDirectory(this)));
     }
 
     /**
-     * 音频格式转换 转换所有的list里的文件
+     * Converts the audio format to all files in the list.
      */
     private void convertAllAudio() {
         if (mAudioList != null && !mAudioList.isEmpty()) {
             String filePath = mAudioList.get(0);
-            // 示例代码一 传输入音频 和 输出音频的路径
-            // 只支持任务串行，不支持多任务
+            // The sample code passes the input and output audio paths.
+            // Only serial tasks are supported. Multiple tasks are not supported.
             int start = filePath.lastIndexOf("/");
             int end = filePath.lastIndexOf(".");
             String name = filePath.substring(start, end);
@@ -126,20 +126,20 @@ public class AudioFormatActivity extends AppCompatActivity {
 
             transformAudio(filePath,outPutPath);
 
-            // 示例代码二  只传输入音频和 输出音频格式（如MP3），输出文件到默认路径
-            // 只支持任务串行，不支持多任务
+            // Example 2: Only the input and output audio formats (such as MP3) are transferred, and the output files are stored in the default path.
+            // Only serial tasks are supported. Multiple tasks are not supported.
             // transformAudioByForm(filePath);
         }
     }
 
-    // 示例代码一（直接传用户自己定义路径文件）
+    // Example code 1 (directly uploading the file to the user-defined path)
     private final void transformAudio(String srcFile,String outPutPath) {
         int start = srcFile.lastIndexOf("/");
         int end = srcFile.lastIndexOf(".");
         String name = srcFile.substring(start, end);
-        // 传源文件路径 和 目标文件路径
-        // 输入文件的路径 如/sdcard/AudioEdit/audio/music.mp3
-        // 输出的文件的路径(音频格式（如aac）作为后缀名)，如/sdcard/AudioEdit/format/music.aac
+        // Transfer the source file path and target file path.
+        // Input file path, for example, /sdcard/AudioEdit/audio/music.mp3.
+        // Path of the output file (audio format (for example, aac) as the suffix), for example, /sdcard/AudioEdit/format/music.aac
         HAEAudioExpansion.getInstance()
                 .transformAudio(
                         getBaseContext(),
@@ -190,10 +190,10 @@ public class AudioFormatActivity extends AppCompatActivity {
                         });
     }
 
-    // 示例代码二（用户传转换的格式，存储到默认路径）
+    // Example code 2(The converted format is stored in the default path.)
     private final void transformAudioByForm(String srcFile) {
-        // srcFile 输入文件的路径 如/sdcard/AudioEdit/audio/music.aac
-        // transferFormat 需要转换的格式（如mp3），输出文件到默认路径/sdcard/AudioEdit/format/
+        // srcFile Pathway for interpolation text Like/sdcard/AudioEdit/audio/music.aac
+        // transferFormat Format to be converted (for example, mp3). The output file is stored in the default path /sdcard/AudioEdit/format/.
         HAEAudioExpansion.getInstance()
                 .transformAudioUseDefaultPath(
                         getBaseContext(),
@@ -227,7 +227,7 @@ public class AudioFormatActivity extends AppCompatActivity {
     }
 
     protected void initEvent() {
-        /* *  返回按钮点击事件  * */
+        /* *  Return to the button click event.  * */
         backAudioFormat.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -236,7 +236,7 @@ public class AudioFormatActivity extends AppCompatActivity {
                     }
                 });
 
-        /* *  格式列表选择  * */
+        /* *  Format List Selection  * */
         radioGroupAudioFormat.setOnCheckedChangeListener(
                 (group, checkedId) -> {
                     if (checkedId == R.id.radio_button_1_fragment_audio_format) {
@@ -248,16 +248,16 @@ public class AudioFormatActivity extends AppCompatActivity {
                     }
                 });
 
-        /* *  转换按钮点击事件  * */
+        /* *  Conversion button click event  * */
         transferAudioFormat.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (isTansforming) {
-                            Toast.makeText(getBaseContext(), "当前有正在进行的格式转换任务", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getBaseContext(), "There is a format conversion task in progress.", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        /* *  判断格式是否选择  * */
+                        /* *  Check whether the format is selected.  * */
                         if (transferFormat.isEmpty()) {
                             Toast.makeText(
                                             getBaseContext(),
@@ -279,7 +279,7 @@ public class AudioFormatActivity extends AppCompatActivity {
             return;
         }
         if (resultCode == SampleConstant.RESULT_CODE && requestCode == SELECT_AUDIOS_REQUEST_CODE && data != null) {
-            // 以AudioInfo形式传过来路径
+            // Path transferred in AudioInfo format
             if (data.hasExtra(Constant.EXTRA_SELECT_RESULT)) {
                 ArrayList<AudioInfo> list =
                         (ArrayList<AudioInfo>) data.getSerializableExtra(SampleConstant.EXTRA_SELECT_RESULT);
@@ -290,7 +290,7 @@ public class AudioFormatActivity extends AppCompatActivity {
                     audioName.setText(list.get(0).getAudioName());
                 }
             }
-            // 以字符串形式传过来路径
+            // Transfer path as a character string.
             if (data.hasExtra(HAEConstant.AUDIO_PATH_LIST)) {
                 mAudioList = (ArrayList<String>) data.getSerializableExtra(HAEConstant.AUDIO_PATH_LIST);
                 if (mAudioList != null && !mAudioList.isEmpty()) {

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 选择音频文件、列表
+ * Select Audio Files, Lists
  *
  * @since 2021-05-10
  */
@@ -28,18 +28,18 @@ public class AudioFilePickerActivity extends AppCompatActivity {
         performFileSearch();
     }
 
-    // 选择文件
+    // Select File
     private void performFileSearch() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        // 允许多选 长按多选
+        // Allow multiple selections, press and hold multiple selections
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        // 限制选取音频类型
+        // Restrict the selection of audio types.
         intent.setType("audio/*");
         startActivityForResult(intent, REQUEST_CODE);
     }
 
-    // 接收返回值
+    // Receive the return value.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -47,12 +47,12 @@ public class AudioFilePickerActivity extends AppCompatActivity {
             case REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     List<Uri> uris = new ArrayList<>();
-                    // 当单选选了一个文件后返回
+                    // Return to when a single file is selected
                     if (data.getData() != null) {
                         Uri uri = data.getData();
                         uris.add(uri);
                     } else {
-                        // 多选
+                        // Multiple Choices
                         ClipData clipData = data.getClipData();
                         if (clipData != null) {
                             for (int i = 0; i < clipData.getItemCount(); i++) {
@@ -67,7 +67,7 @@ public class AudioFilePickerActivity extends AppCompatActivity {
         }
     }
 
-    // 将uri转换为我们需要的path
+    // Convert the URI to the path we need.
     private void handleSelectedAudios(List<Uri> uriList) {
         if (uriList == null || uriList.size() == 0) {
             return;
