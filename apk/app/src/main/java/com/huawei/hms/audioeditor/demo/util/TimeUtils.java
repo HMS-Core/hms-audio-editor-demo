@@ -12,7 +12,6 @@ import java.util.Formatter;
 import java.util.Locale;
 
 /**
- * ss
  *
  * @since 20200202
  */

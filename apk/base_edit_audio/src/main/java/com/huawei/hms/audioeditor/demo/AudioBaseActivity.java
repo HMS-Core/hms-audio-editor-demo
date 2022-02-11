@@ -44,7 +44,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
- * 内容：基础功能集成（此代码只做示例作用，为了更清晰的显示接口调用，参数未做保护，存在数组越界等现象）
+ * Content: basic function integration (This code is only used as an example. To clearly display interface
+ * invoking, parameters are not protected and out-of-bounds array exists.)
+ *
  * @date 2021/11/8
  * @since 2021/11/8
  */
@@ -63,7 +65,7 @@ public class AudioBaseActivity extends AppCompatActivity
     private CountDownLatch latchCountdown;
     private TextView mTvDateLength;
     private Button mGetWaveData;
-    // 导入的音频数量（本例单路径）
+    // Number of imported audio files (single path in this example)
     private List<String> validPath = new ArrayList<>();
     private boolean isThumbNailTaskEnd = false;
 
@@ -108,7 +110,8 @@ public class AudioBaseActivity extends AppCompatActivity
 
     private final String[] PERMISSIONS =
             new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    // 权限请求码
+
+    // Permission Request Code
     private static final int PERMISSION_REQUESTS = 1;
 
     private ProgressDialog progressDialog;
@@ -166,7 +169,7 @@ public class AudioBaseActivity extends AppCompatActivity
                 if (isThumbNailTaskEnd){
                     getWaveData();
                 }else {
-                    Toast.makeText(this,"等待波形缓存",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.wait_for_wave),Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.get_splits_data:
@@ -182,7 +185,7 @@ public class AudioBaseActivity extends AppCompatActivity
                     audioLane.removeAsset(haeAsset.getIndex());
                     mTvAssetLength1.setText(audioLane.getAssets().size()+"");
                 }else {
-                    Toast.makeText(this,"无可删音频",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.no_delete_audio),Toast.LENGTH_SHORT).show();
                 }
                break;
             case R.id.btn_export:
@@ -196,12 +199,12 @@ public class AudioBaseActivity extends AppCompatActivity
                 showProgress();
                 musicPath = Environment.getExternalStorageDirectory().getPath() + "/export"+System.currentTimeMillis()+ ".mp3";
                 HuaweiAudioEditor.getInstance().setExportAudioCallback(exportAudioCallback);
-                // 设置音频属性
+                // Setting Audio Attributes
                 HAEAudioProperty audioProperty = new HAEAudioProperty();
                 audioProperty.setEncodeFormat(audioFormat);
                 audioProperty.setSampleRate(audioRate);
                 audioProperty.setChannels(audioChannel);
-                // 导出音频文件（耗时操作，建议在子线程中处理）
+                // Exporting an Audio File (Time-consuming operation. You are advised to process it in a subthread.)
                 new Thread(
                         () -> {
                             HuaweiAudioEditor.getInstance().exportAudio(audioProperty, musicPath);
@@ -235,19 +238,19 @@ public class AudioBaseActivity extends AppCompatActivity
                     volumeValue = mProgress_volume * 0.01f;
                 }
                 boolean success = audioAsset.setVolume(volumeValue);
-                // 获取音量
+                // Obtain the volume.
                 float volume = audioAsset.getVolume();
                 break;
             case R.id.asset_speed_pitch:
                 boolean success1 = audioLane.changeAssetSpeed(audioAsset.getIndex(), mProgress_speed, mProgress_pitch);
-                // 获取音速，音调
+                // Acquiring the speed of sound, pitch
                 float speed = audioLane.getSpeed(audioAsset.getIndex());
                 float pitch = audioLane.getPitch(audioAsset.getIndex());
                 break;
             case R.id.asset_fade:
-                // 设置淡入淡出
+                // Set Fade-in and Fade-out
                 boolean success2 = audioLane.setAudioAssetFade(audioAsset.getIndex(), fadeInTime, fadeOutTime);
-                 // 获取淡入淡出
+                 // Get Fade-In and Fade-Out
                 int inTime = audioAsset.getFadeInTimeMs();
                 int outTime = audioAsset.getFadeOutTimeMs();
                 break;
@@ -425,7 +428,7 @@ public class AudioBaseActivity extends AppCompatActivity
     }
 
     public void initBase() {
-        // 创建图像编辑管理类
+        // Creating an Image Editing Management Class
         mEditor = HuaweiAudioEditor.create(AudioBaseActivity.this);
         mEditor.initEnvironment();
     }
@@ -433,13 +436,13 @@ public class AudioBaseActivity extends AppCompatActivity
     public void importIntegration(String path) {
         validPath.clear();
         validPath.add(path);
-        // 创建时间线
+        // Creating a Timeline
         mTimeLine = mEditor.getTimeLine();
-        // 创建泳道
+        // Create a swimlane
         audioLane = mTimeLine.appendAudioLane();
         audioAsset = audioLane.appendAudioAsset(path,mTimeLine.getCurrentTime());
         if (audioAsset == null){
-            Toast.makeText(this,"导入无效的路径",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Import invalid path",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -482,7 +485,7 @@ public class AudioBaseActivity extends AppCompatActivity
         WaveformManager.getInstance().generateWaveThumbnailCache(validPath, latchCountdown);
     }
 
-    //获取波形数据
+    // Obtaining Waveform Data
     private void getWaveData(){
         if (getThumbNailTask != null) {
             getThumbNailTask.cancel(true);
@@ -502,12 +505,13 @@ public class AudioBaseActivity extends AppCompatActivity
 
         @Override
         protected Void doInBackground(Void... voids) {
-            // 更新波形(intervalLevel 目前1-9)
+            // update wave(intervalLevel 1-9)
             audioAsset.updateVolumeObjects(currentRequestId, HAEConstant.INTERVAL_TEN_FRAME,
                     audioAsset.getStartTime(), audioAsset.getEndTime(),
                     new HAEAudioVolumeCallback() {
                         @Override
-                        public void onAudioAvailable(HAEAudioVolumeObject audioVolumeObject) {
+                        public void onAudioAvailable(HAEAudioVolumeObject haeAudioVolumeObject) {
+
                         }
 
                         @Override

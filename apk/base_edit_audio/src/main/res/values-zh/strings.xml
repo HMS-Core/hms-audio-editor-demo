@@ -22,5 +22,8 @@
     <string name="delete_tip">删除\n(示例是删除第一个音频)</string>
     <string name="play_delay">请等待导出完成后播放</string>
     <string name="title_progress">进度</string>
+    <string name="wait_for_wave">Waiting for Waveform Buffer</string>
+    <string name="input_name_hint">Please enter a name.</string>
+    <string name="no_delete_audio">No audio can be deleted.</string>
 </resources>
 

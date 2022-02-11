@@ -15,7 +15,7 @@ import android.text.TextUtils;
 import java.io.File;
 
 /**
- * 获取文件路径工具类
+ * Tool class for obtaining the file path
  *
  * @since 2021-05-10
  */

@@ -22,4 +22,7 @@
     <string name="delete_tip">Delete\n(Example deletes the first audio)</string>
     <string name="play_delay">Play the file after the export is complete.</string>
     <string name="title_progress">Progress</string>
+    <string name="wait_for_wave">Waiting for Waveform Buffer</string>
+    <string name="input_name_hint">Please enter a name.</string>
+    <string name="no_delete_audio">No audio can be deleted.</string>
 </resources>

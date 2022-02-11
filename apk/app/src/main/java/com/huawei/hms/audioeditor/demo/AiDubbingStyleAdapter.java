@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * 内容：
  * @date 2021/8/10
  * @since 2021/8/10
  */
