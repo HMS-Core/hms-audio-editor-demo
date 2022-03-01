@@ -135,21 +135,26 @@
     <string name="audio_resume_play">Resume playback</string>
     <string name="asset_volume">volume</string>
     <string name="asset_speed_pitch">sonic pitch</string>
-    <string name="asset_speed">speed </string>
+    <string name="asset_speed">speed</string>
     <string name="asset_pitch">pitch</string>
     <string name="asset_fade_in">fade in</string>
     <string name="asset_fade_out">fade out</string>
     <string name="asset_fade">Fade in and out</string>
     <string name="get_wave_data_tip">Obtain waveform data\n (default original audio, display data length):</string>
     <string name="delete_tip">Delete\n(Example deletes the first audio)</string>
+    <string name="play_delay">Play the file after the export is complete.</string>
 
     <string name="start_download_model">Start to initialize the model.</string>
     <string name="success_download_model">The model is initialized successfully.</string>
     <string name="err_download_model">Failed to initialize the model.Error Code : %s</string>
-    <string name="play_delay">Play the file after the export is complete.</string>
     <string name="title_progress">Progress</string>
     <string name="error_1007">Model download failed.</string>
+    <string name="sound_robots">Robots</string>
+    <string name="sound_cartoon">Cartoon</string>
     <string name="no_delete_audio">No audio can be deleted.</string>
     <string name="wait_for_wave">Waiting for Waveform Buffer</string>
     <string name="input_name_hint">Please enter a name.</string>
+    <string name="select_lan" priority="translator">Please select a language.</string>
+    <string name="select_style" priority="translator">Please select a style.</string>
+    <string name="text_complete">complete</string>
 </resources>

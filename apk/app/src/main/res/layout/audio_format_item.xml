@@ -63,7 +63,7 @@
         android:gravity="start|center_vertical"
         android:maxLines="1"
         android:singleLine="true"
-        android:text="完成"
+        android:text="@string/text_complete"
         android:textColor="#FFAB86CD"
         android:textSize="@dimen/dp_11"
         android:visibility="gone"

@@ -5,6 +5,7 @@
 package com.huawei.hms.audioeditor.demo;
 
 import android.annotation.SuppressLint;
+import android.content.res.AssetManager;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
@@ -20,8 +21,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.huawei.hms.audioeditor.sdk.AudioParameters;
 import com.huawei.hms.audioeditor.sdk.ChangeVoiceOption;
 import com.huawei.hms.audioeditor.sdk.HAEChangeVoiceStream;
@@ -35,7 +34,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Locale;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Demonstrate that PCM data with sampling rate of 44100, bit depth of 16 and channel number of
@@ -78,10 +78,10 @@ public class StreamApiActivity extends AppCompatActivity
     private static final int CHANNEL_COUNT = 2;
     private static final int SAMPLE_RATE = 44100;
     private static final int BUFFER_SIZE = 7056;
-    private static final int CHANGE_VOICE_BUFFER_SIZE = 88200;
+    private static final int CHANGE_VOICE_BUFFER_SIZE = 7056;
 
     // Save to File
-    private boolean saveToFile = true;
+    private boolean saveToFile = false;
     private String saveToFilePath = "/sdcard/cachePcm/changeSound-saved";
     private FileOutputStream saveToFileStream = null;
 
@@ -103,15 +103,10 @@ public class StreamApiActivity extends AppCompatActivity
     private RadioButton mRbFemale;
     private RadioButton mRbMale;
 
-    private float[] malePitch = {0.8f, 0.7f, 2.3f, 1.9f, 1.2f};
-    private float[] femalePitch = {0.5f, 0.4f, 1.4f, 0.6f, 1.0f};
+    private float[] malePitch = {0.8f, 2.3f, 1.9f, 1.2f, 0.7f, 1.0f, 1.5f};
+    private float[] femalePitch = {0.5f, 1.4f, 1f, 0.6f, 0.4f, 1.0f, 1.1f};
 
-    public static final int UNCLE = 1;
-    public static final int LORI = 2;
-    public static final int MONSTERS = 3;
-    public static final int FEMALE = 4;
-    public static final int MALE = 5;
-    private int currentVoiceType = UNCLE;
+    private int currentVoiceType = ChangeVoiceOption.VoiceType.SEASONED.ordinal();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,23 +157,22 @@ public class StreamApiActivity extends AppCompatActivity
 
         mTvSeekValue1 = findViewById(R.id.tv_value_1);
         mTvSeekValue1.setText(0.3 + "");
-        mSbTones.setOnSeekBarChangeListener(
-                new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                        float val = (float) (i + 6) / 20;
-                        mTvSeekValue1.setText(val + "");
-                        changeVoiceOption.setPitch(val);
-                    }
+        mSbTones.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                float val = (float) (i + 6) / 20;
+                mTvSeekValue1.setText(val + "");
+                changeVoiceOption.setPitch(val);
+            }
 
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-                    }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                    }
-                });
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
         mRbMan = findViewById(R.id.rb_man);
         mRbWoman = findViewById(R.id.rb_woman);
         mRbFemale = findViewById(R.id.rb_female);
@@ -189,7 +183,7 @@ public class StreamApiActivity extends AppCompatActivity
         haeChangeVoiceStream = new HAEChangeVoiceStream();
         changeVoiceOption = new ChangeVoiceOption();
         changeVoiceOption.setSpeakerSex(ChangeVoiceOption.SpeakerSex.MALE);
-        changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.CUTE);
+        changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.SEASONED);
         haeChangeVoiceStream.changeVoiceOption(changeVoiceOption);
         resetpitch();
 
@@ -210,28 +204,28 @@ public class StreamApiActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back:
+            case R.id.back :
                 onBackPressed();
                 break;
-            case R.id.begin_change:
+            case R.id.begin_change :
                 changeVoice();
                 break;
-            case R.id.begin_reduction:
+            case R.id.begin_reduction :
                 reduction();
                 break;
-            case R.id.begin_env:
+            case R.id.begin_env :
                 changeEnv();
                 break;
-            case R.id.begin_sound_ground:
+            case R.id.begin_sound_ground :
                 changeSoundGround();
                 break;
-            case R.id.begin_eq:
+            case R.id.begin_eq :
                 changeEq();
                 break;
-            case R.id.begin_play:
+            case R.id.begin_play :
                 beginDealPcmFile(TYPE_NONE);
                 break;
-            default:
+            default :
                 break;
         }
     }
@@ -309,53 +303,43 @@ public class StreamApiActivity extends AppCompatActivity
         if (etPcmFilePath != null) {
             pcmFilePath = etPcmFilePath.getText().toString();
         }
-        File pcmFile = new File(pcmFilePath);
-        if (!pcmFile.exists()) {
-            Toast.makeText(this, getResources().getString(R.string.pcm_file_not_exists), Toast.LENGTH_SHORT).show();
-            return;
-        }
+
         currentType = type;
-        new Thread(
-                () -> {
-                    FileInputStream fileInputStream = null;
-                    try {
-                        fileInputStream = new FileInputStream(pcmFile);
-                        int bufferSize;
-                        if (currentType == TYPE_CHANGE_SOUND) {
-                            bufferSize = CHANGE_VOICE_BUFFER_SIZE;
-                        } else {
-                            bufferSize = BUFFER_SIZE;
-                        }
-                        byte[] buffer = new byte[bufferSize];
-                        byte[] resultByte = null;
-                        if (saveToFile) {
-                            saveToFileStream =
-                                    new FileOutputStream(
-                                            new File(
-                                                    saveToFilePath
-                                                            + "_"
-                                                            + System.currentTimeMillis()
-                                                            + ".pcm"));
-                        }
-                        while (fileInputStream.read(buffer) != -1 && unFinish) {
-                            if (currentType == TYPE_CHANGE_SOUND) {
-                                resultByte = haeChangeVoiceStream.applyPcmData(buffer);
-                                playPcm(resultByte);
-                            } else if (currentType == TYPE_REDUCTION) {
-                                resultByte = haeNoiseReductionStream.applyPcmData(buffer);
-                                playPcm(resultByte);
-                            } else if (currentType == TYPE_ENV) {
-                                resultByte = haeSceneStream.applyPcmData(buffer);
-                                playPcm(resultByte);
-                            } else if (currentType == TYPE_SOUND_FILED) {
-                                resultByte = haeSoundFieldStream.applyPcmData(buffer);
-                                playPcm(resultByte);
-                            } else if (currentType == TYPE_EQ) {
-                                resultByte = haeEqualizerStream.applyPcmData(buffer);
-                                playPcm(resultByte);
-                            } else {
-                                playPcm(buffer);
-                            }
+        new Thread(() -> {
+            AssetManager.AssetInputStream fileInputStream = null;
+            try {
+                fileInputStream = (AssetManager.AssetInputStream) getAssets().open("stream.pcm");
+                int bufferSize;
+                if (currentType == TYPE_CHANGE_SOUND) {
+                    bufferSize = CHANGE_VOICE_BUFFER_SIZE;
+                } else {
+                    bufferSize = BUFFER_SIZE;
+                }
+                byte[] buffer = new byte[bufferSize];
+                byte[] resultByte = null;
+                if (saveToFile) {
+                    saveToFileStream = new FileOutputStream(
+                            new File(saveToFilePath + "_" + System.currentTimeMillis() + ".pcm"));
+                }
+                while (fileInputStream.read(buffer) != -1 && unFinish) {
+                    if (currentType == TYPE_CHANGE_SOUND) {
+                        resultByte = haeChangeVoiceStream.applyPcmData(buffer);
+                        playPcm(resultByte);
+                    } else if (currentType == TYPE_REDUCTION) {
+                        resultByte = haeNoiseReductionStream.applyPcmData(buffer);
+                        playPcm(resultByte);
+                    } else if (currentType == TYPE_ENV) {
+                        resultByte = haeSceneStream.applyPcmData(buffer);
+                        playPcm(resultByte);
+                    } else if (currentType == TYPE_SOUND_FILED) {
+                        resultByte = haeSoundFieldStream.applyPcmData(buffer);
+                        playPcm(resultByte);
+                    } else if (currentType == TYPE_EQ) {
+                        resultByte = haeEqualizerStream.applyPcmData(buffer);
+                        playPcm(resultByte);
+                    } else {
+                        playPcm(buffer);
+                    }
 
                             // Save to File
                             if (saveToFile && resultByte != null) {
@@ -374,41 +358,29 @@ public class StreamApiActivity extends AppCompatActivity
                             }
                         }
 
-                        if (saveToFileStream != null) {
-                            try {
-                                saveToFileStream.close();
-                            } catch (IOException e) {
-                                Log.e(TAG, e.getMessage());
-                            }
-                            saveToFileStream = null;
-                        }
+                if (saveToFileStream != null) {
+                    try {
+                        saveToFileStream.close();
+                    } catch (IOException e) {
+                        Log.e(TAG, e.getMessage());
                     }
-                })
-                .start();
+                    saveToFileStream = null;
+                }
+            }
+        }).start();
     }
 
     private void playPcm(byte[] pcmData) {
         if (mAudioTrack == null) {
-            mAudioTrack =
-                    new AudioTrack(
-                            AudioManager.STREAM_MUSIC,
-                            SAMPLE_RATE,
-                            AudioFormat.CHANNEL_IN_STEREO,
-                            AudioFormat.ENCODING_PCM_16BIT,
-                            BUFFER_SIZE,
-                            AudioTrack.MODE_STREAM);
+            mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, SAMPLE_RATE, AudioFormat.CHANNEL_OUT_STEREO,
+                    AudioFormat.ENCODING_PCM_16BIT, BUFFER_SIZE, AudioTrack.MODE_STREAM);
 
             mAudioTrack.play();
         }
         if (mChangeVoiceAudioTrack == null) {
-            mChangeVoiceAudioTrack =
-                    new AudioTrack(
-                            AudioManager.STREAM_MUSIC,
-                            SAMPLE_RATE,
-                            AudioFormat.CHANNEL_IN_STEREO,
-                            AudioFormat.ENCODING_PCM_16BIT,
-                            CHANGE_VOICE_BUFFER_SIZE,
-                            AudioTrack.MODE_STREAM);
+            mChangeVoiceAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, SAMPLE_RATE,
+                    AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT, CHANGE_VOICE_BUFFER_SIZE,
+                    AudioTrack.MODE_STREAM);
 
             mChangeVoiceAudioTrack.play();
         }
@@ -428,105 +400,110 @@ public class StreamApiActivity extends AppCompatActivity
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
-            case R.id.rb_uncle:
-                currentVoiceType = UNCLE;
+            case R.id.rb_uncle :
+                currentVoiceType = ChangeVoiceOption.VoiceType.SEASONED.ordinal();
                 changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.SEASONED);
                 haeChangeVoiceStream.changeVoiceOption(changeVoiceOption);
                 resetpitch();
                 break;
-            case R.id.rb_lori:
-                currentVoiceType = LORI;
+            case R.id.rb_lori :
+                currentVoiceType = ChangeVoiceOption.VoiceType.CUTE.ordinal();
                 changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.CUTE);
                 haeChangeVoiceStream.changeVoiceOption(changeVoiceOption);
                 resetpitch();
                 break;
-            case R.id.rb_female:
-                currentVoiceType = FEMALE;
+            case R.id.rb_female :
+                currentVoiceType = ChangeVoiceOption.VoiceType.FEMALE.ordinal();
                 changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.FEMALE);
                 haeChangeVoiceStream.changeVoiceOption(changeVoiceOption);
                 resetpitch();
                 break;
-            case R.id.rb_male:
-                currentVoiceType = MALE;
+            case R.id.rb_male :
+                currentVoiceType = ChangeVoiceOption.VoiceType.MALE.ordinal();
                 changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.MALE);
                 haeChangeVoiceStream.changeVoiceOption(changeVoiceOption);
                 resetpitch();
                 break;
-            case R.id.rb_monsters:
-                currentVoiceType = MONSTERS;
+            case R.id.rb_monsters :
+                currentVoiceType = ChangeVoiceOption.VoiceType.MONSTER.ordinal();
                 changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.MONSTER);
                 haeChangeVoiceStream.changeVoiceOption(changeVoiceOption);
                 resetpitch();
                 break;
-            case R.id.rb_gb:
+            case R.id.rb_robots :
+                currentVoiceType = ChangeVoiceOption.VoiceType.ROBOTS.ordinal();
+                changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.ROBOTS);
+                haeChangeVoiceStream.changeVoiceOption(changeVoiceOption);
+                resetpitch();
+                break;
+            case R.id.rb_cartoon :
+                currentVoiceType = ChangeVoiceOption.VoiceType.CARTOON.ordinal();
+                changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.CARTOON);
+                haeChangeVoiceStream.changeVoiceOption(changeVoiceOption);
+                resetpitch();
+                break;
+            case R.id.rb_gb :
                 haeSceneStream.setEnvironmentType(AudioParameters.ENVIRONMENT_TYPE_BROADCAST);
                 break;
-            case R.id.rb_tel:
+            case R.id.rb_tel :
                 haeSceneStream.setEnvironmentType(AudioParameters.ENVIRONMENT_TYPE_EARPIECE);
                 break;
-            case R.id.rb_sx:
+            case R.id.rb_sx :
                 haeSceneStream.setEnvironmentType(AudioParameters.ENVIRONMENT_TYPE_UNDERWATER);
                 break;
-            case R.id.rb_cd:
+            case R.id.rb_cd :
                 haeSceneStream.setEnvironmentType(AudioParameters.ENVIRONMENT_TYPE_GRAMOPHONE);
                 break;
-            case R.id.rb_sound_0:
+            case R.id.rb_sound_0 :
                 haeSoundFieldStream.setSoundType(AudioParameters.SOUND_FIELD_WIDE);
                 break;
-            case R.id.rb_sound_1:
+            case R.id.rb_sound_1 :
                 haeSoundFieldStream.setSoundType(AudioParameters.SOUND_FIELD_FRONT_FACING);
                 break;
-            case R.id.rb_sound_2:
+            case R.id.rb_sound_2 :
                 haeSoundFieldStream.setSoundType(AudioParameters.SOUND_FIELD_NEAR);
                 break;
-            case R.id.rb_sound_3:
+            case R.id.rb_sound_3 :
                 haeSoundFieldStream.setSoundType(AudioParameters.SOUND_FIELD_GRAND);
                 break;
-            case R.id.rb_pops:
+            case R.id.rb_pops :
                 haeEqualizerStream.setEqParams(AudioParameters.EQUALIZER_POP_VALUE);
                 break;
-            case R.id.rb_classic:
+            case R.id.rb_classic :
                 haeEqualizerStream.setEqParams(AudioParameters.EQUALIZER_CLASSICAL_VALUE);
                 break;
-            case R.id.rb_jazz:
+            case R.id.rb_jazz :
                 haeEqualizerStream.setEqParams(AudioParameters.EQUALIZER_JAZZ_VALUE);
                 break;
-            case R.id.rb_rock:
+            case R.id.rb_rock :
                 haeEqualizerStream.setEqParams(AudioParameters.EQUALIZER_ROCK_VALUE);
                 break;
-            case R.id.rb_rb:
+            case R.id.rb_rb :
                 haeEqualizerStream.setEqParams(AudioParameters.EQUALIZER_RB_VALUE);
                 break;
-            case R.id.rb_ballads:
+            case R.id.rb_ballads :
                 haeEqualizerStream.setEqParams(AudioParameters.EQUALIZER_BALLADS_VALUE);
                 break;
-            case R.id.rb_dance_music:
+            case R.id.rb_dance_music :
                 haeEqualizerStream.setEqParams(AudioParameters.EQUALIZER_DANCE_MUSIC_VALUE);
                 break;
-            case R.id.rb_chinese_style:
+            case R.id.rb_chinese_style :
                 haeEqualizerStream.setEqParams(AudioParameters.EQUALIZER_CHINESE_STYLE_VALUE);
                 break;
-            case R.id.rb_man:
+            case R.id.rb_man :
                 changeVoiceOption.setSpeakerSex(ChangeVoiceOption.SpeakerSex.MALE);
                 haeChangeVoiceStream.changeVoiceOption(changeVoiceOption);
                 resetpitch();
                 break;
-            case R.id.rb_woman:
+            case R.id.rb_woman :
                 changeVoiceOption.setSpeakerSex(ChangeVoiceOption.SpeakerSex.FEMALE);
                 haeChangeVoiceStream.changeVoiceOption(changeVoiceOption);
                 resetpitch();
                 break;
-            case R.id.rb_high:
-                changeVoiceOption.setVocalPart(ChangeVoiceOption.VocalPart.HIGH);
-                break;
-            case R.id.rb_center:
+            case R.id.rb_center :
                 changeVoiceOption.setVocalPart(ChangeVoiceOption.VocalPart.MIDDLE);
                 break;
-            case R.id.rb_low:
-                changeVoiceOption.setVocalPart(ChangeVoiceOption.VocalPart.LOW);
-
-                break;
-            default:
+            default :
                 break;
         }
     }
@@ -582,28 +559,7 @@ public class StreamApiActivity extends AppCompatActivity
         } else {
             pitch = femalePitch;
         }
-        if (currentVoiceType == UNCLE) {
-            return pitch[0];
-        } else if (currentVoiceType == MONSTERS) {
-            return pitch[1];
-        } else if (currentVoiceType == LORI) {
-            return pitch[2];
-        } else if (currentVoiceType == MALE || currentVoiceType == FEMALE) {
-            if(mRbMan.isChecked()){
-                if(currentVoiceType == MALE){
-                    return pitch[4];
-                }else{
-                    return pitch[3];
-                }
-            }else{
-                if(currentVoiceType == MALE){
-                    return pitch[3];
-                }else{
-                    return pitch[4];
-                }
-            }
-        }
-        return 0;
+        return pitch[currentVoiceType];
     }
 
     private void resetpitch() {
@@ -611,6 +567,6 @@ public class StreamApiActivity extends AppCompatActivity
         mSbTones.setProgress(pitchProgress);
     }
     private int pitchToProgress(float pitch) {
-        return (int) (pitch * 20-6);
+        return (int) (pitch * 20 - 6);
     }
 }

@@ -97,41 +97,6 @@ public class PermissionUtils {
     }
 
     /**
-     * Detect permission and request permission: If no permission, request permission
-     */
-    public static void checkAndRequestPermission(Context context, String permission, int requestCode) {
-        if (!checkPermission(context, permission)) {
-            requestPermission(context, permission, requestCode);
-        }
-    }
-
-    /**
-     * Detect and request multiple permissions
-     */
-    public static void checkAndRequestMorePermissions(Context context, String[] permissions, int requestCode) {
-        List<String> permissionList = checkMorePermissions(context, permissions);
-        requestMorePermissions(context, permissionList, requestCode);
-    }
-
-    /**
-     * Check Permissions
-     *
-     * @param context    context
-     * @param permission Permission
-     * @param callBack   Callback Listening
-     */
-    public static void checkPermission(Context context, String permission, PermissionCheckCallBack callBack) {
-        if (checkPermission(context, permission)) { // 用户已授予权限
-            callBack.onHasPermission();
-        } else {
-            if (judgePermission(context, permission))  // 用户之前已拒绝过权限申请
-                callBack.onUserHasAlreadyTurnedDown(permission);
-            else                                       // 用户之前已拒绝并勾选了不在询问、用户第一次申请权限。
-                callBack.onUserHasAlreadyTurnedDownAndDontAsk(permission);
-        }
-    }
-
-    /**
      * Detect Multiple Permissions
      *
      * @param context     context
@@ -159,31 +124,6 @@ public class PermissionUtils {
                 // The user has previously rejected and selected Do not ask, and the user applies for permission for the first time.
                 callBack.onUserHasAlreadyTurnedDown(unauthorizedMorePermissions);
             }
-        }
-    }
-
-    /**
-     * Detect and Apply for Permissions
-     */
-    public static void checkAndRequestPermission(Context context, String permission,
-        int requestCode, PermissionRequestSuccessCallBack callBack) {
-        if (checkPermission(context, permission)) {// User Granted Permissions
-            callBack.onHasPermission();
-        } else {
-            requestPermission(context, permission, requestCode);
-        }
-    }
-
-    /**
-     * Detect and apply for multiple permissions
-     */
-    public static void checkAndRequestMorePermissions(Context context, String[] permissions,
-        int requestCode, PermissionRequestSuccessCallBack callBack) {
-        List<String> permissionList = checkMorePermissions(context, permissions);
-        if (permissionList.size() == 0) {  // User Granted Permissions
-            callBack.onHasPermission();
-        } else {
-            requestMorePermissions(context, permissionList, requestCode);
         }
     }
 

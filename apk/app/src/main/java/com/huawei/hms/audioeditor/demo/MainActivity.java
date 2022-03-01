@@ -18,6 +18,7 @@ package com.huawei.hms.audioeditor.demo;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -107,22 +108,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initView();
         initEvent();
+        // scan new files in storage
+        MediaScannerConnection.scanFile(this, new String[]{Environment
+                .getExternalStorageDirectory().getAbsolutePath()}, null, null);
+
         // Setting the APIkey of the SDK
         HAEApplication.getInstance().setApiKey("Set your APIKey");
     }
 
     private void requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                intent.setData(Uri.parse("package:" + this.getPackageName()));
-                startActivityForResult(intent, PERMISSION_REQUESTS);
-            } else {
-                jumpActivity();
-            }
-            return;
-        }
-
         PermissionUtils.checkMorePermissions(
                 mContext,
                 PERMISSIONS,
@@ -482,14 +476,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PERMISSION_REQUESTS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (Environment.isExternalStorageManager()) {
-                jumpActivity();
-            } else {
-                Toast.makeText(this, getResources().getString(R.string.no_write_permission), Toast.LENGTH_SHORT).show();
-            }
-        }
-
         if (requestCode == REQUEST_CODE_FOR_SELECT_VIDEO) {
             if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, getResources().getString(R.string.select_none_video), Toast.LENGTH_SHORT).show();
@@ -497,7 +483,6 @@ public class MainActivity extends AppCompatActivity {
                 if (data != null) {
                     Uri uri = data.getData();
                     String filePath = FileUtils.getRealPath(this, uri);
-                    Log.i(TAG, filePath);
                     if (!TextUtils.isEmpty(filePath)) {
                         beginExtractAudio(filePath);
                     } else {

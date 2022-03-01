@@ -165,31 +165,30 @@ public class RMCommandAdapter<T> extends RecyclerView.Adapter<RViewHolder> {
 
     public interface OnItemClickListener {
         /**
-         * a
+         * click
          *
-         * @param view a
-         * @param holder a
-         * @param dataPosition a
-         * @param position a
+         * @param view view
+         * @param holder holder
+         * @param dataPosition dataPosition
+         * @param position position
          */
         void onItemClick(View view, RecyclerView.ViewHolder holder, int dataPosition, int position);
 
         /**
-         *  a
+         * long click
          *
-         * @param view a
-         * @param holder a
-         * @param dataPosition a
-         * @param position a
-         * @return a
+         * @param view view
+         * @param holder holder
+         * @param dataPosition dataPosition
+         * @param position position
          */
         boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int dataPosition, int position);
     }
 
     /**
-     * a
+     * ClickListener
      *
-     * @param onItemClickListener a
+     * @param onItemClickListener click
      */
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.mOnItemClickListener = onItemClickListener;

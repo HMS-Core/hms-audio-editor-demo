@@ -16,6 +16,10 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.huawei.hms.audioeditor.demo.util.SampleConstant;
 import com.huawei.hms.audioeditor.demo.widget.EditDialogFragment;
 import com.huawei.hms.audioeditor.sdk.HAEAudioExpansion;
@@ -30,10 +34,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Audio Format Conversion
@@ -138,8 +138,8 @@ public class AudioFormatActivity extends AppCompatActivity {
         int end = srcFile.lastIndexOf(".");
         String name = srcFile.substring(start, end);
         // Transfer the source file path and target file path.
-        // Input file path, for example, /sdcard/AudioEdit/audio/music.mp3.
-        // Path of the output file (audio format (for example, aac) as the suffix), for example, /sdcard/AudioEdit/format/music.aac
+        // Input file path, for example, /sdcard/Music/AudioEdit/audio/music.mp3.
+        // Path of the output file (audio format (for example, aac) as the suffix), for example, /sdcard/Music/AudioEdit/format/music.aac
         HAEAudioExpansion.getInstance()
                 .transformAudio(
                         getBaseContext(),
@@ -192,8 +192,8 @@ public class AudioFormatActivity extends AppCompatActivity {
 
     // Example code 2(The converted format is stored in the default path.)
     private final void transformAudioByForm(String srcFile) {
-        // srcFile Pathway for interpolation text Like/sdcard/AudioEdit/audio/music.aac
-        // transferFormat Format to be converted (for example, mp3). The output file is stored in the default path /sdcard/AudioEdit/format/.
+        // srcFile Pathway for interpolation text Like/sdcard/Music/AudioEdit/audio/music.aac
+        // transferFormat Format to be converted (for example, mp3). The output file is stored in the default path /sdcard/Music/AudioEdit/format/.
         HAEAudioExpansion.getInstance()
                 .transformAudioUseDefaultPath(
                         getBaseContext(),

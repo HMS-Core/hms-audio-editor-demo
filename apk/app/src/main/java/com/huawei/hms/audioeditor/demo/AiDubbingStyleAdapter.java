@@ -1,6 +1,7 @@
 package com.huawei.hms.audioeditor.demo;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 public class AiDubbingStyleAdapter extends RecyclerView.Adapter<AiDubbingStyleAdapter.LanguageViewHolder> {
     private Context context;
     private List<String> list;
+    private String name;
 
-    public AiDubbingStyleAdapter(FragmentActivity aiDubbingAudioActivity, List<String> styleList) {
+    public AiDubbingStyleAdapter(FragmentActivity aiDubbingAudioActivity, List<String> styleList ,String name) {
         this.context = aiDubbingAudioActivity;
         this.list = styleList;
+        this.name = name;
     }
 
     public void setList(List<String> lists){
@@ -41,6 +44,11 @@ public class AiDubbingStyleAdapter extends RecyclerView.Adapter<AiDubbingStyleAd
     @Override
     public void onBindViewHolder(@NonNull LanguageViewHolder holder, int position) {
         holder.aiDubbingStyle.setText(list.get(position));
+        if (list.get(position).equals(name)){
+            holder.aiDubbingStyle.setTextColor(Color.parseColor("#5CACEE"));
+        } else {
+            holder.aiDubbingStyle.setTextColor(Color.parseColor("#626262"));
+        }
 
         if (null != onItemClickListener) {
             // Callback click event

@@ -38,6 +38,9 @@ HUAWEI Audio Editor Kit provides a wide range of audio editing capabilities, inc
 	|-- base_edit_audio
 	    |-- com.huawei.audioeditor.demo.apk
 	        |-- AudioBaseActivity  // Integration of basic demo functions
+	|-- aidubbing_audioeditor
+            |-- com.huawei.audioeditor.demo.apk
+                |-- AiDubbingAudioActivity  // AI dubbing functions
 ```
 
 

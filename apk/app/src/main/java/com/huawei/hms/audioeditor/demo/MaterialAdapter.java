@@ -13,8 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.huawei.hms.audioeditor.common.network.http.ability.util.network.NetworkStartup;
+
 import com.huawei.hms.audioeditor.demo.widget.comment.RCommandAdapter;
-import com.huawei.hms.audioeditor.sdk.materials.network.response.MaterialsCutContent;
+import com.huawei.hms.audioeditor.sdk.materials.bean.MaterialsCutContent;
 import com.huawei.hms.audioeditor.sdk.util.SmartLog;
 import com.huawei.hms.audioeditor.ui.R;
 import com.huawei.hms.audioeditor.ui.common.adapter.comment.RViewHolder;
@@ -25,10 +26,10 @@ import com.huawei.hms.audioeditor.demo.util.TimeUtils;
 
 import java.util.List;
 
+import static com.huawei.hms.audioeditor.sdk.materials.bean.MaterialsCutContent.DOWNLOADED;
+import static com.huawei.hms.audioeditor.sdk.materials.bean.MaterialsCutContent.DOWNLOADING;
+import static com.huawei.hms.audioeditor.sdk.materials.bean.MaterialsCutContent.UNDOWNLOAD;
 
-import static com.huawei.hms.audioeditor.sdk.materials.network.response.MaterialsCutContent.DOWNLOADED;
-import static com.huawei.hms.audioeditor.sdk.materials.network.response.MaterialsCutContent.DOWNLOADING;
-import static com.huawei.hms.audioeditor.sdk.materials.network.response.MaterialsCutContent.UNDOWNLOAD;
 
 /**
  * @since 2021/1/16
@@ -135,7 +136,7 @@ public class MaterialAdapter extends RCommandAdapter<MaterialsCutContent> {
         void onItemClick(int aPosition, int aDataPosition);
 
         /**
-         * 下载
+         * download
          *
          * @param aPosition     UI Location
          * @param aDataPosition Data Location
@@ -143,7 +144,7 @@ public class MaterialAdapter extends RCommandAdapter<MaterialsCutContent> {
         void onDownloadClick(int aPosition, int aDataPosition);
 
         /**
-         * 使用点击
+         * click
          *
          * @param aPosition     UI Location
          * @param aDataPosition Data Location

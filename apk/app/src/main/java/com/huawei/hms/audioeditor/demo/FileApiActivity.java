@@ -24,10 +24,15 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.huawei.hms.audioeditor.demo.util.FileUtils;
 import com.huawei.hms.audioeditor.demo.widget.EditDialogFragment;
 import com.huawei.hms.audioeditor.sdk.AudioParameters;
 import com.huawei.hms.audioeditor.sdk.AudioSeparationCallBack;
+import com.huawei.hms.audioeditor.sdk.AudioSeparationType;
 import com.huawei.hms.audioeditor.sdk.ChangeSoundCallback;
 import com.huawei.hms.audioeditor.sdk.ChangeVoiceOption;
 import com.huawei.hms.audioeditor.sdk.HAEAudioSeparationFile;
@@ -39,17 +44,13 @@ import com.huawei.hms.audioeditor.sdk.HAENoiseReductionFile;
 import com.huawei.hms.audioeditor.sdk.HAESceneFile;
 import com.huawei.hms.audioeditor.sdk.HAESoundFieldFile;
 import com.huawei.hms.audioeditor.sdk.HAETempoPitch;
+import com.huawei.hms.audioeditor.sdk.bean.SeparationBean;
 import com.huawei.hms.audioeditor.sdk.materials.network.SeparationCloudCallBack;
-import com.huawei.hms.audioeditor.sdk.materials.network.inner.bean.SeparationBean;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 /**
  * File Interface
@@ -114,68 +115,54 @@ public class FileApiActivity extends AppCompatActivity
 
     private String currentName = "";
 
-    String outputPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    String outputPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getPath()+"/AudioEdit/sample";
 
-    private ChangeSoundCallback callBack =
-            new ChangeSoundCallback() {
-                @Override
-                public void onSuccess(String outAudioPath) {
-                    runOnUiThread(
-                            () -> {
-                                Toast.makeText(FileApiActivity.this, "Success: " + outAudioPath, Toast.LENGTH_SHORT)
-                                        .show();
-                                isProcessing = false;
-                                hideProgress();
-                            });
-                }
+    private ChangeSoundCallback callBack = new ChangeSoundCallback() {
+        @Override
+        public void onSuccess(String outAudioPath) {
+            runOnUiThread(() -> {
+                Toast.makeText(FileApiActivity.this, "Success: " + outAudioPath, Toast.LENGTH_SHORT).show();
+                isProcessing = false;
+                hideProgress();
+            });
+        }
 
-                @Override
-                public void onProgress(int progress) {
-                    runOnUiThread(
-                            () -> {
-                                if (progressDialog != null) {
-                                    progressDialog.setProgress(progress);
-                                }
-                            });
+        @Override
+        public void onProgress(int progress) {
+            runOnUiThread(() -> {
+                if (progressDialog != null) {
+                    progressDialog.setProgress(progress);
                 }
+            });
+        }
 
-                @Override
-                public void onFail(int errorCode) {
-                    runOnUiThread(
-                            () -> {
-                                isProcessing = false;
-                                hideProgress();
-                                if (errorCode == HAEErrorCode.FAIL_FILE_EXIST) {
-                                    Toast.makeText(
-                                            FileApiActivity.this,
-                                            getResources().getString(R.string.file_exists),
-                                            Toast.LENGTH_LONG)
-                                            .show();
-                                    EditDialogFragment.newInstance(
-                                            "",
-                                            currentName,
-                                            (newName, dialog) -> {
-                                                realDealAudioFile(newName);
-                                                dialog.dismiss();
-                                            })
-                                            .show(getSupportFragmentManager(), "EditDialogFragment");
-                                } else {
-                                    Toast.makeText(FileApiActivity.this, "ErrorCode : " + errorCode, Toast.LENGTH_SHORT)
-                                            .show();
-                                }
-                            });
+        @Override
+        public void onFail(int errorCode) {
+            runOnUiThread(() -> {
+                isProcessing = false;
+                hideProgress();
+                if (errorCode == HAEErrorCode.FAIL_FILE_EXIST) {
+                    Toast.makeText(FileApiActivity.this, getResources().getString(R.string.file_exists),
+                            Toast.LENGTH_LONG).show();
+                    EditDialogFragment.newInstance("", currentName, (newName, dialog) -> {
+                        realDealAudioFile(newName);
+                        dialog.dismiss();
+                    }).show(getSupportFragmentManager(), "EditDialogFragment");
+                } else {
+                    Toast.makeText(FileApiActivity.this, "ErrorCode : " + errorCode, Toast.LENGTH_SHORT).show();
                 }
+            });
+        }
 
-                @Override
-                public void onCancel() {
-                    runOnUiThread(
-                            () -> {
-                                isProcessing = false;
-                                Toast.makeText(FileApiActivity.this, "Cancel !", Toast.LENGTH_SHORT).show();
-                                hideProgress();
-                            });
-                }
-            };
+        @Override
+        public void onCancel() {
+            runOnUiThread(() -> {
+                isProcessing = false;
+                Toast.makeText(FileApiActivity.this, "Cancel !", Toast.LENGTH_SHORT).show();
+                hideProgress();
+            });
+        }
+    };
 
     private void hideProgress() {
         if (progressDialog != null) {
@@ -200,8 +187,8 @@ public class FileApiActivity extends AppCompatActivity
     // Minimum value of multiple speed
     private static final float MIN_SPEED_VALUE = 0.5f;
     private static final int MIN_SPEED_PROGRESS_VALUE = 0;
-    private final float PROGRESS_SPEED_INTERVAL =
-            bigDiv(MAX_SPEED_VALUE - MIN_SPEED_VALUE, MAX_SPEED_PROGRESS_VALUE - MIN_SPEED_PROGRESS_VALUE);
+    private final float PROGRESS_SPEED_INTERVAL = bigDiv(MAX_SPEED_VALUE - MIN_SPEED_VALUE,
+            MAX_SPEED_PROGRESS_VALUE - MIN_SPEED_PROGRESS_VALUE);
 
     private HAEChangeVoiceFile haeChangeVoiceFile;
     private HAESceneFile haeSceneFile;
@@ -211,7 +198,6 @@ public class FileApiActivity extends AppCompatActivity
     private HAEAudioSeparationFile haeAudioSeparationFile;
     private HAENoiseReductionFile haeNoiseReductionFile;
     private HAELocalAudioSeparationFile audioSeparationFile;
-
 
     private int REQUEST_CODE_FOR_SELECT_AUDIO = 1000;
 
@@ -223,15 +209,10 @@ public class FileApiActivity extends AppCompatActivity
     private SeekBar mSbTones;
     private TextView mTvSeekValue1;
 
-    private float[] malePitch = {0.8f, 0.7f, 2.3f, 1.9f, 1.2f};
-    private float[] femalePitch = {0.5f, 0.4f, 1.4f, 0.6f, 1.0f};
+    private float[] malePitch = {0.8f, 2.3f, 1.9f, 1.2f, 0.7f, 1.0f, 1.5f};
+    private float[] femalePitch = {0.5f, 1.4f, 1f, 0.6f, 0.4f, 1.0f, 1.1f};
 
-    public static final int UNCLE = 1;
-    public static final int LORI = 2;
-    public static final int MONSTERS = 3;
-    public static final int FEMALE = 4;
-    public static final int MALE = 5;
-    private int currentVoiceType = UNCLE;
+    private int currentVoiceType = ChangeVoiceOption.VoiceType.SEASONED.ordinal();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -282,7 +263,6 @@ public class FileApiActivity extends AppCompatActivity
         beginDevide.setOnClickListener(this);
         findViewById(R.id.begin_vocals_devide).setOnClickListener(this);
 
-
         rgSoundSex = findViewById(R.id.rg_sound_sex);
         rgSoundSex.setOnCheckedChangeListener(this);
         rgSoundPart = findViewById(R.id.rg_sound_part);
@@ -317,18 +297,17 @@ public class FileApiActivity extends AppCompatActivity
         mRbFemale = findViewById(R.id.rb_female);
         mRbMale = findViewById(R.id.rb_male);
 
-
         rbVocals = findViewById(R.id.rbVocals);
         rbVocals.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!instruments.contains(AudioParameters.VOCALS)) {
-                        instruments.add(AudioParameters.VOCALS);
+                    if (!instruments.contains(AudioSeparationType.VOCALS)) {
+                        instruments.add(AudioSeparationType.VOCALS);
                     }
 
                 } else {
-                    instruments.remove(AudioParameters.VOCALS);
+                    instruments.remove(AudioSeparationType.VOCALS);
                 }
             }
         });
@@ -338,7 +317,8 @@ public class FileApiActivity extends AppCompatActivity
         haeChangeVoiceFile = new HAEChangeVoiceFile();
         changeVoiceOption = new ChangeVoiceOption();
         changeVoiceOption.setSpeakerSex(ChangeVoiceOption.SpeakerSex.MALE);
-        changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.CUTE);
+        // By default, the parameter selected on the UI is Seasoned.
+        changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.SEASONED);
         haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
         resetpitch();
 
@@ -358,41 +338,37 @@ public class FileApiActivity extends AppCompatActivity
 
         haeAudioSeparationFile = new HAEAudioSeparationFile();
         instruments = new ArrayList<>();
-        haeAudioSeparationFile.getInstruments(
-                new SeparationCloudCallBack<List<SeparationBean>>() {
-                    @Override
-                    public void onFinish(List<SeparationBean> response) {
-                        if (response != null && !response.isEmpty()) {
-                            for (SeparationBean separationBean : response) {
-                                CheckBox cb = new CheckBox(FileApiActivity.this);
-                                cb.setText(separationBean.getDesc());
-                                cb.setTextColor(getResources().getColor(R.color.white));
-                                LinearLayout.LayoutParams cbParam =
-                                        new LinearLayout.LayoutParams(
-                                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                                ViewGroup.LayoutParams.WRAP_CONTENT);
-                                cb.setLayoutParams(cbParam);
-                                separationDivider.addView(cb);
+        haeAudioSeparationFile.getInstruments(new SeparationCloudCallBack<List<SeparationBean>>() {
+            @Override
+            public void onFinish(List<SeparationBean> response) {
+                if (response != null && !response.isEmpty()) {
+                    for (SeparationBean separationBean : response) {
+                        CheckBox cb = new CheckBox(FileApiActivity.this);
+                        cb.setText(separationBean.getDesc());
+                        cb.setTextColor(getResources().getColor(R.color.white));
+                        LinearLayout.LayoutParams cbParam = new LinearLayout.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        cb.setLayoutParams(cbParam);
+                        separationDivider.addView(cb);
 
-                                cb.setOnCheckedChangeListener(
-                                        new CompoundButton.OnCheckedChangeListener() {
-                                            @Override
-                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                                if (isChecked) {
-                                                    instruments.add(separationBean.getInstrument());
-                                                } else {
-                                                    instruments.remove(separationBean.getInstrument());
-                                                }
-                                            }
-                                        });
+                        cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                if (isChecked) {
+                                    instruments.add(separationBean.getInstrument());
+                                } else {
+                                    instruments.remove(separationBean.getInstrument());
+                                }
                             }
-                        }
+                        });
                     }
+                }
+            }
 
-                    @Override
-                    public void onError(int errorCode) {
-                    }
-                });
+            @Override
+            public void onError(int errorCode) {
+            }
+        });
 
     }
 
@@ -409,58 +385,56 @@ public class FileApiActivity extends AppCompatActivity
         }
         sbPitch.setProgress((int) mToneProgress);
         if (sbSpeed != null) {
-            sbSpeed.setOnSeekBarChangeListener(
-                    new SeekBar.OnSeekBarChangeListener() {
-                        @SuppressLint("SetTextI18n")
-                        @Override
-                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                            if (fromUser) {
-                                if (progress > 0) {
-                                    BigDecimal bSpeed = new BigDecimal(convertProgressToSpeed(progress));
-                                    speed = bSpeed.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
-                                } else {
-                                    speed = MIN_SPEED_VALUE;
-                                    sbSpeed.setProgress((int) (speed * PROGRESS_SPEED_INTERVAL));
-                                }
-                                tvSpeed.setText(format(speed) + "x");
-                            }
+            sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (fromUser) {
+                        if (progress > 0) {
+                            BigDecimal bSpeed = new BigDecimal(convertProgressToSpeed(progress));
+                            speed = bSpeed.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
+                        } else {
+                            speed = MIN_SPEED_VALUE;
+                            sbSpeed.setProgress((int) (speed * PROGRESS_SPEED_INTERVAL));
                         }
+                        tvSpeed.setText(format(speed) + "x");
+                    }
+                }
 
-                        @Override
-                        public void onStartTrackingTouch(SeekBar seekBar) {
-                        }
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
-                        @Override
-                        public void onStopTrackingTouch(SeekBar seekBar) {
-                        }
-                    });
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
         }
 
-        sbPitch.setOnSeekBarChangeListener(
-                new SeekBar.OnSeekBarChangeListener() {
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        if (fromUser) {
-                            if (progress > 0) {
-                                pitch = progress / 10.0F;
-                                tvPitch.setText("+" + format(pitch));
-                            } else {
-                                pitch = 0.1F;
-                                sbSpeed.setProgress(1);
-                                tvPitch.setText("+" + "0.1");
-                            }
-                        }
+        sbPitch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    if (progress > 0) {
+                        pitch = progress / 10.0F;
+                        tvPitch.setText("+" + format(pitch));
+                    } else {
+                        pitch = 0.1F;
+                        sbSpeed.setProgress(1);
+                        tvPitch.setText("+" + "0.1");
                     }
+                }
+            }
 
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-                    }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                    }
-                });
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
     }
 
     public static String format(double value) {
@@ -498,51 +472,51 @@ public class FileApiActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back:
+            case R.id.back :
                 onBackPressed();
                 break;
-            case R.id.begin_change:
+            case R.id.begin_change :
                 beginDealAudioFile(TYPE_CHANGE_SOUND);
                 break;
-            case R.id.begin_devide:
+            case R.id.begin_devide :
                 beginDivideAudioFile();
                 break;
-            case R.id.begin_vocals_devide:
+            case R.id.begin_vocals_devide :
                 beginLocalDivideAudioFile();
                 break;
-            case R.id.begin_env:
+            case R.id.begin_env :
                 beginDealAudioFile(TYPE_ENV);
                 break;
-            case R.id.begin_sound_ground:
+            case R.id.begin_sound_ground :
                 beginDealAudioFile(TYPE_SOUND_GROUND);
                 break;
-            case R.id.begin_eq:
+            case R.id.begin_eq :
                 beginDealAudioFile(TYPE_EQ);
                 break;
-            case R.id.begin_speed_pitch:
+            case R.id.begin_speed_pitch :
                 beginDealAudioFile(TYPE_SPEED_PITCH);
                 break;
-            case R.id.begin_reduction:
+            case R.id.begin_reduction :
                 beginDealAudioFile(TYPE_REDUCTION);
                 break;
-            case R.id.choice_file:
+            case R.id.choice_file :
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
                 intent.setType("audio/*");
                 startActivityForResult(intent, REQUEST_CODE_FOR_SELECT_AUDIO);
                 break;
-            case R.id.cancel:
+            case R.id.cancel :
                 cancelDeal();
                 break;
-            default:
+            default :
                 break;
         }
     }
 
     private void cancelDeal() {
 
-        if(audioSeparationFile!=null){
+        if (audioSeparationFile != null) {
             audioSeparationFile.cancel();
         }
         if (!isProcessing) {
@@ -561,7 +535,7 @@ public class FileApiActivity extends AppCompatActivity
             haeTempoPitch.cancel();
         } else if (currentType == TYPE_REDUCTION) {
             haeNoiseReductionFile.cancel();
-        }else if (currentType == TYPE_DIVIDE) {
+        } else if (currentType == TYPE_DIVIDE) {
             haeAudioSeparationFile.cancel();
         }
     }
@@ -591,149 +565,112 @@ public class FileApiActivity extends AppCompatActivity
     private void realDivideAudio(String name) {
         showProgress();
         haeAudioSeparationFile.setInstruments(instruments);
-        haeAudioSeparationFile.startSeparationTasks(
-                filePath,
-                outputPath,
-                name,
-                new AudioSeparationCallBack() {
-                    @Override
-                    public void onResult(SeparationBean separationBean) {
-                        runOnUiThread(
-                                () -> {
-                                    Toast.makeText(
-                                            FileApiActivity.this,
-                                            separationBean.getInstrument()
-                                                    + " Success: "
-                                                    + separationBean.getOutAudioPath(),
-                                            Toast.LENGTH_SHORT)
-                                            .show();
-                                    isProcessing = false;
-                                    hideProgress();
-                                });
-                    }
+        haeAudioSeparationFile.startSeparationTasks(filePath, outputPath, name, new AudioSeparationCallBack() {
+            @Override
+            public void onResult(SeparationBean separationBean) {
+                runOnUiThread(() -> {
+                    Toast.makeText(FileApiActivity.this,
+                            separationBean.getInstrument() + " Success: " + separationBean.getOutAudioPath(),
+                            Toast.LENGTH_SHORT).show();
+                    isProcessing = false;
+                    hideProgress();
+                });
+            }
 
-                    @Override
-                    public void onFinish(List<SeparationBean> separationBeans) {
-                        runOnUiThread(
-                                () -> {
-                                    isProcessing = false;
-                                    hideProgress();
-                                });
-                    }
+            @Override
+            public void onFinish(List<SeparationBean> separationBeans) {
+                runOnUiThread(() -> {
+                    isProcessing = false;
+                    hideProgress();
+                });
+            }
 
-                    @Override
-                    public void onFail(int errorCode) {
-                        runOnUiThread(
-                                () -> {
+            @Override
+            public void onFail(int errorCode) {
+                runOnUiThread(() -> {
 
-                                    isProcessing = false;
-                                    hideProgress();
-                                    if (errorCode != HAEErrorCode.FAIL_FILE_EXIST) {
-                                        Toast.makeText(FileApiActivity.this, "ErrorCode : " + errorCode, Toast.LENGTH_SHORT)
-                                                .show();
-                                    } else {
-                                        Toast.makeText(
-                                                FileApiActivity.this,
-                                                getResources().getString(R.string.file_exists),
-                                                Toast.LENGTH_LONG)
-                                                .show();
-                                        EditDialogFragment.newInstance(
-                                                "",
-                                                name,
-                                                (newName, dialog) -> {
-                                                    realDivideAudio(newName);
-                                                    dialog.dismiss();
-                                                })
-                                                .show(getSupportFragmentManager(), "EditDialogFragment");
-                                    }
-                                });
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        runOnUiThread(
-                                () -> {
-                                    isProcessing = false;
-                                    Toast.makeText(FileApiActivity.this, "Cancel !", Toast.LENGTH_SHORT).show();
-                                    hideProgress();
-                                });
+                    isProcessing = false;
+                    hideProgress();
+                    if (errorCode != HAEErrorCode.FAIL_FILE_EXIST) {
+                        Toast.makeText(FileApiActivity.this, "ErrorCode : " + errorCode, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(FileApiActivity.this, getResources().getString(R.string.file_exists),
+                                Toast.LENGTH_LONG).show();
+                        EditDialogFragment.newInstance("", name, (newName, dialog) -> {
+                            realDivideAudio(newName);
+                            dialog.dismiss();
+                        }).show(getSupportFragmentManager(), "EditDialogFragment");
                     }
                 });
+            }
+
+            @Override
+            public void onCancel() {
+                runOnUiThread(() -> {
+                    isProcessing = false;
+                    Toast.makeText(FileApiActivity.this, "Cancel !", Toast.LENGTH_SHORT).show();
+                    hideProgress();
+                });
+            }
+        });
     }
 
     // Voice separation function of the terminal test version
     private void realLocalDivideAudio(String name) {
         showProgress();
-        audioSeparationFile =new HAELocalAudioSeparationFile();
+        audioSeparationFile = new HAELocalAudioSeparationFile();
 
         localInstruments = new ArrayList<>();
         // The current version supports only voice separation.
-        localInstruments.add(AudioParameters.VOCALS);
+        localInstruments.add(AudioSeparationType.VOCALS);
         audioSeparationFile.setInstruments(localInstruments);
         audioSeparationFile.startSeparationTask(filePath, outputPath, name, new AudioSeparationCallBack() {
             @Override
             public void onResult(SeparationBean separationBean) {
-                runOnUiThread(
-                        () -> {
-                            Toast.makeText(
-                                    FileApiActivity.this,
-                                    separationBean.getInstrument()
-                                            + " Success: "
-                                            + separationBean.getOutAudioPath(),
-                                    Toast.LENGTH_SHORT)
-                                    .show();
-                            isProcessing = false;
-                        });
+                runOnUiThread(() -> {
+                    Toast.makeText(FileApiActivity.this,
+                            separationBean.getInstrument() + " Success: " + separationBean.getOutAudioPath(),
+                            Toast.LENGTH_SHORT).show();
+                    isProcessing = false;
+                });
 
             }
 
             @Override
             public void onFinish(List<SeparationBean> separationBeans) {
-                runOnUiThread(
-                        () -> {
-                            isProcessing = false;
-                            hideProgress();
-                        });
+                runOnUiThread(() -> {
+                    isProcessing = false;
+                    hideProgress();
+                });
 
             }
 
-
             @Override
             public void onFail(int errorCode) {
-                runOnUiThread(
-                        () -> {
+                runOnUiThread(() -> {
 
-                            isProcessing = false;
-                            hideProgress();
-                            if (errorCode != HAEErrorCode.FAIL_FILE_EXIST) {
-                                Toast.makeText(FileApiActivity.this, "ErrorCode : " + errorCode, Toast.LENGTH_SHORT)
-                                        .show();
-                            } else {
-                                Toast.makeText(
-                                        FileApiActivity.this,
-                                        getResources().getString(R.string.file_exists),
-                                        Toast.LENGTH_LONG)
-                                        .show();
-                                EditDialogFragment.newInstance(
-                                        "",
-                                        name,
-                                        (newName, dialog) -> {
-                                            realLocalDivideAudio(newName);
-                                            dialog.dismiss();
-                                        })
-                                        .show(getSupportFragmentManager(), "EditDialogFragment");
-                            }
-                        });
+                    isProcessing = false;
+                    hideProgress();
+                    if (errorCode != HAEErrorCode.FAIL_FILE_EXIST) {
+                        Toast.makeText(FileApiActivity.this, "ErrorCode : " + errorCode, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(FileApiActivity.this, getResources().getString(R.string.file_exists),
+                                Toast.LENGTH_LONG).show();
+                        EditDialogFragment.newInstance("", name, (newName, dialog) -> {
+                            realLocalDivideAudio(newName);
+                            dialog.dismiss();
+                        }).show(getSupportFragmentManager(), "EditDialogFragment");
+                    }
+                });
             }
 
             @Override
             public void onCancel() {
-                runOnUiThread(
-                        () -> {
-                            isProcessing = false;
-                            Toast.makeText(FileApiActivity.this, "Cancel !", Toast.LENGTH_SHORT).show();
-                            hideProgress();
-                        });
+                runOnUiThread(() -> {
+                    isProcessing = false;
+                    Toast.makeText(FileApiActivity.this, "Cancel !", Toast.LENGTH_SHORT).show();
+                    hideProgress();
+                });
             }
         });
 
@@ -801,104 +738,110 @@ public class FileApiActivity extends AppCompatActivity
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
-            case R.id.rb_uncle:
-                currentVoiceType = UNCLE;
+            case R.id.rb_uncle :
+                currentVoiceType = ChangeVoiceOption.VoiceType.SEASONED.ordinal();
                 changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.SEASONED);
                 haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
                 resetpitch();
                 break;
-            case R.id.rb_lori:
-                currentVoiceType = LORI;
+            case R.id.rb_lori :
+                currentVoiceType = ChangeVoiceOption.VoiceType.CUTE.ordinal();
                 changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.CUTE);
                 haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
                 resetpitch();
                 break;
-            case R.id.rb_female:
-                currentVoiceType = FEMALE;
+            case R.id.rb_female :
+                currentVoiceType = ChangeVoiceOption.VoiceType.FEMALE.ordinal();
                 changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.FEMALE);
                 haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
                 resetpitch();
                 break;
-            case R.id.rb_male:
-                currentVoiceType = MALE;
+            case R.id.rb_male :
+                currentVoiceType = ChangeVoiceOption.VoiceType.MALE.ordinal();
                 changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.MALE);
                 haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
                 resetpitch();
                 break;
-            case R.id.rb_monsters:
-                currentVoiceType = MONSTERS;
+            case R.id.rb_monsters :
+                currentVoiceType = ChangeVoiceOption.VoiceType.MONSTER.ordinal();
                 changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.MONSTER);
                 haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
                 resetpitch();
                 break;
-            case R.id.rb_gb:
+            case R.id.rb_robots :
+                currentVoiceType = ChangeVoiceOption.VoiceType.ROBOTS.ordinal();
+                changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.ROBOTS);
+                haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
+                resetpitch();
+                break;
+            case R.id.rb_cartoon :
+                currentVoiceType = ChangeVoiceOption.VoiceType.CARTOON.ordinal();
+                changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.CARTOON);
+                haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
+                resetpitch();
+                break;
+            case R.id.rb_gb :
                 haeSceneFile.setTypeOfFile(AudioParameters.ENVIRONMENT_TYPE_BROADCAST);
                 break;
-            case R.id.rb_tel:
+            case R.id.rb_tel :
                 haeSceneFile.setTypeOfFile(AudioParameters.ENVIRONMENT_TYPE_EARPIECE);
                 break;
-            case R.id.rb_sx:
+            case R.id.rb_sx :
                 haeSceneFile.setTypeOfFile(AudioParameters.ENVIRONMENT_TYPE_UNDERWATER);
                 break;
-            case R.id.rb_cd:
+            case R.id.rb_cd :
                 haeSceneFile.setTypeOfFile(AudioParameters.ENVIRONMENT_TYPE_GRAMOPHONE);
                 break;
-            case R.id.rb_sound_0:
+            case R.id.rb_sound_0 :
                 haeSoundFieldFile.setTypeOfFile(AudioParameters.SOUND_FIELD_WIDE);
                 break;
-            case R.id.rb_sound_1:
+            case R.id.rb_sound_1 :
                 haeSoundFieldFile.setTypeOfFile(AudioParameters.SOUND_FIELD_FRONT_FACING);
                 break;
-            case R.id.rb_sound_2:
+            case R.id.rb_sound_2 :
                 haeSoundFieldFile.setTypeOfFile(AudioParameters.SOUND_FIELD_NEAR);
                 break;
-            case R.id.rb_sound_3:
+            case R.id.rb_sound_3 :
                 haeSoundFieldFile.setTypeOfFile(AudioParameters.SOUND_FIELD_GRAND);
                 break;
-            case R.id.rb_pops:
+            case R.id.rb_pops :
                 haeEqualizerFile.setEqValueOfFile(AudioParameters.EQUALIZER_POP_VALUE);
                 break;
-            case R.id.rb_classic:
+            case R.id.rb_classic :
                 haeEqualizerFile.setEqValueOfFile(AudioParameters.EQUALIZER_CLASSICAL_VALUE);
                 break;
-            case R.id.rb_jazz:
+            case R.id.rb_jazz :
                 haeEqualizerFile.setEqValueOfFile(AudioParameters.EQUALIZER_JAZZ_VALUE);
                 break;
-            case R.id.rb_rock:
+            case R.id.rb_rock :
                 haeEqualizerFile.setEqValueOfFile(AudioParameters.EQUALIZER_ROCK_VALUE);
                 break;
-            case R.id.rb_rb:
+            case R.id.rb_rb :
                 haeEqualizerFile.setEqValueOfFile(AudioParameters.EQUALIZER_RB_VALUE);
                 break;
-            case R.id.rb_ballads:
+            case R.id.rb_ballads :
                 haeEqualizerFile.setEqValueOfFile(AudioParameters.EQUALIZER_BALLADS_VALUE);
                 break;
-            case R.id.rb_dance_music:
+            case R.id.rb_dance_music :
                 haeEqualizerFile.setEqValueOfFile(AudioParameters.EQUALIZER_DANCE_MUSIC_VALUE);
                 break;
-            case R.id.rb_chinese_style:
+            case R.id.rb_chinese_style :
                 haeEqualizerFile.setEqValueOfFile(AudioParameters.EQUALIZER_CHINESE_STYLE_VALUE);
                 break;
-            case R.id.rb_man:
+            case R.id.rb_man :
                 changeVoiceOption.setSpeakerSex(ChangeVoiceOption.SpeakerSex.MALE);
                 haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
                 resetpitch();
                 break;
-            case R.id.rb_woman:
+            case R.id.rb_woman :
                 changeVoiceOption.setSpeakerSex(ChangeVoiceOption.SpeakerSex.FEMALE);
                 haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
                 resetpitch();
                 break;
-            case R.id.rb_high:
-                changeVoiceOption.setVocalPart(ChangeVoiceOption.VocalPart.HIGH);
-                break;
-            case R.id.rb_center:
+            case R.id.rb_center :
                 changeVoiceOption.setVocalPart(ChangeVoiceOption.VocalPart.MIDDLE);
                 break;
-            case R.id.rb_low:
-                changeVoiceOption.setVocalPart(ChangeVoiceOption.VocalPart.LOW);
-                break;
-            default:
+            default :
                 break;
         }
     }
@@ -943,35 +886,15 @@ public class FileApiActivity extends AppCompatActivity
         } else {
             pitch = femalePitch;
         }
-        if (currentVoiceType == UNCLE) {
-            return pitch[0];
-        } else if (currentVoiceType == MONSTERS) {
-            return pitch[1];
-        } else if (currentVoiceType == LORI) {
-            return pitch[2];
-        } else if (currentVoiceType == MALE || currentVoiceType == FEMALE) {
-            if(mRbMan.isChecked()){
-                if(currentVoiceType == MALE){
-                    return pitch[4];
-                }else{
-                    return pitch[3];
-                }
-            }else{
-                if(currentVoiceType == MALE){
-                    return pitch[3];
-                }else{
-                    return pitch[4];
-                }
-            }
-        }
-        return 0;
+        return pitch[currentVoiceType];
     }
 
     private void resetpitch() {
         int pitchProgress = pitchToProgress(getDefaultPitch());
         mSbTones.setProgress(pitchProgress);
     }
+
     private int pitchToProgress(float pitch) {
-        return (int) (pitch * 20-6);
+        return (int) (pitch * 20 - 6);
     }
 }

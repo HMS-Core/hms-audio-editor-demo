@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MySeekBar">
+        <attr name="main_bg" format="color" />
+        <attr name="line_bg" format="color" /> <!--滑动条背景色-->
+        <attr name="value_bg" format="color" />
+        <attr name="line_width" format="dimension" />
+        <attr name="progress_min" format="integer" />
+        <attr name="progress_max" format="integer" />
+        <attr name="progress" format="integer" />
+        <attr name="progress_anchor" format="integer" />
+        <attr name="step" format="integer" />
+        <attr name="show_text" format="boolean" />
+    </declare-styleable>
+</resources>

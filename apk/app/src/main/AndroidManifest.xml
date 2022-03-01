@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.huawei.hms.audioeditor.demo">
-    <!-- 允许程序振动 UI操作的震动反馈需要 -->
+    <!-- Vibration feedback requirements to allow program vibration UI operation -->
     <uses-permission android:name="android.permission.VIBRATE" />
-    <!-- 允许程序录音 音频录音功能需要 -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 允许程序写入外部存储, 素材存储，录音文件等本地存储需要 -->
+    <!-- Allow Program Recording Audio Recording Required -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />

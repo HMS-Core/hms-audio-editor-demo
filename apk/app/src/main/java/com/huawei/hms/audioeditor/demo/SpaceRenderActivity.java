@@ -16,6 +16,8 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.huawei.hms.audioeditor.demo.util.FileUtils;
 import com.huawei.hms.audioeditor.demo.widget.EditDialogFragment;
@@ -27,9 +29,7 @@ import com.huawei.hms.audioeditor.sdk.SpaceRenderExtensionParams;
 import com.huawei.hms.audioeditor.sdk.SpaceRenderMode;
 import com.huawei.hms.audioeditor.sdk.SpaceRenderPositionParams;
 import com.huawei.hms.audioeditor.sdk.SpaceRenderRotationParams;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import com.huawei.hms.audioeditor.sdk.DownloadCallback;
 
 /**
  * content：
@@ -67,7 +67,7 @@ public class SpaceRenderActivity extends AppCompatActivity
     private SpaceRenderPositionView renderFront1;
     private SpaceRenderPositionView renderTop1;
     private Button mStartRendering;
-    private String outputPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    private String outputPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
     private String currentName = "";
     private String typeName = "";
     private ProgressDialog progressDialog;

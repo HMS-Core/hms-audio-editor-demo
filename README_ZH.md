@@ -35,9 +35,12 @@
 		    |-- FileApiActivity  // demo 各功能文件接口
 		    |-- StreamApiActivity  // demo 各功能流式接口
 	        |-- AudioBaseActivity  // demo 基础功能集成
-	|-- base_edit_audio
+	|-- base_audioeditor
 	    |-- com.huawei.audioeditor.demo.apk
 	        |-- AudioBaseActivity  // demo 基础功能集成
+	|-- aidubbing_audioeditor
+        |-- com.huawei.audioeditor.demo.apk
+            |-- AiDubbingAudioActivity  // AI 配音 集成
 ```
 
 ## 运行步骤

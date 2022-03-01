@@ -31,19 +31,10 @@
         android:gravity="center_vertical">
 
         <RadioButton
-            android:id="@+id/rb_high"
-            style="@style/style_api_rb"
-            android:text="@string/voice_high"
-            android:checked="true" />
-
-        <RadioButton
             android:id="@+id/rb_center"
             style="@style/style_api_rb"
             android:text="@string/voice_center"/>
-        <RadioButton
-            android:id="@+id/rb_low"
-            style="@style/style_api_rb"
-            android:text="@string/voice_low"/>
+
     </RadioGroup>
     <HorizontalScrollView
         android:layout_width="match_parent"
@@ -82,6 +73,16 @@
                 android:id="@+id/rb_monsters"
                 style="@style/style_api_rb"
                 android:text="@string/sound_monsters"/>
+
+            <RadioButton
+                android:id="@+id/rb_robots"
+                style="@style/style_api_rb"
+                android:text="@string/sound_robots"/>
+
+            <RadioButton
+                android:id="@+id/rb_cartoon"
+                style="@style/style_api_rb"
+                android:text="@string/sound_cartoon"/>
 
         </RadioGroup>
 

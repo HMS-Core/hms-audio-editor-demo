@@ -27,7 +27,6 @@
     <string name="audio_format_wav">WAV</string>
     <string name="audio_format_m4a">M4A</string>
     <string name="audio_format_aac">AAC</string>
-    <string name="audio_format_flac">FLAC</string>
     <string name="transfer_btn">转换</string>
     <string name="format_title">音频格式转换</string>
     <string name="save_path">存储至 %s</string>
@@ -125,7 +124,6 @@
     <string name="no_write_permission">存储权限获取失败</string>
     <string name="local_separation">"音源分离(端侧版本)"</string>
     <string name="cloud_separation">"音源分离(云侧版本)"</string>
-    <!--基础功能-->
     <string name="title_audio_base">基础功能</string>
     <string name="begin_import_file">导入</string>
     <string name="base_export">导出</string>
@@ -145,16 +143,21 @@
     <string name="asset_fade">淡入淡出</string>
     <string name="get_wave_data_tip">获取波形数据\n(默认原音频,显示数据长度):</string>
     <string name="delete_tip">删除\n(示例是删除第一个音频)</string>
+    <string name="play_delay">请等待导出完成后播放</string>
 
     <string name="start_download_model">开始初始化模型</string>
     <string name="success_download_model">模型初始化成功</string>
     <string name="err_download_model">模型初始化失败！错误码：%s</string>
-    <string name="play_delay">请等待导出完成后播放</string>
     <string name="title_progress">进度</string>
     <string name="error_1007">模型下载失败</string>
+    <string name="sound_robots">机器人</string>
+    <string name="sound_cartoon">卡通</string>
     <string name="no_delete_audio">无可删音频</string>
     <string name="wait_for_wave">等待波形数据</string>
     <string name="input_name_hint">请输入名称</string>
+    <string name="select_lan" priority="translator">请选择语言</string>
+    <string name="select_style" priority="translator">请选择风格</string>
+    <string name="text_complete">完成</string>
 
 </resources>
 

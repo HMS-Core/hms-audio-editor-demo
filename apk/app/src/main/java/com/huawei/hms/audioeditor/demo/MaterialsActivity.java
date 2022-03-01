@@ -17,6 +17,7 @@ package com.huawei.hms.audioeditor.demo;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -29,9 +30,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.huawei.hms.audioeditor.sdk.HAEMaterialsManageFile;
 import com.huawei.hms.audioeditor.sdk.materials.network.MaterialsCallBack;
 import com.huawei.hms.audioeditor.sdk.materials.network.MaterialsDownloadCallBack;
-import com.huawei.hms.audioeditor.sdk.materials.network.inner.bean.MaterialMenu;
-import com.huawei.hms.audioeditor.sdk.materials.network.response.MaterialsCutColumn;
-import com.huawei.hms.audioeditor.sdk.materials.network.response.MaterialsCutContent;
+import com.huawei.hms.audioeditor.sdk.materials.bean.MaterialMenu;
+import com.huawei.hms.audioeditor.sdk.materials.bean.MaterialsCutColumn;
+import com.huawei.hms.audioeditor.sdk.materials.bean.MaterialsCutContent;
 import com.huawei.hms.audioeditor.sdk.util.FileUtil;
 
 import com.google.android.material.tabs.TabLayout;
@@ -89,8 +90,7 @@ public class MaterialsActivity extends AppCompatActivity
                                     new MaterialsCallBack<String>() {
                                         @Override
                                         public void onFinish(String downloadUrl) {
-                                            String saveDirectory =
-                                                    FileUtil.getAudioExtractStorageDirectory(getBaseContext());
+                                            String saveDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
                                             String saveName = "material-" + System.currentTimeMillis();
                                             materialsManageFile.downloadResource(
                                                     downloadUrl,
@@ -167,7 +167,7 @@ public class MaterialsActivity extends AppCompatActivity
                 new TabLayout.OnTabSelectedListener() {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
-                        // 获取素材栏目
+                        // Obtaining Material Columns
                         fatherId = (String) tab.getTag();
                         getColumns(fatherId);
                         if (mMediaPlayer != null) {
@@ -245,7 +245,7 @@ public class MaterialsActivity extends AppCompatActivity
         mRecyclerView.setItemAnimator(null);
         mRecyclerView.setAdapter(mMaterialAdapter);
 
-        // 获取素材类型
+        // Obtain the material type.
         materialsManageFile.getFatherId(new MaterialsCallBack<List<MaterialMenu>>() {
             @Override
             public void onFinish(List<MaterialMenu> list) {
@@ -257,7 +257,7 @@ public class MaterialsActivity extends AppCompatActivity
                     tabLayoutFather.addTab(tab);
                 }
 
-                // 目前有两个大类，0是音效，1是乐段
+                // Currently, there are two categories: 0 for sound effects and 1 for music segments.
                 fatherId = list.get(0).getMenuId();
                 getColumns(fatherId);
             }
@@ -273,7 +273,7 @@ public class MaterialsActivity extends AppCompatActivity
     }
 
     private void getColumns(String fatherId) {
-        // 获取素材栏目列表
+        // Obtains the material column list.
         materialsManageFile.getColumnsByFatherColumnId(
                 fatherId,
                 new MaterialsCallBack<List<MaterialsCutColumn>>() {
@@ -283,7 +283,7 @@ public class MaterialsActivity extends AppCompatActivity
                         tabLayoutFatherSecond.removeAllTabs();
                         mColumnsList = response;
                         for (int i = 0; i < response.size(); i++) {
-                            // 乐段分 乐器，风格类型
+                            // Segments are divided into instruments, style types.
                             TabLayout.Tab tab = tabLayoutFatherSecond.newTab();
                             tab.setText(response.get(i).getColumnName());
                             tab.setTag(response.get(i).getColumnId());
@@ -304,7 +304,7 @@ public class MaterialsActivity extends AppCompatActivity
     private void initBottomTab(List<MaterialsCutColumn> response, String fatherId) {
         int fatherSecondIndex = tabLayoutFatherSecond.getSelectedTabPosition();
         tabLayout.removeAllTabs();
-        // 乐器或者风格，类型下面的素材分类
+        // Musical instrument or style, material classification under type
         if (response.get(fatherSecondIndex).getChildren() != null) {
             tabLayout.setVisibility(View.VISIBLE);
             for (int j = 0; j < response.get(fatherSecondIndex).getChildren().size(); j++) {

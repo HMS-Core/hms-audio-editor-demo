@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#181818</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#3C3F41</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="transparent">#00000000</color>
+    <color name="common_line_color">#FFFFFFFF</color>
+    <color name="common_text_color">#FFBB3CEC</color>
+
+    <color name="default_blue">#FF007DFF</color>
+
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+
+    <color name="clr_normal">#1AFFFFFF</color>
+    <color name="pick_line_color">#FF3B274C</color>
+    <color name="pick_add_select_color">#FF8008</color>
+    <color name="color_90">#909090</color>
+    <color name="color_333">#333333</color>
+    <color name="color_666">#666666</color>
+    <color name="color_999">#999999</color>
+    <color name="color_fff_60">#99FFFFFF</color>
+    <color name="color_ccc_20">#33000000</color>
+    <color name="color_fff_20">#33FFFFFF</color>
+    <color name="color_fff_40">#66FFFFFF</color>
+    <color name="color_fff_86">#DBFFFFFF</color>
+    <color name="color_FF8008_30">#4DFF8008</color>
+    <color name="bottom_edit_fg_bg">#161616</color>
+    <color name="color_module_select_red">#FF2332</color>
+    <color name="title_tv">#DBFFFFFF</color>
+
+    <color name="seekbar_value_yellow">#FFEC3CBD</color>
+
+    <color name="gold">#BCA56F</color>
+    <color name="oragin">#D94E38</color>
+    <color name="video_edit_main_bg_color">#FF101010</color>
+
+    <color name="edit_background">#FF0D0326</color>
+
+    <color name="yellow_text_selected">#FFC837</color>
+    <color name="orange_text_selected">#FF8008</color>
+    <color name="grey_text">#99FFFFFF</color>
+    <color name="track_view_bg">#FF101010</color>
+    <color name="pure_black">#FF000000</color>
+    <color name="export_bg">#101010</color>
+
+    <color name="local_music_normal_color">#66FFFFFF</color>
+    <color name="color_20">#202020</color>
+    <color name="color_fff_10">#1AFFFFFF</color>
+
+    <color name="black_20">#33000000</color>
+    <color name="black_80">#FF000000</color>
+    <color name="speedBarTextColor">#DBFFFFFF</color>
+    <color name="launch_name_color">#FFFF8008</color>
+    <color name="launch_hint_title_color">#E6000000</color>
+    <color name="launch_hint_dialog_bg_color">#FFF6F6F6</color>
+    <color name="launch_hint_dialog_cancel_color">#CC000000</color>
+    <color name="launch_hint_dialog_affirm_color">#FFFF8008</color>
+
+    <color name="clip_color_E6000000">#E6000000</color>
+    <color name="clip_color_E6FFFFFF">#E6FFFFFF</color>
+    <color name="clip_color_99000000">#99000000</color>
+
+    <!--白色透明度-->
+    <color name="translucent_white_05">#F2FFFFFF</color>
+    <color name="translucent_white_10">#E6FFFFFF</color>
+    <color name="translucent_white_14">#DBFFFFFF</color>
+    <color name="translucent_white_40">#99FFFFFF</color>
+    <color name="translucent_white_80">#33FFFFFF</color>
+    <color name="translucent_white_100">#00FFFFFF</color>
+
+    <!--黑色透明度-->
+    <color name="translucent_black_05">#F2000000</color>
+    <color name="filterdialog">#F6F6F6</color>
+    <color name="video_edit_photo">#FF2D2D2D</color>
+
+    <color name="app_main_color">#FF0D0326</color>
+    <color name="app_statusBarColor">#FF0D0326</color>
+    <color name="app_navigationBarColor">#FF0D0326</color>
+    <color name="video_clips_color">#101010</color>
+    <color name="menu_background">#FF231931</color>
+    <color name="menu_panel_background">#202020</color>
+
+    <color name="wave_color">#231931</color>
+    <color name="wave_center_color">#FDC82C</color>
+    <color name="wave_line_color">#8981F7</color>
+
+    <color name="app_bg">#FF0D0326</color>
+    <color name="progress_bg">#FF0B042D</color>
+    <color name="audio_format_text_color1">#FF8981F7</color>
+    <color name="audio_format_text_color2">#FFFFFFFF</color>
+
+    <color name="text_color_white_99">#99FFFFFF</color>
+    <color name="text_color_09">#e5FFFFFF</color>
+    <color name="text_color_main">#6555E6</color>
+
+    <color name="bg_sound">#467794</color>
+    <color name="bg_style">#5C8059</color>
+    <color name="bg_sound_2">#467794</color>
+    <color name="bg_sound_3">#467794</color>
+    <color name="import_button_search">#6555E6</color>
+    <color name="export_seek_color">#6555E6</color>
+    <color name="seekbar_bg_color">#50ffffff</color>
+    <color name="bg_equilibrium">#9F644F</color>
+    <color name="bg_voice_change">#A14A5C</color>
+    <color name="bg_reduce_noise">#997E39</color>
+    <color name="bg_environment">#3D4D91</color>
+
+    <color name="blue">#6555E6</color>
+    <color name="button_background">#5CACEE</color>
+    <color name="secondary_text_color">#626262</color>
+    <color name="primary_background">#f2f2f2</color>
+    <color name="main_background">#262331</color>
+    <color name="divide">#262331</color>
+
+</resources>

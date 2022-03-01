@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ai Dubbing</string>
+
+    <string name="queuing_mode">Queuing Mode</string>
+    <string name="clear_mode">Clear Mode</string>
+    <string name="back">back</string>
+    <string name="dubbing_s">Text to speech</string>
+    <string name="intro">text to speak</string>
+    <string name="language">Language:</string>
+    <string name="style">Style:</string>
+    <string name="mode">Play Mode:</string>
+    <string name="volume_demo">Volume:</string>
+    <string name="speech_rate">Speech Rate:</string>
+    <string name="queue_add">Start synthesis</string>
+    <string name="play">Play Result</string>
+    <string name="release_dubbing">stop</string>
+    <string name="pause">pause</string>
+    <string name="resume">resume</string>
+    <string name="asr_mark">* This service is only available for Huawei mobile phones</string>
+    <string name="chinese">Chinese</string>
+    <string name="simplified_chinese">Simplified Chinese</string>
+    <string name="english_choose">English</string>
+    <string name="french">French</string>
+    <string name="Italian">Italian</string>
+    <string name="German">German</string>
+    <string name="spanish">Spanish</string>
+    <string name="male_zh">Chinese male voice</string>
+    <string name="male_en_eagle">English male voice - eagle</string>
+    <string name="female_en_eagle">English female voice-eagle</string>
+    <string name="male_en">English male voice</string>
+    <string name="female_fr">French female voice</string>
+    <string name="female_es">Spanish female voice</string>
+    <string name="female_en">English female voice</string>
+    <string name="female_zh">Chinese female voice</string>
+    <string name="female_de">German female voice</string>
+    <string name="female_it">Italian female voice</string>
+    <string name="init_progress">50%</string>
+    <string name="nonetwork">The network is not connected.</string>
+    <string name="speak_abnormal">Language and Pronunciation Mismatch</string>
+    <string name="abnormal">The service is abnormal.</string>
+    <string name="replay">Retry</string>
+    <string name="str_ok">determine</string>
+    <string name="please_enter_text">Please enter the text ~</string>
+    <string name="text_to_audio">AI dubbing</string>
+    <string name="queue_add_center">Synthesis</string>
+
+    <string name="text_to_audio_error_1" priority="translator">Invalid parameter.</string>
+    <string name="text_to_audio_error_2" priority="LT">Network error.</string>
+    <string name="text_to_audio_error_3" priority="translator">Insufficient balance.</string>
+    <string name="text_to_audio_error_4" priority="translator">Speech generation failed.</string>
+    <string name="text_to_audio_error_5" priority="translator">Audio playback error.</string>
+    <string name="text_to_audio_error_6" priority="translator">Authentication failed.</string>
+    <string name="text_to_audio_error_7" priority="translator">The token has expired or is invalid.</string>
+    <string name="text_to_audio_error_8" priority="LT">Something went wrong.</string>
+    <string name="text_to_audio_error_9" priority="LT">Unknown error.</string>
+    <string name="text_to_audio_error" priority="LT">Network not responding.</string>
+    <string name="error_80005" priority="LT">Unable to use Chinese with this voice.</string>
+    <string name="error_2002" priority="LT">Contains unsupported characters.</string>
+    <string name="text_to_speech_toast_1" priority="translator">Enter some text.</string>
+    <string name="select_lan" priority="translator">Please select a language.</string>
+    <string name="select_style" priority="translator">Please select a style.</string>
+</resources>
