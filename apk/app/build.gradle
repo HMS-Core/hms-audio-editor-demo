@@ -28,9 +28,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-   lintOptions {
-       abortOnError false
-   }
+    lintOptions {
+        abortOnError false
+    }
 
     android.applicationVariants.all {
         variant ->
@@ -51,7 +51,7 @@ dependencies {
     implementation('com.github.bumptech.glide:glide:4.11.0') {
         exclude group: "com.android.support"
     }
-
+    implementation('com.huawei.agconnect:agconnect-core:1.5.2.300')
     implementation('com.huawei.hms:audio-editor-ui:1.4.0.301')
 
 }
