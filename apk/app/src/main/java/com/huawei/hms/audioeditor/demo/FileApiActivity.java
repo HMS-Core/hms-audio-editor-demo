@@ -24,10 +24,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import com.huawei.hms.audioeditor.demo.util.FileUtils;
 import com.huawei.hms.audioeditor.demo.widget.EditDialogFragment;
 import com.huawei.hms.audioeditor.sdk.AudioParameters;
@@ -51,6 +47,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 /**
  * File Interface
@@ -81,7 +81,7 @@ public class FileApiActivity extends AppCompatActivity
     private Button beginFileReduction;
     private Button beginDevide;
     private CheckBox rbAccompaniment;
-    private RadioButton rbVocals;
+    private CheckBox rbVocals;
     private CheckBox rbFiddle;
     private CheckBox rbGuitar;
     private CheckBox rbPiano;
@@ -297,17 +297,53 @@ public class FileApiActivity extends AppCompatActivity
         mRbFemale = findViewById(R.id.rb_female);
         mRbMale = findViewById(R.id.rb_male);
 
+        localInstruments = new ArrayList<>();
+        // default
+        localInstruments.add(AudioSeparationType.VOCALS);
         rbVocals = findViewById(R.id.rbVocals);
         rbVocals.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!instruments.contains(AudioSeparationType.VOCALS)) {
-                        instruments.add(AudioSeparationType.VOCALS);
-                    }
-
+                    localInstruments.add(AudioSeparationType.VOCALS);
                 } else {
-                    instruments.remove(AudioSeparationType.VOCALS);
+                    localInstruments.remove(AudioSeparationType.VOCALS);
+                }
+            }
+        });
+
+        CheckBox rbGuitar = findViewById(R.id.rbGuitar);
+        rbGuitar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    localInstruments.add(AudioSeparationType.AGUITAR);
+                } else {
+                    localInstruments.remove(AudioSeparationType.AGUITAR);
+                }
+            }
+        });
+
+        CheckBox rbElectricGuitar = findViewById(R.id.rbElectricGuitar);
+        rbElectricGuitar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    localInstruments.add(AudioSeparationType.EGUITAR);
+                } else {
+                    localInstruments.remove(AudioSeparationType.EGUITAR);
+                }
+            }
+        });
+
+        CheckBox rbPiano = findViewById(R.id.rbPiano);
+        rbPiano.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    localInstruments.add(AudioSeparationType.PIANO);
+                } else {
+                    localInstruments.remove(AudioSeparationType.PIANO);
                 }
             }
         });
@@ -558,7 +594,7 @@ public class FileApiActivity extends AppCompatActivity
             Toast.makeText(this, getResources().getString(R.string.select_none_audio), Toast.LENGTH_SHORT).show();
             return;
         }
-        String name = getOrgName() + "_vocals";
+        String name = getOrgName();
         realLocalDivideAudio(name);
     }
 
@@ -619,10 +655,6 @@ public class FileApiActivity extends AppCompatActivity
     private void realLocalDivideAudio(String name) {
         showProgress();
         audioSeparationFile = new HAELocalAudioSeparationFile();
-
-        localInstruments = new ArrayList<>();
-        // The current version supports only voice separation.
-        localInstruments.add(AudioSeparationType.VOCALS);
         audioSeparationFile.setInstruments(localInstruments);
         audioSeparationFile.startSeparationTask(filePath, outputPath, name, new AudioSeparationCallBack() {
             @Override
