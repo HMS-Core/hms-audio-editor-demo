@@ -20,19 +20,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.huawei.hms.audioeditor.common.agc.HAEApplication;
 import com.huawei.hms.audioeditor.demo.util.FileUtils;
@@ -43,9 +37,18 @@ import com.huawei.hms.audioeditor.sdk.AudioExtractCallBack;
 import com.huawei.hms.audioeditor.sdk.HAEAudioExpansion;
 import com.huawei.hms.audioeditor.sdk.HAEErrorCode;
 import com.huawei.hms.audioeditor.sdk.util.FileUtil;
+import com.huawei.hms.audioeditor.ui.api.AudioEditorLaunchOption;
 import com.huawei.hms.audioeditor.ui.api.AudioExportCallBack;
 import com.huawei.hms.audioeditor.ui.api.AudioInfo;
 import com.huawei.hms.audioeditor.ui.api.HAEUIManager;
+
+import java.io.File;
+import java.io.IOException;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -109,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
         initView();
         initEvent();
         // scan new files in storage
-        MediaScannerConnection.scanFile(this, new String[]{Environment
-                .getExternalStorageDirectory().getAbsolutePath()}, null, null);
+        MediaScannerConnection.scanFile(this, new String[] { Environment
+                .getExternalStorageDirectory().getAbsolutePath() }, null, null);
 
         // Setting the APIkey of the SDK
         HAEApplication.getInstance().setApiKey("Set your APIKey");
@@ -240,8 +243,20 @@ public class MainActivity extends AppCompatActivity {
      * Import audio and enter the audio editing interface management class.
      */
     private void startUIActivity() {
-        HAEUIManager.getInstance().launchEditorActivity(this);
+        AudioEditorLaunchOption.Builder builder = new AudioEditorLaunchOption.Builder();
+        String exportUrl = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getPath() + File.separator;
+        builder.setExportPath(exportUrl);
         HAEUIManager.getInstance().setCallback(callBack);
+        try {
+            HAEUIManager.getInstance().launchEditorActivity(this, builder.build());
+        } catch (IOException e) {
+            Toast.makeText(
+                    MainActivity.this,
+                    "IOException, check your file Permission",
+                    Toast.LENGTH_LONG)
+                    .show();
+        }
+
     }
 
     // Start the audio format conversion page.

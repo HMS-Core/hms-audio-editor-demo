@@ -157,4 +157,9 @@
     <string name="select_lan" priority="translator">Please select a language.</string>
     <string name="select_style" priority="translator">Please select a style.</string>
     <string name="text_complete">complete</string>
+
+    <string name="separation_accomp">accomp</string>
+    <string name="separation_brass">brass</string>
+    <string name="separation_string">string</string>
+    <string name="separation_main">lead_vocals</string>
 </resources>

@@ -159,5 +159,15 @@
     <string name="select_style" priority="translator">请选择风格</string>
     <string name="text_complete">完成</string>
 
+    <string name="separation_drums">鼓</string>
+    <string name="separation_bass">贝司</string>
+    <string name="separation_piano">钢琴</string>
+    <string name="separation_guitar">吉他</string>
+    <string name="separation_electric_guitar">电吉他</string>
+    <string name="separation_vocals">人声</string>
+    <string name="separation_accomp">伴奏</string>
+    <string name="separation_brass">管乐</string>
+    <string name="separation_string">弦乐</string>
+    <string name="separation_main">主唱</string>
 </resources>
 

@@ -275,13 +275,41 @@
                 android:id="@+id/begin_devide"
                 style="@style/style_api_btn"
                 android:text="@string/cloud_separation"/>
+            <HorizontalScrollView
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <RadioButton
-                android:layout_marginTop="10dp"
-                android:id="@+id/rbVocals"
-                style="@style/style_api_rb"
-                android:text="@string/vocal"
-                android:checked="true"/>
+                    <CheckBox
+                        android:id="@+id/rbVocals"
+                        style="@style/style_api_rb"
+                        android:layout_marginTop="10dp"
+                        android:checked="true"
+                        android:text="@string/vocal" />
+
+                    <CheckBox
+                        android:id="@+id/rbGuitar"
+                        style="@style/style_api_rb"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/separation_guitar" />
+
+                    <CheckBox
+                        android:id="@+id/rbElectricGuitar"
+                        style="@style/style_api_rb"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/separation_electric_guitar" />
+
+                    <CheckBox
+                        android:id="@+id/rbPiano"
+                        style="@style/style_api_rb"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/separation_piano" />
+                </LinearLayout>
+            </HorizontalScrollView>
 
             <Button
                 android:id="@+id/begin_vocals_devide"
