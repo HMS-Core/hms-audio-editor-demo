@@ -58,9 +58,9 @@
 
     <style name="style_api_rb">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">52dp</item>
+        <item name="android:layout_height">40dp</item>
         <item name="android:textColor">#FFFFFF</item>
-        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingEnd">10dp</item>
         <item name="android:layoutDirection">locale</item>
     </style>
 
@@ -88,5 +88,14 @@
         <item name="android:layout_marginStart">@dimen/dp_16</item>
         <item name="android:layout_marginEnd">@dimen/dp_16</item>
         <item name="android:padding">@dimen/dp_12</item>
+    </style>
+
+    <style name="MyCheckBox" parent="@android:style/Widget.Material.CompoundButton.CheckBox">
+        <item name="colorControlNormal">#f5f5f5</item>
+        <item name="colorControlActivated">@color/blue</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:layout_marginEnd">@dimen/dp_20</item>
     </style>
 </resources>

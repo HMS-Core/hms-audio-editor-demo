@@ -122,7 +122,7 @@
     <string name="no_write_permission">no file permission</string>
     <string name="local_separation">"Voice separation (device-side version)"</string>
     <string name="cloud_separation">"Voice separation (cloud-side version)"</string>
-
+    <string name="cloud_separation_sync">"Voice separation async (cloud-side version)"</string>
     <string name="title_audio_base">Basic Functions</string>
     <string name="begin_import_file">Import</string>
     <string name="base_export">Export</string>
@@ -157,9 +157,4 @@
     <string name="select_lan" priority="translator">Please select a language.</string>
     <string name="select_style" priority="translator">Please select a style.</string>
     <string name="text_complete">complete</string>
-
-    <string name="separation_accomp">accomp</string>
-    <string name="separation_brass">brass</string>
-    <string name="separation_string">string</string>
-    <string name="separation_main">lead_vocals</string>
 </resources>

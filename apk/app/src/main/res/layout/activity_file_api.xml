@@ -271,10 +271,20 @@
 
             </HorizontalScrollView>
 
-            <Button
-                android:id="@+id/begin_devide"
-                style="@style/style_api_btn"
-                android:text="@string/cloud_separation"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/begin_devide_aync"
+                    style="@style/style_api_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/cloud_separation_sync" />
+            </LinearLayout>
+
             <HorizontalScrollView
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -292,21 +302,68 @@
                         android:text="@string/vocal" />
 
                     <CheckBox
-                        android:id="@+id/rbGuitar"
+                        android:id="@+id/rbMainVoice"
                         style="@style/style_api_rb"
                         android:layout_marginTop="10dp"
+                        android:text="@string/separation_main" />
+
+                    <CheckBox
+                        android:id="@+id/rbAccomp"
+                        style="@style/style_api_rb"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/accompaniment" />
+
+                    <CheckBox
+                        android:id="@+id/rbAccompAcc"
+                        style="@style/style_api_rb"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/separation_leadbackacc" />
+
+                    <CheckBox
+                        android:id="@+id/rbDrums"
+                        style="@style/style_api_rb"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/separation_drums" />
+
+                    <CheckBox
+                        android:id="@+id/rbBass"
+                        style="@style/style_api_rb"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/separation_bass" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <HorizontalScrollView
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <CheckBox
+                        android:id="@+id/rbGuitar"
+                        style="@style/style_api_rb"
                         android:text="@string/separation_guitar" />
 
                     <CheckBox
                         android:id="@+id/rbElectricGuitar"
                         style="@style/style_api_rb"
-                        android:layout_marginTop="10dp"
                         android:text="@string/separation_electric_guitar" />
+
+                    <CheckBox
+                        android:id="@+id/rbBrass"
+                        style="@style/style_api_rb"
+                        android:text="@string/separation_brass_string" />
+
+                    <CheckBox
+                        android:id="@+id/rbString"
+                        style="@style/style_api_rb"
+                        android:text="@string/separation_string" />
 
                     <CheckBox
                         android:id="@+id/rbPiano"
                         style="@style/style_api_rb"
-                        android:layout_marginTop="10dp"
                         android:text="@string/separation_piano" />
                 </LinearLayout>
             </HorizontalScrollView>

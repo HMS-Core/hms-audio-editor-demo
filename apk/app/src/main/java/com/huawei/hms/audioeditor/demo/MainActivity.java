@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void startUIActivity() {
         AudioEditorLaunchOption.Builder builder = new AudioEditorLaunchOption.Builder();
-        String exportUrl = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getPath() + File.separator;
+        String exportUrl = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getPath();
         builder.setExportPath(exportUrl);
         HAEUIManager.getInstance().setCallback(callBack);
         try {

@@ -271,6 +271,10 @@ public class AiDubbingAudioActivity extends AppCompatActivity
                     msg = AiDubbingAudioActivity.this.getResources()
                             .getString(com.huawei.hms.audioeditor.ui.R.string.error_80005);
                     break;
+                case HAEAiDubbingError.ERR_WISEGUARD :
+                    msg = AiDubbingAudioActivity.this.getResources()
+                            .getString(com.huawei.hms.audioeditor.ui.R.string.error_2039);
+                    break;
                 default :
                     msg = AiDubbingAudioActivity.this.getResources()
                             .getString(com.huawei.hms.audioeditor.ui.R.string.text_to_audio_error);
