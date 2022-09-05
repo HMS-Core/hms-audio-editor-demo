@@ -35,6 +35,7 @@ import com.huawei.hms.audioeditor.sdk.ChangeSoundCallback;
 import com.huawei.hms.audioeditor.sdk.ChangeVoiceOption;
 import com.huawei.hms.audioeditor.sdk.HAEAudioSeparationAsyncFile;
 import com.huawei.hms.audioeditor.sdk.HAEChangeVoiceFile;
+import com.huawei.hms.audioeditor.sdk.HAEChangeVoiceFileCommon;
 import com.huawei.hms.audioeditor.sdk.HAEEqualizerFile;
 import com.huawei.hms.audioeditor.sdk.HAEErrorCode;
 import com.huawei.hms.audioeditor.sdk.HAELocalAudioSeparationFile;
@@ -42,6 +43,7 @@ import com.huawei.hms.audioeditor.sdk.HAENoiseReductionFile;
 import com.huawei.hms.audioeditor.sdk.HAESceneFile;
 import com.huawei.hms.audioeditor.sdk.HAESoundFieldFile;
 import com.huawei.hms.audioeditor.sdk.HAETempoPitch;
+import com.huawei.hms.audioeditor.sdk.VoiceTypeCommon;
 import com.huawei.hms.audioeditor.sdk.bean.SeparationBean;
 import com.huawei.hms.audioeditor.sdk.bean.SeparationQueryTaskResp;
 import com.huawei.hms.audioeditor.sdk.materials.network.MaterialsDownloadCallBack;
@@ -72,6 +74,8 @@ public class FileApiActivity extends AppCompatActivity
     private Button cancel;
     private RadioGroup rgFileSoundType;
     private Button beginFileChange;
+    private RadioGroup rgSoundTypeCommon;
+    private Button beginChangeCommon;
     private RadioGroup rgFileEnvType;
     private Button beginFileEvn;
     private RadioGroup rgFileSoundGround;
@@ -106,6 +110,7 @@ public class FileApiActivity extends AppCompatActivity
     private static final int TYPE_DIVIDE = 8;
     private static final int TYPE_DIVIDE_SYNC = 9;
     private static final int TYPE_DIVIDE_LOCAL = 10;
+    private static final int TYPE_CHANGE_SOUND_COMMON = 11;
     private int currentType = TYPE_NONE;
 
     // Cloud-side audio source separation, separation type
@@ -200,6 +205,7 @@ public class FileApiActivity extends AppCompatActivity
             MAX_SPEED_PROGRESS_VALUE - MIN_SPEED_PROGRESS_VALUE);
 
     private HAEChangeVoiceFile haeChangeVoiceFile;
+    private HAEChangeVoiceFileCommon  haeChangeVoiceFileCommon;
     private HAESceneFile haeSceneFile;
     private HAESoundFieldFile haeSoundFieldFile;
     private HAEEqualizerFile haeEqualizerFile;
@@ -246,8 +252,12 @@ public class FileApiActivity extends AppCompatActivity
         cancel.setOnClickListener(this);
         beginFileChange = findViewById(R.id.begin_change);
         beginFileChange.setOnClickListener(this);
+        beginChangeCommon = findViewById(R.id.begin_change_common);
+        beginChangeCommon.setOnClickListener(this);
         rgFileSoundType = findViewById(R.id.rg_sound_type);
         rgFileSoundType.setOnCheckedChangeListener(this);
+        rgSoundTypeCommon = findViewById(R.id.rg_sound_type_common);
+        rgSoundTypeCommon.setOnCheckedChangeListener(this);
         rgFileEnvType = findViewById(R.id.rg_env_type);
         rgFileEnvType.setOnCheckedChangeListener(this);
         beginFileEvn = findViewById(R.id.begin_env);
@@ -268,6 +278,7 @@ public class FileApiActivity extends AppCompatActivity
         beginFileSpeedPitch.setOnClickListener(this);
         beginFileReduction = findViewById(R.id.begin_reduction);
         beginFileReduction.setOnClickListener(this);
+        findViewById(R.id.rb_normal_common).setVisibility(View.GONE);
         findViewById(R.id.begin_devide_aync).setOnClickListener(this);
         findViewById(R.id.begin_vocals_devide).setOnClickListener(this);
 
@@ -355,6 +366,8 @@ public class FileApiActivity extends AppCompatActivity
     }
 
     private void initAllAbility() {
+        haeChangeVoiceFileCommon = new HAEChangeVoiceFileCommon();
+        haeChangeVoiceFileCommon.changeVoiceType(VoiceTypeCommon.SEASONED);
         haeChangeVoiceFile = new HAEChangeVoiceFile();
         changeVoiceOption = new ChangeVoiceOption();
         changeVoiceOption.setSpeakerSex(ChangeVoiceOption.SpeakerSex.MALE);
@@ -458,7 +471,6 @@ public class FileApiActivity extends AppCompatActivity
                         tvPitch.setText("+" + format(pitch));
                     } else {
                         pitch = 0.1F;
-                        sbSpeed.setProgress(1);
                         tvPitch.setText("+" + "0.1");
                     }
                 }
@@ -515,6 +527,9 @@ public class FileApiActivity extends AppCompatActivity
             case R.id.begin_change :
                 beginDealAudioFile(TYPE_CHANGE_SOUND);
                 break;
+            case R.id.begin_change_common:
+                beginDealAudioFile(TYPE_CHANGE_SOUND_COMMON);
+                break;
             case R.id.begin_devide_aync :
                 beginDivideAudioFileAsync();
                 break;
@@ -558,6 +573,8 @@ public class FileApiActivity extends AppCompatActivity
         hideProgress();
         if (currentType == TYPE_CHANGE_SOUND) {
             haeChangeVoiceFile.cancel();
+        } else if (currentType == TYPE_CHANGE_SOUND_COMMON) {
+            haeChangeVoiceFileCommon.cancel();
         } else if (currentType == TYPE_ENV) {
             haeSceneFile.cancel();
         } else if (currentType == TYPE_SOUND_GROUND) {
@@ -842,6 +859,8 @@ public class FileApiActivity extends AppCompatActivity
         if (currentType == TYPE_CHANGE_SOUND) {
             haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
             haeChangeVoiceFile.applyAudioFile(filePath, outputPath, currentName, callBack);
+        } else if (currentType == TYPE_CHANGE_SOUND_COMMON) {
+            haeChangeVoiceFileCommon.applyAudioFile(filePath, outputPath, currentName, callBack);
         } else if (currentType == TYPE_ENV) {
             haeSceneFile.applyAudioFile(filePath, outputPath, currentName, callBack);
         } else if (currentType == TYPE_SOUND_GROUND) {
@@ -900,6 +919,24 @@ public class FileApiActivity extends AppCompatActivity
                 changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.CARTOON);
                 haeChangeVoiceFile.changeVoiceOption(changeVoiceOption);
                 resetpitch();
+                break;
+            case R.id.rb_uncle_common :
+                haeChangeVoiceFileCommon.changeVoiceType(VoiceTypeCommon.SEASONED);
+                break;
+            case R.id.rb_lori_common :
+                haeChangeVoiceFileCommon.changeVoiceType(VoiceTypeCommon.CUTE);
+                break;
+            case R.id.rb_female_common :
+                haeChangeVoiceFileCommon.changeVoiceType(VoiceTypeCommon.FEMALE);
+                break;
+            case R.id.rb_male_common :
+                haeChangeVoiceFileCommon.changeVoiceType(VoiceTypeCommon.MALE);
+                break;
+            case R.id.rb_monsters_common :
+                haeChangeVoiceFileCommon.changeVoiceType(VoiceTypeCommon.MONSTER);
+                break;
+            case R.id.rb_trill_common :
+                haeChangeVoiceFileCommon.changeVoiceType(VoiceTypeCommon.TRILL);
                 break;
             case R.id.rb_gb :
                 haeSceneFile.setTypeOfFile(AudioParameters.ENVIRONMENT_TYPE_BROADCAST);

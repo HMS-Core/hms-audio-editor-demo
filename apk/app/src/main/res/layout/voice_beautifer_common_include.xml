@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <RadioGroup
+            android:id="@+id/rg_sound_type_beautifer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <RadioButton
+                android:id="@+id/rb_clear_beautifer"
+                style="@style/style_api_rb"
+                android:text="@string/beautifer_clear"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rb_theatre_beautifer"
+                style="@style/style_api_rb"
+                android:text="@string/beautifer_theatre"/>
+
+            <RadioButton
+                android:id="@+id/rb_cd_beautifer"
+                style="@style/style_api_rb"
+                android:text="@string/beautifer_cd"/>
+
+            <RadioButton
+                android:id="@+id/rb_studio_beautifer"
+                style="@style/style_api_rb"
+                android:text="@string/beautifer_studio"/>
+
+
+            <RadioButton
+                android:id="@+id/rb_normal_beautifer"
+                style="@style/style_api_rb"
+                android:text="@string/sound_normal"/>
+        </RadioGroup>
+
+    </HorizontalScrollView>
+
+    <Button
+        android:id="@+id/begin_beautifer_common"
+        style="@style/style_api_btn"
+        android:text="@string/beautifer_btn"/>
+</LinearLayout>

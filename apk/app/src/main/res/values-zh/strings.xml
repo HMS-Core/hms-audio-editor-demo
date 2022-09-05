@@ -38,7 +38,10 @@
     <string name="sound_female">女声</string>
     <string name="sound_male">男声</string>
     <string name="sound_monsters">怪物</string>
-    <string name="begin_change">开始变声</string>
+    <string name="sound_trill">颤音</string>
+    <string name="sound_normal">原声</string>
+    <string name="begin_change">开始变声(语音版)</string>
+    <string name="begin_change_common">开始变声(通用版)</string>
     <string name="pcm_file_not_exists">PCM文件不存在</string>
     <string name="change_sound_pcm_path">请输入变声的pcm文件路径</string>
     <string name="begin_reduction">开始降噪</string>
@@ -159,5 +162,10 @@
     <string name="select_lan" priority="translator">请选择语言</string>
     <string name="select_style" priority="translator">请选择风格</string>
     <string name="text_complete">完成</string>
+    <string name="beautifer_clear">清澈</string>
+    <string name="beautifer_theatre">剧场</string>
+    <string name="beautifer_cd">唱片</string>
+    <string name="beautifer_studio">录音棚</string>
+    <string name="beautifer_btn">声音美化</string>
 </resources>
 

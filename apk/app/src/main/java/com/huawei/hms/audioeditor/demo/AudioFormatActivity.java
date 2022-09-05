@@ -16,10 +16,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.huawei.hms.audioeditor.demo.util.SampleConstant;
 import com.huawei.hms.audioeditor.demo.widget.EditDialogFragment;
 import com.huawei.hms.audioeditor.sdk.HAEAudioExpansion;
@@ -34,6 +30,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Audio Format Conversion
@@ -174,42 +174,6 @@ public class AudioFormatActivity extends AppCompatActivity {
                                     Toast.makeText(AudioFormatActivity.this, "ErrorCode : " + errorCode, Toast.LENGTH_SHORT)
                                             .show();
                                 }
-                            }
-
-                            @Override
-                            public void onSuccess(String outPutPath) {
-                                isTansforming = false;
-                                Toast.makeText(getBaseContext(), "Success: " + outPutPath, Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onCancel() {
-                                isTansforming = false;
-                                Toast.makeText(getBaseContext(), "Cancel", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-    }
-
-    // Example code 2(The converted format is stored in the default path.)
-    private final void transformAudioByForm(String srcFile) {
-        // srcFile Pathway for interpolation text Like/sdcard/Music/AudioEdit/audio/music.aac
-        // transferFormat Format to be converted (for example, mp3). The output file is stored in the default path /sdcard/Music/AudioEdit/format/.
-        HAEAudioExpansion.getInstance()
-                .transformAudioUseDefaultPath(
-                        getBaseContext(),
-                        srcFile,
-                        transferFormat,
-                        new OnTransformCallBack() {
-                            @Override
-                            public void onProgress(int progress) {
-                                isTansforming = true;
-                                progressBar.setProgress(progress);
-                            }
-
-                            @Override
-                            public void onFail(int errorCode) {
-                                isTansforming = false;
-                                Toast.makeText(getBaseContext(), "fail: " + errorCode, Toast.LENGTH_SHORT).show();
                             }
 
                             @Override

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <RadioGroup
+            android:id="@+id/rg_sound_type_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <RadioButton
+                android:id="@+id/rb_uncle_common"
+                style="@style/style_api_rb"
+                android:text="@string/sound_uncle"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rb_lori_common"
+                style="@style/style_api_rb"
+                android:text="@string/sound_lori"/>
+
+            <RadioButton
+                android:id="@+id/rb_female_common"
+                style="@style/style_api_rb"
+                android:text="@string/sound_female"/>
+
+            <RadioButton
+                android:id="@+id/rb_male_common"
+                style="@style/style_api_rb"
+                android:text="@string/sound_male"/>
+
+            <RadioButton
+                android:id="@+id/rb_monsters_common"
+                style="@style/style_api_rb"
+                android:text="@string/sound_monsters"/>
+
+            <RadioButton
+                android:id="@+id/rb_trill_common"
+                style="@style/style_api_rb"
+                android:text="@string/sound_trill"/>
+
+            <RadioButton
+                android:id="@+id/rb_normal_common"
+                style="@style/style_api_rb"
+                android:text="@string/sound_normal"/>
+        </RadioGroup>
+
+    </HorizontalScrollView>
+
+    <Button
+        android:id="@+id/begin_change_common"
+        style="@style/style_api_btn"
+        android:text="@string/begin_change_common"/>
+</LinearLayout>

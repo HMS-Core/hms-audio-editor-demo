@@ -52,6 +52,6 @@ dependencies {
         exclude group: "com.android.support"
     }
 
-    implementation('com.huawei.hms:audio-editor-ui:1.6.0.301')
+    implementation('com.huawei.hms:audio-editor-ui:1.7.0.300')
 
 }

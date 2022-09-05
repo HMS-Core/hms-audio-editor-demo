@@ -24,14 +24,17 @@ import android.widget.Toast;
 import com.huawei.hms.audioeditor.sdk.AudioParameters;
 import com.huawei.hms.audioeditor.sdk.ChangeVoiceOption;
 import com.huawei.hms.audioeditor.sdk.HAEChangeVoiceStream;
+import com.huawei.hms.audioeditor.sdk.HAEChangeVoiceStreamCommon;
 import com.huawei.hms.audioeditor.sdk.HAEEqualizerStream;
 import com.huawei.hms.audioeditor.sdk.HAEErrorCode;
 import com.huawei.hms.audioeditor.sdk.HAENoiseReductionStream;
 import com.huawei.hms.audioeditor.sdk.HAESceneStream;
 import com.huawei.hms.audioeditor.sdk.HAESoundFieldStream;
+import com.huawei.hms.audioeditor.sdk.HAEVoiceBeautifierStream;
+import com.huawei.hms.audioeditor.sdk.VoiceBeautifierType;
+import com.huawei.hms.audioeditor.sdk.VoiceTypeCommon;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -49,7 +52,11 @@ public class StreamApiActivity extends AppCompatActivity
     private ImageView back;
     private EditText etPcmFilePath;
     private RadioGroup rgSoundType;
+    private RadioGroup rgSoundTypeBeautifer;
+    private RadioGroup rgSoundTypeCommon;
     private Button beginChange;
+    private Button beginChangeCommon;
+    private Button beginBeautifer;
     private Button beginPlay;
     private Button beginReduction;
     private RadioGroup rgEnvType;
@@ -68,6 +75,8 @@ public class StreamApiActivity extends AppCompatActivity
     private static final int TYPE_ENV = 3;
     private static final int TYPE_SOUND_FILED = 4;
     private static final int TYPE_EQ = 5;
+    private static final int TYPE_CHANGE_SOUND_COMMON = 6;
+    private static final int TYPE_VOICE_BEAUTIFIER= 7;
     private int currentType = TYPE_NONE;
 
     @SuppressLint("SdCardPath")
@@ -86,6 +95,8 @@ public class StreamApiActivity extends AppCompatActivity
     private FileOutputStream saveToFileStream = null;
 
     private HAEChangeVoiceStream haeChangeVoiceStream;
+    private HAEChangeVoiceStreamCommon haeChangeVoiceStreamCommon;
+    private HAEVoiceBeautifierStream haeVoiceBeautifierStream;
     private HAENoiseReductionStream haeNoiseReductionStream;
     private HAESceneStream haeSceneStream;
     private HAESoundFieldStream haeSoundFieldStream;
@@ -129,10 +140,16 @@ public class StreamApiActivity extends AppCompatActivity
         beginPlay.setOnClickListener(this);
         beginChange = findViewById(R.id.begin_change);
         beginChange.setOnClickListener(this);
+        beginChangeCommon = findViewById(R.id.begin_change_common);
+        beginChangeCommon.setOnClickListener(this);
         beginReduction = findViewById(R.id.begin_reduction);
         beginReduction.setOnClickListener(this);
         rgSoundType = findViewById(R.id.rg_sound_type);
         rgSoundType.setOnCheckedChangeListener(this);
+        rgSoundTypeCommon = findViewById(R.id.rg_sound_type_common);
+        rgSoundTypeCommon.setOnCheckedChangeListener(this);
+        rgSoundTypeBeautifer = findViewById(R.id.rg_sound_type_beautifer);
+        rgSoundTypeBeautifer.setOnCheckedChangeListener(this);
         rgEnvType = findViewById(R.id.rg_env_type);
         rgEnvType.setOnCheckedChangeListener(this);
         beginEvn = findViewById(R.id.begin_env);
@@ -145,6 +162,8 @@ public class StreamApiActivity extends AppCompatActivity
         rgEq.setOnCheckedChangeListener(this);
         beginEq = findViewById(R.id.begin_eq);
         beginEq.setOnClickListener(this);
+        beginBeautifer = findViewById(R.id.begin_beautifer_common);
+        beginBeautifer.setOnClickListener(this);
 
         rgSoundSex = findViewById(R.id.rg_sound_sex);
         rgSoundSex.setOnCheckedChangeListener(this);
@@ -187,7 +206,13 @@ public class StreamApiActivity extends AppCompatActivity
         haeChangeVoiceStream.changeVoiceOption(changeVoiceOption);
         resetpitch();
 
+        haeChangeVoiceStreamCommon = new HAEChangeVoiceStreamCommon();
+        haeChangeVoiceStreamCommon.changeVoiceType(VoiceTypeCommon.SEASONED);
+
         haeNoiseReductionStream = new HAENoiseReductionStream();
+
+        haeVoiceBeautifierStream = new HAEVoiceBeautifierStream();
+        haeVoiceBeautifierStream.setVoiceBeautifierType(VoiceBeautifierType.CLEAR);
 
         haeSceneStream = new HAESceneStream();
         haeSceneStream.setEnvironmentType(AudioParameters.ENVIRONMENT_TYPE_BROADCAST);
@@ -209,6 +234,12 @@ public class StreamApiActivity extends AppCompatActivity
                 break;
             case R.id.begin_change :
                 changeVoice();
+                break;
+            case R.id.begin_change_common :
+                changeVoiceCommon();
+                break;
+            case R.id.begin_beautifer_common :
+                voiceBeautifier();
                 break;
             case R.id.begin_reduction :
                 reduction();
@@ -295,6 +326,30 @@ public class StreamApiActivity extends AppCompatActivity
         }
     }
 
+    private void changeVoiceCommon() {
+        if (isPlaying) {
+            return;
+        }
+        int res = haeChangeVoiceStreamCommon.setAudioFormat(BIT_DEPTH, CHANNEL_COUNT, SAMPLE_RATE);
+        if (res != HAEErrorCode.SUCCESS) {
+            Toast.makeText(StreamApiActivity.this, "err code : " + res, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        beginDealPcmFile(TYPE_CHANGE_SOUND_COMMON);
+    }
+
+    private void voiceBeautifier() {
+        if (isPlaying) {
+            return;
+        }
+        int res = haeVoiceBeautifierStream.setAudioFormat(BIT_DEPTH, CHANNEL_COUNT, SAMPLE_RATE);
+        if (res != HAEErrorCode.SUCCESS) {
+            Toast.makeText(StreamApiActivity.this, "err code : " + res, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        beginDealPcmFile(TYPE_VOICE_BEAUTIFIER);
+    }
+
     private void beginDealPcmFile(int type) {
         if (isPlaying) {
             return;
@@ -324,6 +379,12 @@ public class StreamApiActivity extends AppCompatActivity
                 while (fileInputStream.read(buffer) != -1 && unFinish) {
                     if (currentType == TYPE_CHANGE_SOUND) {
                         resultByte = haeChangeVoiceStream.applyPcmData(buffer);
+                        playPcm(resultByte);
+                    } else if (currentType == TYPE_CHANGE_SOUND_COMMON) {
+                        resultByte = haeChangeVoiceStreamCommon.applyPcmData(buffer);
+                        playPcm(resultByte);
+                    }  else if (currentType == TYPE_VOICE_BEAUTIFIER) {
+                        resultByte = haeVoiceBeautifierStream.applyPcmData(buffer);
                         playPcm(resultByte);
                     } else if (currentType == TYPE_REDUCTION) {
                         resultByte = haeNoiseReductionStream.applyPcmData(buffer);
@@ -400,6 +461,21 @@ public class StreamApiActivity extends AppCompatActivity
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
+            case R.id.rb_clear_beautifer:
+                haeVoiceBeautifierStream.setVoiceBeautifierType(VoiceBeautifierType.CLEAR);
+                break;
+            case R.id.rb_cd_beautifer:
+                haeVoiceBeautifierStream.setVoiceBeautifierType(VoiceBeautifierType.CD);
+                break;
+            case R.id.rb_theatre_beautifer:
+                haeVoiceBeautifierStream.setVoiceBeautifierType(VoiceBeautifierType.THEATRE);
+                break;
+            case R.id.rb_studio_beautifer:
+                haeVoiceBeautifierStream.setVoiceBeautifierType(VoiceBeautifierType.RECORDING_STUDIO);
+                break;
+            case R.id.rb_normal_beautifer:
+                haeVoiceBeautifierStream.setVoiceBeautifierType(VoiceBeautifierType.NORMAL);
+                break;
             case R.id.rb_uncle :
                 currentVoiceType = ChangeVoiceOption.VoiceType.SEASONED.ordinal();
                 changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.SEASONED);
@@ -441,6 +517,27 @@ public class StreamApiActivity extends AppCompatActivity
                 changeVoiceOption.setVoiceType(ChangeVoiceOption.VoiceType.CARTOON);
                 haeChangeVoiceStream.changeVoiceOption(changeVoiceOption);
                 resetpitch();
+                break;
+            case R.id.rb_uncle_common :
+                haeChangeVoiceStreamCommon.changeVoiceType(VoiceTypeCommon.SEASONED);
+                break;
+            case R.id.rb_lori_common :
+                haeChangeVoiceStreamCommon.changeVoiceType(VoiceTypeCommon.CUTE);
+                break;
+            case R.id.rb_female_common :
+                haeChangeVoiceStreamCommon.changeVoiceType(VoiceTypeCommon.FEMALE);
+                break;
+            case R.id.rb_male_common :
+                haeChangeVoiceStreamCommon.changeVoiceType(VoiceTypeCommon.MALE);
+                break;
+            case R.id.rb_monsters_common :
+                haeChangeVoiceStreamCommon.changeVoiceType(VoiceTypeCommon.MONSTER);
+                break;
+            case R.id.rb_trill_common :
+                haeChangeVoiceStreamCommon.changeVoiceType(VoiceTypeCommon.TRILL);
+                break;
+            case R.id.rb_normal_common :
+                haeChangeVoiceStreamCommon.changeVoiceType(VoiceTypeCommon.NORMAL);
                 break;
             case R.id.rb_gb :
                 haeSceneStream.setEnvironmentType(AudioParameters.ENVIRONMENT_TYPE_BROADCAST);
@@ -519,6 +616,12 @@ public class StreamApiActivity extends AppCompatActivity
     private void releaseAllAbility() {
         if (haeChangeVoiceStream != null) {
             haeChangeVoiceStream.release();
+        }
+        if (haeVoiceBeautifierStream != null) {
+            haeVoiceBeautifierStream.release();
+        }
+        if (haeChangeVoiceStreamCommon != null) {
+            haeChangeVoiceStreamCommon.release();
         }
         if (haeNoiseReductionStream != null) {
             haeNoiseReductionStream.release();

@@ -95,6 +95,10 @@
 
             <include layout="@layout/change_voice_include" />
 
+            <include layout="@layout/change_voice_common_include" />
+
+            <include layout="@layout/voice_beautifer_common_include" />
+
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

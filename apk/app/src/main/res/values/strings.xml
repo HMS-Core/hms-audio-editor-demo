@@ -38,6 +38,9 @@
     <string name="sound_male">Male</string>
     <string name="sound_monsters">Monster</string>
     <string name="begin_change">Start Voice FX</string>
+    <string name="sound_trill">Trill</string>
+    <string name="sound_normal">Normal</string>
+    <string name="begin_change_common">Start Voice FX(common)</string>
     <string name="pcm_file_not_exists">PCM file does not exist</string>
     <string name="change_sound_pcm_path">Please enter the path of the pcm file</string>
     <string name="begin_reduction">Start noise reduction</string>
@@ -157,4 +160,9 @@
     <string name="select_lan" priority="translator">Please select a language.</string>
     <string name="select_style" priority="translator">Please select a style.</string>
     <string name="text_complete">complete</string>
+    <string name="beautifer_clear">Clear</string>
+    <string name="beautifer_theatre">Theatre</string>
+    <string name="beautifer_cd">CD</string>
+    <string name="beautifer_studio">Studio</string>
+    <string name="beautifer_btn">Start Voice Beautifier</string>
 </resources>
