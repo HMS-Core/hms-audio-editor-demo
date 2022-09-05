@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 .getExternalStorageDirectory().getAbsolutePath() }, null, null);
 
         // Setting the APIkey of the SDK
-        HAEApplication.getInstance().setApiKey("CwEAAAAAgcZ0VHghjbgMNepCshMBYMrI2gz95T5FaZxi3uLwCelE1mHjKDMFG12FU10eqCo89KLyreLfXk6winssUXdvwYgh7LQ=");
+        HAEApplication.getInstance().setApiKey("Set your APIKey");
     }
 
     private void requestPermission() {
