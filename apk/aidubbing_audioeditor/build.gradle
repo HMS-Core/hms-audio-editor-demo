@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.huawei.hms.audioeditor.demo"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 30
         versionCode 10002300
         versionName '1.0.2.300'
