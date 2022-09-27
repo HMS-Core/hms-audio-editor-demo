@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.huawei.hms.audioeditor.demo"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 30
         versionCode Integer.parseInt(rootProject.ext.ae_apk_versionCode)
         versionName rootProject.ext.ae_apk_versionName
