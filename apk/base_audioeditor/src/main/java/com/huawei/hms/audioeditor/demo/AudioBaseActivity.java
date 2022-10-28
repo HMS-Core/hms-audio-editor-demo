@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
  */
 
 package com.huawei.hms.audioeditor.demo;
@@ -14,7 +14,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -34,6 +33,7 @@ import com.huawei.hms.audioeditor.sdk.bean.HAEAudioProperty;
 import com.huawei.hms.audioeditor.sdk.bean.HAEAudioVolumeObject;
 import com.huawei.hms.audioeditor.sdk.engine.audio.thumbnail.WaveformManager;
 import com.huawei.hms.audioeditor.sdk.lane.HAEAudioLane;
+import com.huawei.hms.audioeditor.sdk.util.SmartLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +51,9 @@ import androidx.appcompat.app.AppCompatActivity;
  * @since 2021/11/8
  */
 public class AudioBaseActivity extends AppCompatActivity
-        implements View.OnClickListener {
-    private int REQUEST_CODE_FOR_SELECT_AUDIO = 1000;
+    implements View.OnClickListener {
+    private static final String TAG = "AudioBaseActivity";
+    private static final int REQUEST_CODE_FOR_SELECT_AUDIO = 1000;
     private String filePath = "";
     private TextView mBack;
     private Button mChoiceFile;
@@ -65,6 +66,7 @@ public class AudioBaseActivity extends AppCompatActivity
     private CountDownLatch latchCountdown;
     private TextView mTvDateLength;
     private Button mGetWaveData;
+
     // Number of imported audio files (single path in this example)
     private List<String> validPath = new ArrayList<>();
     private boolean isThumbNailTaskEnd = false;
@@ -90,15 +92,15 @@ public class AudioBaseActivity extends AppCompatActivity
     private SeekBar mSbVolume;
     private Button mAssetVolume;
     private TextView mTvVolume;
-    private int mProgress_volume = 100;
+    private int mProgressVolume = 100;
 
     private SeekBar mSbSpeed;
     private SeekBar mSbPitch;
     private TextView mTvSpeed;
     private TextView mTvPitch;
     private Button mBtnSpeedAndPitch;
-    private float mProgress_speed = 1.0F;
-    private float mProgress_pitch = 1.0F;
+    private float mProgressSpeed = 1.0F;
+    private float mProgressPitch = 1.0F;
 
     private SeekBar mSbFadeIn;
     private SeekBar mSbFadeOut;
@@ -108,8 +110,8 @@ public class AudioBaseActivity extends AppCompatActivity
     private int fadeInTime = 0;
     private int fadeOutTime = 0;
 
-    private final String[] PERMISSIONS =
-            new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private static final String[] PERMISSIONS =
+        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     // Permission Request Code
     private static final int PERMISSION_REQUESTS = 1;
@@ -125,24 +127,24 @@ public class AudioBaseActivity extends AppCompatActivity
         initView();
         initListener();
         PermissionUtils.checkMorePermissions(
-                AudioBaseActivity.this,
-                PERMISSIONS,
-                new PermissionUtils.PermissionCheckCallBack() {
-                    @Override
-                    public void onHasPermission() {
+            AudioBaseActivity.this,
+            PERMISSIONS,
+            new PermissionUtils.PermissionCheckCallBack() {
+                @Override
+                public void onHasPermission() {
 
-                    }
+                }
 
-                    @Override
-                    public void onUserHasAlreadyTurnedDown(String... permission) {
-                        PermissionUtils.requestMorePermissions(AudioBaseActivity.this, PERMISSIONS, PERMISSION_REQUESTS);
-                    }
+                @Override
+                public void onUserHasAlreadyTurnedDown(String... permission) {
+                    PermissionUtils.requestMorePermissions(AudioBaseActivity.this, PERMISSIONS, PERMISSION_REQUESTS);
+                }
 
-                    @Override
-                    public void onUserHasAlreadyTurnedDownAndDontAsk(String... permission) {
-                        PermissionUtils.requestMorePermissions(AudioBaseActivity.this, PERMISSIONS, PERMISSION_REQUESTS);
-                    }
-                });
+                @Override
+                public void onUserHasAlreadyTurnedDownAndDontAsk(String... permission) {
+                    PermissionUtils.requestMorePermissions(AudioBaseActivity.this, PERMISSIONS, PERMISSION_REQUESTS);
+                }
+            });
         initProgress();
     }
 
@@ -166,38 +168,38 @@ public class AudioBaseActivity extends AppCompatActivity
                 finish();
                 break;
             case R.id.get_wave_data:
-                if (isThumbNailTaskEnd){
+                if (isThumbNailTaskEnd) {
                     getWaveData();
-                }else {
-                    Toast.makeText(this, getResources().getString(R.string.wait_for_wave),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, getResources().getString(R.string.wait_for_wave), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.get_splits_data:
-                long splitPoint = audioAsset.getEndTime()/2;
+                long splitPoint = audioAsset.getEndTime() / 2;
                 boolean isSuccess = audioLane.splitAsset(audioAsset.getIndex(), splitPoint);
-                if (isSuccess){
-                    mTvAssetLength.setText(audioLane.getAssets().size()+"");
+                if (isSuccess) {
+                    mTvAssetLength.setText(audioLane.getAssets().size() + "");
                 }
                 break;
             case R.id.asset_del:
-                if (audioLane.getAssets().size()>0){
+                if (audioLane.getAssets().size() > 0) {
                     HAEAsset haeAsset = audioLane.getAssets().get(0);
                     audioLane.removeAsset(haeAsset.getIndex());
-                    mTvAssetLength1.setText(audioLane.getAssets().size()+"");
-                }else {
-                    Toast.makeText(this, getResources().getString(R.string.no_delete_audio),Toast.LENGTH_SHORT).show();
+                    mTvAssetLength1.setText(audioLane.getAssets().size() + "");
+                } else {
+                    Toast.makeText(this, getResources().getString(R.string.no_delete_audio), Toast.LENGTH_SHORT).show();
                 }
-               break;
+                break;
             case R.id.btn_export:
-                if(isProcessing){
-                    if (progressDialog != null && !progressDialog.isShowing() ){
+                if (isProcessing) {
+                    if (progressDialog != null && !progressDialog.isShowing()) {
                         progressDialog.show();
                     }
                     return;
                 }
                 isProcessing = true;
                 showProgress();
-                musicPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getPath() + "/export"+System.currentTimeMillis()+ ".mp3";
+                musicPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getPath() + "/export" + System.currentTimeMillis() + ".mp3";
                 HuaweiAudioEditor.getInstance().setExportAudioCallback(exportAudioCallback);
                 // Setting Audio Attributes
                 HAEAudioProperty audioProperty = new HAEAudioProperty();
@@ -206,10 +208,10 @@ public class AudioBaseActivity extends AppCompatActivity
                 audioProperty.setChannels(audioChannel);
                 // Exporting an Audio File (Time-consuming operation. You are advised to process it in a subthread.)
                 new Thread(
-                        () -> {
-                            HuaweiAudioEditor.getInstance().exportAudio(audioProperty, musicPath);
-                        })
-                        .start();
+                    () -> {
+                        HuaweiAudioEditor.getInstance().exportAudio(audioProperty, musicPath);
+                    })
+                    .start();
                 break;
             case R.id.audio_resume_play:
                 if (HuaweiAudioEditor.getInstance().getState() == HuaweiAudioEditor.State.COMPILE) {
@@ -217,7 +219,7 @@ public class AudioBaseActivity extends AppCompatActivity
                     return;
                 }
                 HuaweiAudioEditor.getInstance()
-                        .playTimeLine(mTimeLine.getCurrentTime(), mTimeLine.getEndTime());
+                    .playTimeLine(mTimeLine.getCurrentTime(), mTimeLine.getEndTime());
                 break;
             case R.id.audio_play:
                 if (HuaweiAudioEditor.getInstance().getState() == HuaweiAudioEditor.State.COMPILE) {
@@ -225,39 +227,43 @@ public class AudioBaseActivity extends AppCompatActivity
                     return;
                 }
                 HuaweiAudioEditor.getInstance()
-                        .playTimeLine(mTimeLine.getStartTime(), mTimeLine.getEndTime());
+                    .playTimeLine(mTimeLine.getStartTime(), mTimeLine.getEndTime());
                 break;
             case R.id.audio_stop:
                 HuaweiAudioEditor.getInstance().pauseTimeLine();
                 break;
             case R.id.asset_volume:
                 float volumeValue;
-                if (mProgress_volume > 100) {
-                    volumeValue = mProgress_volume / 20f;
+                if (mProgressVolume > 100) {
+                    volumeValue = mProgressVolume / 20f;
                 } else {
-                    volumeValue = mProgress_volume * 0.01f;
+                    volumeValue = mProgressVolume * 0.01f;
                 }
                 boolean success = audioAsset.setVolume(volumeValue);
                 // Obtain the volume.
                 float volume = audioAsset.getVolume();
+                SmartLog.i(TAG, "success: " + success + " volume: " + volume);
                 break;
             case R.id.asset_speed_pitch:
-                boolean success1 = audioLane.changeAssetSpeed(audioAsset.getIndex(), mProgress_speed, mProgress_pitch);
+                boolean success1 = audioLane.changeAssetSpeed(audioAsset.getIndex(), mProgressSpeed, mProgressPitch);
                 // Acquiring the speed of sound, pitch
                 float speed = audioLane.getSpeed(audioAsset.getIndex());
                 float pitch = audioLane.getPitch(audioAsset.getIndex());
+                SmartLog.i(TAG, "success1: " + success1 + " speed: " + speed + " pitch:" + pitch);
                 break;
             case R.id.asset_fade:
                 // Set Fade-in and Fade-out
                 boolean success2 = audioLane.setAudioAssetFade(audioAsset.getIndex(), fadeInTime, fadeOutTime);
-                 // Get Fade-In and Fade-Out
+                // Get Fade-In and Fade-Out
                 int inTime = audioAsset.getFadeInTimeMs();
                 int outTime = audioAsset.getFadeOutTimeMs();
+                SmartLog.i(TAG, "success2: " + success2 + " inTime: " + inTime + " outTime:" + outTime);
                 break;
             default:
                 break;
         }
     }
+
     HuaweiAudioEditor.ExportAudioCallback exportAudioCallback = new HuaweiAudioEditor.ExportAudioCallback() {
         @Override
         public void onCompileProgress(long time, long duration) {
@@ -268,29 +274,31 @@ public class AudioBaseActivity extends AppCompatActivity
                 }
                 int finalProgress = progress;
                 runOnUiThread(
-                        () -> {
-                            Log.d("progress",finalProgress+"");
-                            if (progressDialog != null) {
-                                progressDialog.setProgress(finalProgress);
-                            }
-                        });
+                    () -> {
+                        SmartLog.d("progress", finalProgress + "");
+                        if (progressDialog != null) {
+                            progressDialog.setProgress(finalProgress);
+                        }
+                    });
             }
         }
+
         @Override
         public void onCompileFinished() {
-            Log.d("progress","finish");
+            SmartLog.d("progress", "finish");
             isProcessing = false;
-            runOnUiThread(()->{
+            runOnUiThread(() -> {
                 hideProgress();
-                Toast.makeText(AudioBaseActivity.this,"Finish",Toast.LENGTH_SHORT).show();
+                Toast.makeText(AudioBaseActivity.this, "Finish", Toast.LENGTH_SHORT).show();
             });
         }
+
         @Override
         public void onCompileFailed(int errCode, String errorMsg) {
             isProcessing = false;
-            runOnUiThread(()->{
+            runOnUiThread(() -> {
                 hideProgress();
-                Toast.makeText(AudioBaseActivity.this,errorMsg,Toast.LENGTH_SHORT).show();
+                Toast.makeText(AudioBaseActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
             });
         }
     };
@@ -351,79 +359,89 @@ public class AudioBaseActivity extends AppCompatActivity
         mSbFadeOut.setMax(100);
     }
 
-    private void initListener(){
+    private void initListener() {
         mSbVolume.setOnSeekBarChangeListener(
-                new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                        mProgress_volume = i;
-                        float volumeValue =  (float) mProgress_volume/10;
-                        mTvVolume.setText(getResources().getString(R.string.asset_volume)+"-("+volumeValue+")");
-                    }
+            new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                    mProgressVolume = i;
+                    float volumeValue = (float) mProgressVolume / 10;
+                    mTvVolume.setText(getResources().getString(R.string.asset_volume) + "-(" + volumeValue + ")");
+                }
 
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {}
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {}
-                });
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
         mSbSpeed.setOnSeekBarChangeListener(
-                new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                        mProgress_speed = (i+5)/10;
-                        mTvSpeed.setText(getResources().getString(R.string.asset_speed)+"-("+mProgress_speed+")");
-                    }
+            new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                    mProgressSpeed = (float) (i + 5) / 10f;
+                    mTvSpeed.setText(getResources().getString(R.string.asset_speed) + "-(" + mProgressSpeed + ")");
+                }
 
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {}
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {}
-                });
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
         mSbPitch.setOnSeekBarChangeListener(
-                new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                        mProgress_pitch = (i+1)/10;
-                        mTvPitch.setText(getResources().getString(R.string.asset_pitch)+"-("+mProgress_pitch+")");
-                        mTvSpeed.setText(getResources().getString(R.string.asset_speed)+"-("+mProgress_speed+")");
-                    }
+            new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                    mProgressPitch = (float) (i + 1) / 10f;
+                    mTvPitch.setText(getResources().getString(R.string.asset_pitch) + "-(" + mProgressPitch + ")");
+                    mTvSpeed.setText(getResources().getString(R.string.asset_speed) + "-(" + mProgressSpeed + ")");
+                }
 
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {}
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {}
-                });
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
         mSbFadeIn.setOnSeekBarChangeListener(
-                new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-                        fadeInTime = (int)((float) (progress / 10.0));
-                        mFadeIn.setText(getResources().getString(R.string.asset_fade_in)+"-("+fadeInTime + "s)");
-                    }
+            new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+                    fadeInTime = (int) ((float) (progress / 10.0));
+                    mFadeIn.setText(getResources().getString(R.string.asset_fade_in) + "-(" + fadeInTime + "s)");
+                }
 
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {}
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {}
-                });
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
         mSbFadeOut.setOnSeekBarChangeListener(
-                new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-                        fadeOutTime = (int)((float) (progress / 10.0));
-                        mFadeOut.setText(getResources().getString(R.string.asset_fade_out)+"-("+fadeOutTime + "s)");
-                    }
+            new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+                    fadeOutTime = (int) ((float) (progress / 10.0));
+                    mFadeOut.setText(getResources().getString(R.string.asset_fade_out) + "-(" + fadeOutTime + "s)");
+                }
 
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {}
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {}
-                });
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
 
     }
 
@@ -440,9 +458,9 @@ public class AudioBaseActivity extends AppCompatActivity
         mTimeLine = mEditor.getTimeLine();
         // Create a swimlane
         audioLane = mTimeLine.appendAudioLane();
-        audioAsset = audioLane.appendAudioAsset(path,mTimeLine.getCurrentTime());
-        if (audioAsset == null){
-            Toast.makeText(this,"Import invalid path",Toast.LENGTH_SHORT).show();
+        audioAsset = audioLane.appendAudioAsset(path, mTimeLine.getCurrentTime());
+        if (audioAsset == null) {
+            Toast.makeText(this, "Import invalid path", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -453,40 +471,38 @@ public class AudioBaseActivity extends AppCompatActivity
         mSbFadeIn.setProgress(audioAsset.getFadeInTimeMs() / 100);
         mSbFadeOut.setProgress(audioAsset.getFadeOutTimeMs() / 100);
 
-        mTvVolume.setText(getResources().getString(R.string.asset_volume)+"-("+audioAsset.getVolume()+")");
-        mProgress_pitch = audioAsset.getPitch();
-        mProgress_speed = audioAsset.getSpeed();
-        mTvPitch.setText(getResources().getString(R.string.asset_pitch)+"-("+mProgress_pitch+")");
-        mTvSpeed.setText(getResources().getString(R.string.asset_speed)+"-("+mProgress_speed+")");
+        mTvVolume.setText(getResources().getString(R.string.asset_volume) + "-(" + audioAsset.getVolume() + ")");
+        mProgressPitch = audioAsset.getPitch();
+        mProgressSpeed = audioAsset.getSpeed();
+        mTvPitch.setText(getResources().getString(R.string.asset_pitch) + "-(" + mProgressPitch + ")");
+        mTvSpeed.setText(getResources().getString(R.string.asset_speed) + "-(" + mProgressSpeed + ")");
 
 
-        mTvAssetLength.setText(audioLane.getAssets().size()+"");
+        mTvAssetLength.setText(audioLane.getAssets().size() + "");
         latchCountdown = new CountDownLatch(validPath.size());
-        new Thread(
-                () -> {
-                    latchCountdown = new CountDownLatch(validPath.size());
-                    updateAudioCache(validPath, latchCountdown);
-                    try {
-                        latchCountdown.await();
-                        Log.i("AudioBase", "all the audio data load complete");
+        new Thread(() -> {
+            latchCountdown = new CountDownLatch(validPath.size());
+            updateAudioCache(validPath, latchCountdown);
+            try {
+                latchCountdown.await();
+                SmartLog.i("AudioBase", "all the audio data load complete");
 
-                    } catch (InterruptedException e) {
-                        Log.e("AudioBase", "got exception " + e.getMessage());
-                    }
-                    if (getApplicationContext() == null) {
-                        return;
-                    }
-                    isThumbNailTaskEnd = true;
-
-                })
-                .start();
+            } catch (InterruptedException e) {
+                SmartLog.e("AudioBase", "got exception " + e.getMessage());
+            }
+            if (getApplicationContext() == null) {
+                return;
+            }
+            isThumbNailTaskEnd = true;
+        }).start();
     }
+
     private void updateAudioCache(final List<String> validPath, CountDownLatch latchCountdown) {
         WaveformManager.getInstance().generateWaveThumbnailCache(validPath, latchCountdown);
     }
 
     // Obtaining Waveform Data
-    private void getWaveData(){
+    private void getWaveData() {
         if (getThumbNailTask != null) {
             getThumbNailTask.cancel(true);
             getThumbNailTask = null;
@@ -507,18 +523,22 @@ public class AudioBaseActivity extends AppCompatActivity
         protected Void doInBackground(Void... voids) {
             // update wave(intervalLevel 1-9)
             audioAsset.updateVolumeObjects(currentRequestId, HAEConstant.INTERVAL_TEN_FRAME,
-                    audioAsset.getStartTime(), audioAsset.getEndTime(),
-                    () -> {
+                audioAsset.getStartTime(), audioAsset.getEndTime(), new HAEAudioVolumeCallback() {
+                    @Override
+                    public void onAudioEnd() {
                         CopyOnWriteArrayList<HAEAudioVolumeObject> receivedVolumeObjects =
-                                audioAsset.getAudioList();
-                        runOnUiThread(
-                                () -> {
-                                    mTvDateLength.setText(receivedVolumeObjects.size()+"");
-                                });
+                            audioAsset.getAudioList();
+                        runOnUiThread(() -> {
+                            mTvDateLength.setText(receivedVolumeObjects.size() + "");
+                        });
+                        SmartLog.d("audioVolumeObject", receivedVolumeObjects.size() + "");
+                    }
 
-                        Log.d("audioVolumeObject",receivedVolumeObjects.size()+"");
-
-                    });
+                    @Override
+                    public void onAudioFail(int i, String s) {
+                        SmartLog.e("onAudioFail", "code:" + i + " msg:" + s);
+                    }
+                });
             return null;
         }
     }
@@ -551,6 +571,7 @@ public class AudioBaseActivity extends AppCompatActivity
         WaveformManager.getInstance().cleanWaveThumbnailCache(validPath);
         mEditor.stopEditor();
     }
+
     private void showProgress() {
         if (progressDialog != null) {
             progressDialog.setProgress(0);

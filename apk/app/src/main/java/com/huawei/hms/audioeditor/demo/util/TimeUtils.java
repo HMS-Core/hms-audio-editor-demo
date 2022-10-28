@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
  */
 
 package com.huawei.hms.audioeditor.demo.util;
@@ -11,10 +11,6 @@ import com.huawei.hms.audioeditor.ui.R;
 import java.util.Formatter;
 import java.util.Locale;
 
-/**
- *
- * @since 20200202
- */
 public class TimeUtils {
     private static StringBuilder sFormatBuilder = new StringBuilder();
     private static Formatter sFormatter = new Formatter(sFormatBuilder, Locale.getDefault());

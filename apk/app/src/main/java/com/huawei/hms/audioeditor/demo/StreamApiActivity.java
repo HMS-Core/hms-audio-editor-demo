@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2021-2021. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
  */
 
 package com.huawei.hms.audioeditor.demo;
@@ -10,7 +10,6 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +32,7 @@ import com.huawei.hms.audioeditor.sdk.HAESoundFieldStream;
 import com.huawei.hms.audioeditor.sdk.HAEVoiceBeautifierStream;
 import com.huawei.hms.audioeditor.sdk.VoiceBeautifierType;
 import com.huawei.hms.audioeditor.sdk.VoiceTypeCommon;
+import com.huawei.hms.audioeditor.sdk.util.SmartLog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -127,7 +127,9 @@ public class StreamApiActivity extends AppCompatActivity
         initAllAbility();
         File savePcmPath = new File(saveToFilePath);
         if (!savePcmPath.exists()) {
-            savePcmPath.mkdirs();
+            if (!savePcmPath.mkdirs()) {
+                SmartLog.i(TAG, "mkdirs failed");
+            }
         }
     }
 
@@ -175,12 +177,12 @@ public class StreamApiActivity extends AppCompatActivity
         mSbTones.setMax(54);
 
         mTvSeekValue1 = findViewById(R.id.tv_value_1);
-        mTvSeekValue1.setText(0.3 + "");
+        mTvSeekValue1.setText(String.valueOf(0.3));
         mSbTones.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 float val = (float) (i + 6) / 20;
-                mTvSeekValue1.setText(val + "");
+                mTvSeekValue1.setText(String.valueOf(val));
                 changeVoiceOption.setPitch(val);
             }
 
@@ -365,11 +367,7 @@ public class StreamApiActivity extends AppCompatActivity
             try {
                 fileInputStream = (AssetManager.AssetInputStream) getAssets().open("stream.pcm");
                 int bufferSize;
-                if (currentType == TYPE_CHANGE_SOUND) {
-                    bufferSize = CHANGE_VOICE_BUFFER_SIZE;
-                } else {
-                    bufferSize = BUFFER_SIZE;
-                }
+                bufferSize = CHANGE_VOICE_BUFFER_SIZE;
                 byte[] buffer = new byte[bufferSize];
                 byte[] resultByte = null;
                 if (saveToFile) {
@@ -408,14 +406,15 @@ public class StreamApiActivity extends AppCompatActivity
                             }
                         }
                     } catch (IOException e) {
-                        Log.e(TAG, e.getMessage());
+                        SmartLog.e(TAG, e.getMessage());
                     } finally {
+                        releaseAllAbility();
                         isPlaying = false;
                         if (fileInputStream != null) {
                             try {
                                 fileInputStream.close();
                             } catch (IOException e) {
-                                Log.e(TAG, e.getMessage());
+                                SmartLog.e(TAG, e.getMessage());
                             }
                         }
 
@@ -423,7 +422,7 @@ public class StreamApiActivity extends AppCompatActivity
                     try {
                         saveToFileStream.close();
                     } catch (IOException e) {
-                        Log.e(TAG, e.getMessage());
+                        SmartLog.e(TAG, e.getMessage());
                     }
                     saveToFileStream = null;
                 }
@@ -538,6 +537,18 @@ public class StreamApiActivity extends AppCompatActivity
                 break;
             case R.id.rb_normal_common :
                 haeChangeVoiceStreamCommon.changeVoiceType(VoiceTypeCommon.NORMAL);
+                break;
+            case R.id.rb_cyberpunk_common :
+                haeChangeVoiceStreamCommon.changeVoiceType(VoiceTypeCommon.CYBERPUNK);
+                break;
+            case R.id.rb_war_common :
+                haeChangeVoiceStreamCommon.changeVoiceType(VoiceTypeCommon.WAR);
+                break;
+            case R.id.rb_mix_common :
+                haeChangeVoiceStreamCommon.changeVoiceType(VoiceTypeCommon.MIX);
+                break;
+            case R.id.rb_synth_common :
+                haeChangeVoiceStreamCommon.changeVoiceType(VoiceTypeCommon.SYNTH);
                 break;
             case R.id.rb_gb :
                 haeSceneStream.setEnvironmentType(AudioParameters.ENVIRONMENT_TYPE_BROADCAST);

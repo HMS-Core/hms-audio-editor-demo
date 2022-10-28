@@ -5,7 +5,7 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.3"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.huawei.hms.audioeditor.demo"
@@ -28,9 +28,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    lintOptions {
-        abortOnError false
-    }
+   lintOptions {
+       abortOnError false
+   }
 
 }
 
@@ -47,10 +47,6 @@ dependencies {
     implementation('com.github.bumptech.glide:glide:4.11.0') {
         exclude group: "com.android.support"
     }
-    implementation('com.huawei.agconnect:agconnect-core:1.5.2.300')
-    implementation('com.huawei.hms:audio-editor-aidubbing:1.7.0.300')
-//    implementation('com.squareup.okhttp3:okhttp:3.12.0')
+    implementation('com.huawei.hms:audio-editor-aidubbing:1.8.0.301')
     implementation('org.greenrobot:greendao:3.3.0')
-//    implementation project(path: ':sdk:HuaweiAudioCommon')
-//    implementation project(path: ':sdk:HuaweiAudioAiDubbing')
 }

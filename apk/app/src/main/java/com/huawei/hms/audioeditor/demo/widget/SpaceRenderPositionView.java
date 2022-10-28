@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2021-2021. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
  */
 
 package com.huawei.hms.audioeditor.demo.widget;
@@ -29,13 +29,13 @@ import androidx.annotation.Nullable;
 public class SpaceRenderPositionView extends View {
 
     public static final float MAX_DEST = 5.0f;
-    private final int LINE_WIDTH = dpToPx(1.5f);
     private static final int AREA_COUNT = 4;
     private static final int NO_RES_ID = -1;
     private static final int FRONT_TYPE = 1;
     private static final int TOP_TYPE = 2;
     private static final int DEFAULT_ACTIVE_COLOR = 0xFF6555E6;
     private static final int DEFAULT_IN_ACTIVE_COLOR = 0x80FFFFFF;
+    private final int lineWidth = dpToPx(1.5f);
     private int mCenterBitmapId = NO_RES_ID;
     private int mActiveColor = DEFAULT_ACTIVE_COLOR;
     private Paint mPaint;
@@ -79,7 +79,7 @@ public class SpaceRenderPositionView extends View {
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(LINE_WIDTH);
+        mPaint.setStrokeWidth(lineWidth);
 
         if (mCenterBitmapId > 0) {
             mCenterBitmap = BitmapFactory.decodeResource(getResources(), mCenterBitmapId);
@@ -94,7 +94,7 @@ public class SpaceRenderPositionView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         viewSize = w;
-        float radius = viewSize / 2.0f - mPointRadius - LINE_WIDTH;
+        float radius = viewSize / 2.0f - mPointRadius - lineWidth;
         destZoom = MAX_DEST / radius;
         if (currentX <= 0 && currentY <= 0) {
             currentX = (float) w / 2;
@@ -128,7 +128,7 @@ public class SpaceRenderPositionView extends View {
         } else {
             mPaint.setColor(DEFAULT_IN_ACTIVE_COLOR);
         }
-        int offset = LINE_WIDTH / 2;
+        int offset = lineWidth / 2;
         canvas.drawLine(0, offset, viewSize, offset, mPaint);
         canvas.drawLine(viewSize - offset, 0, viewSize - offset, viewSize, mPaint);
         canvas.drawLine(viewSize, viewSize - offset, 0, viewSize - offset, mPaint);
@@ -219,8 +219,8 @@ public class SpaceRenderPositionView extends View {
     }
 
     private void limitPointPosition() {
-        int min = mPointRadius + LINE_WIDTH;
-        int max = viewSize - mPointRadius - LINE_WIDTH;
+        int min = mPointRadius + lineWidth;
+        int max = viewSize - mPointRadius - lineWidth;
         if (currentX <= min) {
             currentX = min;
         }

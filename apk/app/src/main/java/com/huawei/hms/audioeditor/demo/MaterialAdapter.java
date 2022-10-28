@@ -30,7 +30,6 @@ import static com.huawei.hms.audioeditor.sdk.materials.bean.MaterialsCutContent.
 import static com.huawei.hms.audioeditor.sdk.materials.bean.MaterialsCutContent.DOWNLOADING;
 import static com.huawei.hms.audioeditor.sdk.materials.bean.MaterialsCutContent.UNDOWNLOAD;
 
-
 /**
  * @since 2021/1/16
  */
@@ -48,9 +47,9 @@ public class MaterialAdapter extends RCommandAdapter<MaterialsCutContent> {
     }
 
     @Override
-    protected void convert(
+    protected void rcConvert(
             RViewHolder holder, MaterialsCutContent materialsCutContent, int dataPosition, int position) {
-        ImageView mMusicPictureIv = holder.getView(R.id.music_icon);
+        holder.getView(R.id.music_icon);
         TextView mNameTv = holder.getView(R.id.music_name_tv);
         TextView mDurationTv = holder.getView(R.id.local_duration_tv);
         ImageView mMusicDownloadIv = holder.getView(R.id.music_download_icon);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
  */
 
 package com.huawei.hms.audioeditor.demo.widget;
@@ -22,15 +22,11 @@ import androidx.fragment.app.DialogFragment;
 import com.huawei.hms.audioeditor.demo.R;
 import com.huawei.hms.audioeditor.sdk.HAEAudioExpansion;
 
-/**
- * @date 2021/5/11
- * @since 2021/5/11
- */
 public class ProgressDialog extends DialogFragment implements View.OnClickListener {
-    public ProgressBar rd_progress;
-    private TextView tv_progress;
-    private TextView tv_message;
-    private TextView tv_cancel;
+    public ProgressBar rdProgress;
+    private TextView tvProgress;
+    private TextView tvMessage;
+    private TextView tvCancel;
 
     public static ProgressDialog newInstance(String message) {
         Bundle bundle = new Bundle();
@@ -41,8 +37,8 @@ public class ProgressDialog extends DialogFragment implements View.OnClickListen
     }
 
     public void setProgress(int progress) {
-        rd_progress.setProgress(progress);
-        tv_progress.setText(progress + "%");
+        rdProgress.setProgress(progress);
+        tvProgress.setText(progress + "%");
     }
 
     @Nullable
@@ -50,26 +46,26 @@ public class ProgressDialog extends DialogFragment implements View.OnClickListen
     public View onCreateView(
             @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Dialog dialog = getDialog();
-        /* *  The dialog does not have a title.This parameter needs to be set before setContentView.
-        An error will be reported after setContentView.  * */
+
+        // The dialog does not have a title.This parameter needs to be set before setContentView.
+        // An error will be reported after setContentView.
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        /* *  Setting the Dialog Background Transparency Effect  * */
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
         View view = requireActivity().getLayoutInflater().inflate(R.layout.progress_dialog, null);
-        rd_progress = view.findViewById(R.id.pb_progress);
-        tv_progress = view.findViewById(R.id.tv_progress);
-        tv_message = view.findViewById(R.id.tv_message);
-        tv_cancel = view.findViewById(R.id.tv_cancel);
-        tv_cancel.setOnClickListener(this);
+        rdProgress = view.findViewById(R.id.pb_progress);
+        tvProgress = view.findViewById(R.id.tv_progress);
+        tvMessage = view.findViewById(R.id.tv_message);
+        tvCancel = view.findViewById(R.id.tv_cancel);
+        tvCancel.setOnClickListener(this);
         if (getArguments() != null) {
             String message = getArguments().getString("message");
             if (!TextUtils.isEmpty(message)) {
-                tv_message.setText(getArguments().getString("message"));
+                tvMessage.setText(getArguments().getString("message"));
             }
         } else {
-            tv_message.setVisibility(View.GONE);
+            tvMessage.setVisibility(View.GONE);
         }
 
         return view;

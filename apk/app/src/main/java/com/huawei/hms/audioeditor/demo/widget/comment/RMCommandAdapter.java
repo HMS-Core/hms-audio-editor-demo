@@ -25,9 +25,6 @@ public class RMCommandAdapter<T> extends RecyclerView.Adapter<RViewHolder> {
     private SparseArray<View> mHeaders = new SparseArray<>();
     private SparseArray<View> mFooters = new SparseArray<>();
 
-    private int BASE_ITEM_TYPE_HEADER = 100000;
-    private int BASE_ITEM_TYPE_FOOTER = 200000;
-
     protected List<T> mList;
     protected Context mContext;
     public ItemViewDelegateManager mItemViewDelegateManager;
@@ -37,14 +34,6 @@ public class RMCommandAdapter<T> extends RecyclerView.Adapter<RViewHolder> {
         mContext = context;
         mList = list;
         mItemViewDelegateManager = new ItemViewDelegateManager();
-    }
-
-    public int getHeaderCount() {
-        return mHeaders.size();
-    }
-
-    public int getFooterCount() {
-        return mFooters.size();
     }
 
     @Override
@@ -153,12 +142,6 @@ public class RMCommandAdapter<T> extends RecyclerView.Adapter<RViewHolder> {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
-    protected RMCommandAdapter addItemViewDelegate(int viewType, ItemViewDelegate<T> itemViewDelegate) {
-        mItemViewDelegateManager.addDelegate(viewType, itemViewDelegate);
-        return this;
-    }
-
     private boolean useItemViewDelegateManager() {
         return mItemViewDelegateManager.getItemViewDelegateCount() > 0;
     }
@@ -176,11 +159,11 @@ public class RMCommandAdapter<T> extends RecyclerView.Adapter<RViewHolder> {
 
         /**
          * long click
-         *
          * @param view view
          * @param holder holder
          * @param dataPosition dataPosition
          * @param position position
+         * @return true: success; false:failed
          */
         boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int dataPosition, int position);
     }

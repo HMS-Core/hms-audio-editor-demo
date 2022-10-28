@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
+ */
+
 package com.huawei.hms.audioeditor.demo;
 
 import android.app.Activity;
@@ -63,6 +67,8 @@ public class AudioFilePickerActivity extends AppCompatActivity {
                     handleSelectedAudios(uris);
                 }
                 finish();
+                break;
+            default:
                 break;
         }
     }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout_recycler_view_layout_home_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/dp_20"
+    android:background="@color/transparent">
+    <LinearLayout
+        android:id="@+id/ll_recycler_view_layout_home_item"
+        android:layout_width="@dimen/dp_48"
+        android:layout_height="@dimen/dp_48"
+        android:gravity="center"
+        android:background="@drawable/bg_recycler_img_home_item"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/image_recycler_view_layout_home_item"
+            android:layout_width="@dimen/dp_24"
+            android:layout_height="@dimen/dp_24"
+            android:background="@drawable/ic_main_draft_music"
+            />
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/more_recycler_view_layout_home_item"
+        android:layout_width="@dimen/dp_24"
+        android:layout_height="@dimen/dp_24"
+        android:background="@mipmap/icon_home_more"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_12"
+        android:layout_marginEnd="@dimen/dp_12"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/more_recycler_view_layout_home_item"
+        app:layout_constraintStart_toEndOf="@+id/ll_recycler_view_layout_home_item"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/name_recycler_view_layout_home_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="HarmonyHeiTi"
+            android:gravity="start|center_vertical"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/main_menu_item"
+            android:textSize="@dimen/dp_14"
+            tools:ignore="SpUsage" />
+
+        <TextView
+            android:id="@+id/size_recycler_view_layout_home_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_6"
+            android:fontFamily="PingFangSC"
+            android:gravity="start|center_vertical"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="#99ffffff"
+            android:textSize="@dimen/dp_10"
+            tools:ignore="SpUsage" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

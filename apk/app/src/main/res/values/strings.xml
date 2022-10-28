@@ -13,6 +13,14 @@
     <string name="extract_fail">Audio extraction failed.</string>
     <string name="main_extract">Audio extraction</string>
     <string name="main_format">Format conversion</string>
+    <string name="main_title">Petal Li Yin</string>
+    <string name="main_draft">Draft box</string>
+    <string name="main_clip">Music Clips</string>
+    <string name="main_clip_text2">Import Audio Easy Editing</string>
+
+    <string name="main_popup_window_text1">Delete</string>
+    <string name="main_popup_window_text2">Rename</string>
+    <string name="main_popup_window_text3">Draft Copy</string>
     <string name="main_effect">Effects</string>
     <string name="main_withdraw">Audio extraction</string>
     <string name="file_not_avable">This file is not available</string>
@@ -165,4 +173,5 @@
     <string name="beautifer_cd">CD</string>
     <string name="beautifer_studio">Studio</string>
     <string name="beautifer_btn">Start Voice Beautifier</string>
+    <string name="audio_clip_title">Audio Editor</string>
 </resources>

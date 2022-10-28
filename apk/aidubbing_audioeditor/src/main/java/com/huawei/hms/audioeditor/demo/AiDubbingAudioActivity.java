@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
+ */
+
 package com.huawei.hms.audioeditor.demo;
 
 import android.app.Dialog;
@@ -6,7 +10,6 @@ import android.media.AudioFormat;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -34,6 +37,7 @@ import com.huawei.hms.audioeditor.sdk.engine.dubbing.HAEAiDubbingEngine;
 import com.huawei.hms.audioeditor.sdk.engine.dubbing.HAEAiDubbingError;
 import com.huawei.hms.audioeditor.sdk.engine.dubbing.HAEAiDubbingSpeaker;
 import com.huawei.hms.audioeditor.sdk.engine.dubbing.HAEAiDubbingWarn;
+import com.huawei.hms.audioeditor.sdk.util.SmartLog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -48,17 +52,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * AI dubbing
+ *
  * @date 2021/8/10
  * @since 2021/8/10
  */
 public class AiDubbingAudioActivity extends AppCompatActivity
-        implements View.OnClickListener,
-                SeekBar.OnSeekBarChangeListener,
-                AiDubbingLanguageAdapter.OnItemClickListener,
-                AiDubbingStyleAdapter.OnItemClickListener {
+    implements View.OnClickListener,
+    SeekBar.OnSeekBarChangeListener,
+    AiDubbingLanguageAdapter.OnItemClickListener,
+    AiDubbingStyleAdapter.OnItemClickListener {
     private static final String TAG = "AiDubbingAudioActivity";
 
-    public static String AUDIO_PATH;
+    public String audioPath;
 
     private EditText editText;
 
@@ -70,22 +75,22 @@ public class AiDubbingAudioActivity extends AppCompatActivity
     private SeekBar speedSeek;
     private SeekBar volumeSeek;
 
-    private TextView textView_volume;
-    private TextView textView_speed;
+    private TextView textViewVolume;
+    private TextView textViewSpeed;
     private TextView languageText;
     private TextView speakerText;
     private TextView modeText;
 
     private ImageView clear;
 
-    private RelativeLayout rl_language;
-    private RelativeLayout rl_speaker;
-    private RelativeLayout rl_mode;
+    private RelativeLayout rlLanguage;
+    private RelativeLayout rlSpeaker;
+    private RelativeLayout rlMode;
 
     private HAEAiDubbingEngine mEngine;
 
     private Map<String, String> languageMap = new HashMap<>();
-    private int[] playModeResources = new int[] {R.string.queuing_mode, R.string.clear_mode};
+    private int[] playModeResources = new int[]{R.string.queuing_mode, R.string.clear_mode};
     private boolean isFlush = false; // Sequence or queued playback.
     private boolean isPause = false;
 
@@ -106,7 +111,7 @@ public class AiDubbingAudioActivity extends AppCompatActivity
         HAEApplication.getInstance().setApiKey("Set your APIKey");
         HAEAiDubbingConfig mlConfigs = new HAEAiDubbingConfig();
         mEngine = new HAEAiDubbingEngine(mlConfigs);
-        AUDIO_PATH = FileUtils.initFile(this);
+        audioPath = FileUtils.initFile(this);
         initView();
         initAction();
     }
@@ -125,161 +130,163 @@ public class AiDubbingAudioActivity extends AppCompatActivity
 
         clear = findViewById(R.id.close);
 
-        textView_volume = findViewById(R.id.textView_volume);
-        textView_speed = findViewById(R.id.textView_speed);
+        textViewVolume = findViewById(R.id.textView_volume);
+        textViewSpeed = findViewById(R.id.textView_speed);
 
         languageText = findViewById(R.id.languagetext);
         speakerText = findViewById(R.id.styletext);
         modeText = findViewById(R.id.modetext);
-        rl_language = findViewById(R.id.rl_language);
-        rl_speaker = findViewById(R.id.rl_style);
-        rl_mode = findViewById(R.id.rl_mode);
+        rlLanguage = findViewById(R.id.rl_language);
+        rlSpeaker = findViewById(R.id.rl_style);
+        rlMode = findViewById(R.id.rl_mode);
 
         initSpeakerList();
         createModeDialog();
 
-        textView_volume.setText(120 + "");
-        textView_speed.setText(100 + "");
+        textViewVolume.setText(120 + "");
+        textViewSpeed.setText(100 + "");
     }
 
     HAEAiDubbingCallback callback =
-            new HAEAiDubbingCallback() {
-                @Override
-                public void onError(String taskId, HAEAiDubbingError err) {
-                    stopAiDubbing();
-                    errToast(err);
-                }
+        new HAEAiDubbingCallback() {
+            @Override
+            public void onError(String taskId, HAEAiDubbingError err) {
+                stopAiDubbing();
+                errToast(err);
+            }
 
-                @Override
-                public void onWarn(String taskId, HAEAiDubbingWarn warn) {}
+            @Override
+            public void onWarn(String taskId, HAEAiDubbingWarn warn) {
+            }
 
-                @Override
-                public void onRangeStart(String taskId, int start, int end) {}
+            @Override
+            public void onRangeStart(String taskId, int start, int end) {
+            }
 
-                @Override
-                public void onAudioAvailable(
-                        String taskId,
-                        HAEAiDubbingAudioInfo HAEAiDubbingAudioInfo,
-                        int i,
-                        Pair<Integer, Integer> pair,
-                        Bundle bundle) {
-                    // Start to receive files and save them as files.
+            @Override
+            public void onAudioAvailable(
+                String taskId,
+                HAEAiDubbingAudioInfo aiDubbingAudioInfo,
+                int i,
+                Pair<Integer, Integer> pair,
+                Bundle bundle) {
+                // Start to receive files and save them as files.
+                String pcmFile = getAudioFileNameByTask(taskId, PCM_EXT);
+                FileUtils.writeBufferToFile(aiDubbingAudioInfo.getAudioData(), pcmFile, true);
+            }
+
+            @Override
+            public void onEvent(String taskId, int eventID, Bundle bundle) {
+                // The synthesis is complete.
+                if (eventID == HAEAiDubbingConstants.EVENT_SYNTHESIS_COMPLETE) {
                     String pcmFile = getAudioFileNameByTask(taskId, PCM_EXT);
-                    FileUtils.writeBufferToFile(HAEAiDubbingAudioInfo.getAudioData(), pcmFile, true);
-                }
-
-                @Override
-                public void onEvent(String taskId, int eventID, Bundle bundle) {
-                    // The synthesis is complete.
-                    if (eventID == HAEAiDubbingConstants.EVENT_SYNTHESIS_COMPLETE) {
-                        String pcmFile = getAudioFileNameByTask(taskId, PCM_EXT);
-                        String waveFile = getAudioFileNameByTask(taskId, WAV_EXT);
-                        final String convertWaveFile =
-                                PCMToWav.convertWaveFile(
-                                        pcmFile,
-                                        waveFile,
-                                        16000,
-                                        AudioFormat.CHANNEL_IN_MONO,
-                                        AudioFormat.ENCODING_PCM_16BIT);
-                        if (isSpeechNoPreview) {
-                            runOnUiThread(
-                                    () -> {
-                                        addBtn.setText(R.string.queue_add);
-                                        Toast.makeText(AiDubbingAudioActivity.this, convertWaveFile, Toast.LENGTH_SHORT)
-                                                .show();
-                                    });
-                            stopAiDubbing();
-                        }
+                    String waveFile = getAudioFileNameByTask(taskId, WAV_EXT);
+                    final String convertWaveFile =
+                        PCMToWav.convertWaveFile(
+                            pcmFile,
+                            waveFile,
+                            16000,
+                            AudioFormat.CHANNEL_IN_MONO,
+                            AudioFormat.ENCODING_PCM_16BIT);
+                    if (isSpeechNoPreview) {
+                        runOnUiThread(
+                            () -> {
+                                addBtn.setText(R.string.queue_add);
+                                Toast.makeText(AiDubbingAudioActivity.this, convertWaveFile, Toast.LENGTH_SHORT)
+                                    .show();
+                            });
+                        stopAiDubbing();
                     }
                 }
+            }
 
-                @Override
-                public void onSpeakerUpdate(List<HAEAiDubbingSpeaker> speakerList, List<String> lanList, List<String> lanDescList) {
-                    notifySpeaker(speakerList,lanList,lanDescList);
-                }
-            };
+            @Override
+            public void onSpeakerUpdate(List<HAEAiDubbingSpeaker> speakerList, List<String> lanList, List<String> lanDescList) {
+                notifySpeaker(speakerList, lanList, lanDescList);
+            }
+        };
 
     private void notifySpeaker(List<HAEAiDubbingSpeaker> speakerList, List<String> lanList, List<String> lanDescList) {
         runOnUiThread(
-                () -> {
-                    if(aiDubbingStyleAdapter != null && lanDescList != null){
-                        languageCodeList = lanList;
-                        languageDescList = lanDescList;
-                        if (aiDubbingLanguageAdapter != null){
-                            aiDubbingLanguageAdapter.setList(languageDescList);
-                        }
+            () -> {
+                if (aiDubbingStyleAdapter != null && lanDescList != null) {
+                    languageCodeList = lanList;
+                    languageDescList = lanDescList;
+                    if (aiDubbingLanguageAdapter != null) {
+                        aiDubbingLanguageAdapter.setList(languageDescList);
                     }
-                    // Update the data obtained from the network.
-                    if (aiDubbingStyleAdapter != null) {
-                        speakerCodeList.clear();
-                        speakerTypeList.clear();
-                        List<TextToSpeechStyleBean> divideBeanList = generateList(speakerList);
-                        for (TextToSpeechStyleBean divideBean : divideBeanList) {
-                            speakerCodeList.add(divideBean.getSpeaker().getSpeakerDesc());
-                            speakerTypeList.add(divideBean.getSpeaker().getName());
-                        }
-                        aiDubbingStyleAdapter.setList(speakerCodeList);
+                }
+                // Update the data obtained from the network.
+                if (aiDubbingStyleAdapter != null) {
+                    speakerCodeList.clear();
+                    speakerTypeList.clear();
+                    List<TextToSpeechStyleBean> divideBeanList = generateList(speakerList);
+                    for (TextToSpeechStyleBean divideBean : divideBeanList) {
+                        speakerCodeList.add(divideBean.getSpeaker().getSpeakerDesc());
+                        speakerTypeList.add(divideBean.getSpeaker().getName());
                     }
-                });
+                    aiDubbingStyleAdapter.setList(speakerCodeList);
+                }
+            });
     }
 
     private void errToast(HAEAiDubbingError err) {
         runOnUiThread(
-                () -> {
-                    String msg = "";
-                    switch (err.getErrorId()) {
-                        case HAEAiDubbingError.ERR_ILLEGAL_PARAMETER:
-                            msg = AiDubbingAudioActivity.this.getResources()
-                                    .getString(R.string.text_to_audio_error_1);
-                            break;
-                        case HAEAiDubbingError.ERR_NET_CONNECT_FAILED:
-                            msg = AiDubbingAudioActivity.this.getResources()
-                                    .getString(R.string.text_to_audio_error_2);
-                            break;
-                        case HAEAiDubbingError.ERR_INSUFFICIENT_BALANCE:
-                            msg = AiDubbingAudioActivity.this.getResources()
-                                    .getString(R.string.text_to_audio_error_3);
-                            break;
-                        case HAEAiDubbingError.ERR_SPEECH_SYNTHESIS_FAILED:
-                            msg = AiDubbingAudioActivity.this.getResources()
-                                    .getString(R.string.text_to_audio_error_4);
-                            break;
-                        case HAEAiDubbingError.ERR_AUDIO_PLAYER_FAILED:
-                            msg = AiDubbingAudioActivity.this.getResources()
-                                    .getString(R.string.text_to_audio_error_5);
-                            break;
-                        case HAEAiDubbingError.ERR_AUTHORIZE_FAILED:
-                            msg = AiDubbingAudioActivity.this.getResources()
-                                    .getString(R.string.text_to_audio_error_6);
-                            break;
-                        case HAEAiDubbingError.ERR_AUTHORIZE_TOKEN_INVALID:
-                            msg = AiDubbingAudioActivity.this.getResources()
-                                    .getString(R.string.text_to_audio_error_7);
-                            break;
-                        case HAEAiDubbingError.ERR_INTERNAL:
-                            msg = AiDubbingAudioActivity.this.getResources()
-                                    .getString(R.string.text_to_audio_error_8);
-                            break;
-                        case HAEAiDubbingError.ERR_UNKNOWN:
-                            msg = AiDubbingAudioActivity.this.getResources()
-                                    .getString(R.string.text_to_audio_error_9);
-                            break;
-                        case HAEAiDubbingError.ERR_TEXT:
-                            msg = AiDubbingAudioActivity.this
-                                            .getResources().getString(R.string.error_2002);
-                            break;
-                        case HAEAiDubbingError.ERR_SPEAKER_LAN:
-                            msg = AiDubbingAudioActivity.this
-                                            .getResources().getString(R.string.error_80005);
-                            break;
-                        default:
-                            msg = AiDubbingAudioActivity.this.getResources()
-                                            .getString(R.string.text_to_audio_error);
-                            break;
-                    }
-                    addBtn.setText(R.string.replay);
-                    Toast.makeText(AiDubbingAudioActivity.this, msg,Toast.LENGTH_SHORT).show();
-                });
+            () -> {
+                String msg = "";
+                switch (err.getErrorId()) {
+                    case HAEAiDubbingError.ERR_ILLEGAL_PARAMETER:
+                        msg = AiDubbingAudioActivity.this.getResources()
+                            .getString(R.string.text_to_audio_error_1);
+                        break;
+                    case HAEAiDubbingError.ERR_NET_CONNECT_FAILED:
+                        msg = AiDubbingAudioActivity.this.getResources()
+                            .getString(R.string.text_to_audio_error_2);
+                        break;
+                    case HAEAiDubbingError.ERR_INSUFFICIENT_BALANCE:
+                        msg = AiDubbingAudioActivity.this.getResources()
+                            .getString(R.string.text_to_audio_error_3);
+                        break;
+                    case HAEAiDubbingError.ERR_SPEECH_SYNTHESIS_FAILED:
+                        msg = AiDubbingAudioActivity.this.getResources()
+                            .getString(R.string.text_to_audio_error_4);
+                        break;
+                    case HAEAiDubbingError.ERR_AUDIO_PLAYER_FAILED:
+                        msg = AiDubbingAudioActivity.this.getResources()
+                            .getString(R.string.text_to_audio_error_5);
+                        break;
+                    case HAEAiDubbingError.ERR_AUTHORIZE_FAILED:
+                        msg = AiDubbingAudioActivity.this.getResources()
+                            .getString(R.string.text_to_audio_error_6);
+                        break;
+                    case HAEAiDubbingError.ERR_AUTHORIZE_TOKEN_INVALID:
+                        msg = AiDubbingAudioActivity.this.getResources()
+                            .getString(R.string.text_to_audio_error_7);
+                        break;
+                    case HAEAiDubbingError.ERR_INTERNAL:
+                        msg = AiDubbingAudioActivity.this.getResources()
+                            .getString(R.string.text_to_audio_error_8);
+                        break;
+                    case HAEAiDubbingError.ERR_UNKNOWN:
+                        msg = AiDubbingAudioActivity.this.getResources()
+                            .getString(R.string.text_to_audio_error_9);
+                        break;
+                    case HAEAiDubbingError.ERR_TEXT:
+                        msg = AiDubbingAudioActivity.this
+                            .getResources().getString(R.string.error_2002);
+                        break;
+                    case HAEAiDubbingError.ERR_SPEAKER_LAN:
+                        msg = AiDubbingAudioActivity.this
+                            .getResources().getString(R.string.error_80005);
+                        break;
+                    default:
+                        msg = AiDubbingAudioActivity.this.getResources()
+                            .getString(R.string.text_to_audio_error);
+                        break;
+                }
+                addBtn.setText(R.string.replay);
+                Toast.makeText(AiDubbingAudioActivity.this, msg, Toast.LENGTH_SHORT).show();
+            });
     }
 
     private AiDubbingLanguageAdapter aiDubbingLanguageAdapter;
@@ -338,9 +345,9 @@ public class AiDubbingAudioActivity extends AppCompatActivity
             int right = left + v.getWidth();
             // Click the input box area to keep the event of clicking EditText
             return !(event.getX() > left)
-                    || !(event.getX() < right)
-                    || !(event.getY() > top)
-                    || !(event.getY() < bottom);
+                || !(event.getX() < right)
+                || !(event.getY() > top)
+                || !(event.getY() < bottom);
         }
         return false;
     }
@@ -356,20 +363,19 @@ public class AiDubbingAudioActivity extends AppCompatActivity
         RecyclerView languageRv = view.findViewById(R.id.language_rv);
         languageCodeList = mEngine.getLanguages();
         languageDescList = mEngine.getLanguagesDesc();
-        if (languageCodeList == null ||languageCodeList.size() == 0){
+        if (languageCodeList == null || languageCodeList.size() == 0) {
             initSpeakerList();
             return;
         }
         List<String> languageList = new ArrayList<>();
-        if (languageCodeList != null) {
-            if (defaultLanguageCode.equals("")) {
-                defaultLanguageCode = languageCodeList.get(0);
-            }
-            if (defaultLanguageDesc.equals("")) {
-                defaultLanguageDesc = languageDescList.get(0);
-            }
-            languageList.addAll(languageDescList);
+        if (defaultLanguageCode.equals("")) {
+            defaultLanguageCode = languageCodeList.get(0);
         }
+        if (defaultLanguageDesc.equals("")) {
+            defaultLanguageDesc = languageDescList.get(0);
+        }
+        languageList.addAll(languageDescList);
+
         languageText.setText(defaultLanguageDesc);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -377,7 +383,7 @@ public class AiDubbingAudioActivity extends AppCompatActivity
         languageRv.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         // Initialize the adapter.
-        aiDubbingLanguageAdapter = new AiDubbingLanguageAdapter(this, languageList,defaultLanguageDesc);
+        aiDubbingLanguageAdapter = new AiDubbingLanguageAdapter(this, languageList, defaultLanguageDesc);
 
         // Set adapter.
         languageRv.setAdapter(aiDubbingLanguageAdapter);
@@ -413,12 +419,12 @@ public class AiDubbingAudioActivity extends AppCompatActivity
             speakerCodeList.add(divideBean.getSpeaker().getSpeakerDesc());
             speakerTypeList.add(divideBean.getSpeaker().getName());
         }
-        if(defaultSpeakerType == -1){
+        if (defaultSpeakerType == -1) {
             defaultSpeakerCode = divideBeanList.get(0).getSpeaker().getSpeakerDesc();
             defaultSpeakerType = Integer.parseInt(divideBeanList.get(0).getSpeaker().getName());
             speakerText.setText(defaultSpeakerCode);
         }
-        aiDubbingStyleAdapter = new AiDubbingStyleAdapter(this, speakerCodeList , defaultSpeakerCode);
+        aiDubbingStyleAdapter = new AiDubbingStyleAdapter(this, speakerCodeList, defaultSpeakerCode);
 
         // set adapter
         styleRv.setAdapter(aiDubbingStyleAdapter);
@@ -481,14 +487,14 @@ public class AiDubbingAudioActivity extends AppCompatActivity
         volumeSeek.setOnSeekBarChangeListener(this);
         clear.setOnClickListener(this);
 
-        rl_language.setOnClickListener(this);
-        rl_speaker.setOnClickListener(this);
-        rl_mode.setOnClickListener(this);
+        rlLanguage.setOnClickListener(this);
+        rlSpeaker.setOnClickListener(this);
+        rlMode.setOnClickListener(this);
     }
 
     @Override
     public void onDestroy() {
-        Log.e(TAG, "onDestroy");
+        SmartLog.e(TAG, "onDestroy");
         super.onDestroy();
         if (mEngine != null) {
             mEngine.stop();
@@ -508,12 +514,12 @@ public class AiDubbingAudioActivity extends AppCompatActivity
                 editText.setText("");
                 break;
             case R.id.btn_play:
-                if (defaultLanguageCode.equals("")){
-                    Toast.makeText(AiDubbingAudioActivity.this, this.getResources().getString(R.string.select_lan),Toast.LENGTH_SHORT).show();
+                if (defaultLanguageCode.equals("")) {
+                    Toast.makeText(AiDubbingAudioActivity.this, this.getResources().getString(R.string.select_lan), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (defaultSpeakerCode.equals("")){
-                    Toast.makeText(AiDubbingAudioActivity.this, this.getResources().getString(R.string.select_style),Toast.LENGTH_SHORT).show();
+                if (defaultSpeakerCode.equals("")) {
+                    Toast.makeText(AiDubbingAudioActivity.this, this.getResources().getString(R.string.select_style), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 // Use the system player to play the cached audio.
@@ -525,40 +531,40 @@ public class AiDubbingAudioActivity extends AppCompatActivity
                 String text = editText.getText().toString();
                 if (TextUtils.isEmpty(text)) {
                     Toast.makeText(
-                                    AiDubbingAudioActivity.this,
-                                    AiDubbingAudioActivity.this.getResources().getString(R.string.text_to_speech_toast_1),
-                                    Toast.LENGTH_SHORT)
-                            .show();
+                        AiDubbingAudioActivity.this,
+                        AiDubbingAudioActivity.this.getResources().getString(R.string.text_to_speech_toast_1),
+                        Toast.LENGTH_SHORT)
+                        .show();
                 } else {
                     String taskId = mEngine.speak(text, aiMode);
                     temp.put(taskId, text);
                 }
                 break;
             case R.id.btn_add:
-                if (defaultLanguageCode.equals("") || defaultLanguageDesc.equals("")){
-                    Toast.makeText(AiDubbingAudioActivity.this, this.getResources().getString(R.string.select_lan),Toast.LENGTH_SHORT).show();
+                if (defaultLanguageCode.equals("") || defaultLanguageDesc.equals("")) {
+                    Toast.makeText(AiDubbingAudioActivity.this, this.getResources().getString(R.string.select_lan), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (defaultSpeakerCode.equals("")){
-                    Toast.makeText(AiDubbingAudioActivity.this, this.getResources().getString(R.string.select_style),Toast.LENGTH_SHORT).show();
+                if (defaultSpeakerCode.equals("")) {
+                    Toast.makeText(AiDubbingAudioActivity.this, this.getResources().getString(R.string.select_style), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (addBtn.getText().toString().equals(getResources().getString(R.string.queue_add_center))) {
                     Toast.makeText(
-                                    AiDubbingAudioActivity.this,
-                                    AiDubbingAudioActivity.this.getResources().getString(R.string.queue_add_center),
-                                    Toast.LENGTH_SHORT)
-                            .show();
+                        AiDubbingAudioActivity.this,
+                        AiDubbingAudioActivity.this.getResources().getString(R.string.queue_add_center),
+                        Toast.LENGTH_SHORT)
+                        .show();
                     return;
                 }
                 String s = editText.getText().toString();
                 // Invoke Ai to perform voice conversion.
                 if (TextUtils.isEmpty(s)) {
                     Toast.makeText(
-                                    AiDubbingAudioActivity.this,
-                                    AiDubbingAudioActivity.this.getResources().getString(R.string.text_to_speech_toast_1),
-                                    Toast.LENGTH_SHORT)
-                            .show();
+                        AiDubbingAudioActivity.this,
+                        AiDubbingAudioActivity.this.getResources().getString(R.string.text_to_speech_toast_1),
+                        Toast.LENGTH_SHORT)
+                        .show();
                 } else {
                     addBtn.setText(R.string.queue_add_center);
                     isSaveSpeechToFile = true;
@@ -587,10 +593,10 @@ public class AiDubbingAudioActivity extends AppCompatActivity
                 break;
             case R.id.rl_language:
                 if (!NetworkUtil.isNetworkConnected()) {
-                    Toast.makeText(AiDubbingAudioActivity.this, this.getResources().getString(R.string.text_to_audio_error_2),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AiDubbingAudioActivity.this, this.getResources().getString(R.string.text_to_audio_error_2), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(mEngine == null || mEngine.getLanguages() == null){
+                if (mEngine == null || mEngine.getLanguages() == null) {
                     HAEAiDubbingConfig mlConfigs = new HAEAiDubbingConfig();
                     mEngine = new HAEAiDubbingEngine(mlConfigs);
                     mEngine.setAiDubbingCallback(callback);
@@ -599,8 +605,8 @@ public class AiDubbingAudioActivity extends AppCompatActivity
                 showLanguageDialog();
                 break;
             case R.id.rl_style:
-                if (defaultLanguageCode.equals("") || defaultLanguageDesc.equals("")){
-                    Toast.makeText(AiDubbingAudioActivity.this, this.getResources().getString(R.string.select_lan),Toast.LENGTH_SHORT).show();
+                if (defaultLanguageCode.equals("") || defaultLanguageDesc.equals("")) {
+                    Toast.makeText(AiDubbingAudioActivity.this, this.getResources().getString(R.string.select_lan), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 speakerList = mEngine.getSpeakerNoRequest(defaultLanguageCode);
@@ -647,20 +653,19 @@ public class AiDubbingAudioActivity extends AppCompatActivity
                 if (progress == 90) {
                     String text1 = 90 + "";
                     seekBar.setProgress(0);
-                    textView_volume.setText(text1);
+                    textViewVolume.setText(text1);
                 } else {
-                    textView_volume.setText(p + "");
+                    textViewVolume.setText(p + "");
                 }
                 break;
             case R.id.speedSeek:
                 int s = progress + 50;
-                String text = progress + "";
                 if (progress == 50) {
                     String text1 = 50 + "";
                     seekBar.setProgress(50);
-                    textView_speed.setText(text1);
+                    textViewSpeed.setText(text1);
                 } else {
-                    textView_speed.setText(s + "");
+                    textViewSpeed.setText(s + "");
                 }
                 break;
             default:
@@ -669,7 +674,8 @@ public class AiDubbingAudioActivity extends AppCompatActivity
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {}
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
@@ -690,12 +696,11 @@ public class AiDubbingAudioActivity extends AppCompatActivity
         defaultLanguageCode = languageCodeList.get(position);
         defaultLanguageDesc = languageDescList.get(position);
         languageText.setText(defaultLanguageDesc);
-        // updateConfig();
         aiDubbingLanguageAdapter.notifyDataSetChanged();
         languageDialog.dismiss();
-        List<HAEAiDubbingSpeaker> speakerList = mEngine.getSpeakerNoRequest(defaultLanguageCode);
-        defaultSpeakerCode = speakerList.get(0).getSpeakerDesc();
-        defaultSpeakerType = Integer.parseInt(speakerList.get(0).getName());
+        List<HAEAiDubbingSpeaker> speakers = mEngine.getSpeakerNoRequest(defaultLanguageCode);
+        defaultSpeakerCode = speakers.get(0).getSpeakerDesc();
+        defaultSpeakerType = Integer.parseInt(speakers.get(0).getName());
         speakerText.setText(defaultSpeakerCode);
     }
 
@@ -704,13 +709,13 @@ public class AiDubbingAudioActivity extends AppCompatActivity
         defaultSpeakerCode = speakerCodeList.get(position);
         defaultSpeakerType = Integer.parseInt(speakerTypeList.get(position));
         speakerText.setText(defaultSpeakerCode);
-        // updateConfig();
         aiDubbingStyleAdapter.notifyDataSetChanged();
         speakerDialog.dismiss();
     }
 
     private final List<TextToSpeechStyleBean> listData = new ArrayList<>();
     private List<HAEAiDubbingSpeaker> speakerList;
+
     private void initSpeakerList() {
         listData.clear();
         initAiDubbing(null);
@@ -726,7 +731,9 @@ public class AiDubbingAudioActivity extends AppCompatActivity
         String mFolder = cachePath + File.separator + AI_DUBBING_PATH;
         File file = new File(mFolder);
         if (!file.exists()) {
-            file.mkdirs();
+            if (!file.mkdirs()) {
+                SmartLog.i(TAG, "mkdirs failed");
+            }
         }
 
         filePath = mFolder + File.separator + taskId + fileType;
@@ -763,9 +770,7 @@ public class AiDubbingAudioActivity extends AppCompatActivity
         if (isSaveSpeechToFile) {
             aiMode |= HAEAiDubbingEngine.OPEN_STREAM;
         }
-        HAEAiDubbingConfig mlConfigs =
-                new HAEAiDubbingConfig().setVolume(volumeVal).setSpeed(speedVal).setType(defaultSpeakerType).setLanguage(defaultLanguageCode);
-        return mlConfigs;
+        return new HAEAiDubbingConfig().setVolume(volumeVal).setSpeed(speedVal).setType(defaultSpeakerType).setLanguage(defaultLanguageCode);
     }
 
     private List<TextToSpeechStyleBean> generateList(List<HAEAiDubbingSpeaker> speakerList) {

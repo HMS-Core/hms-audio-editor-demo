@@ -52,7 +52,7 @@ HUAWEI Audio Editor Kit provides a wide range of audio editing capabilities, inc
 - Compile and run on an Android device.
 
 ## Supported Environment
-Android SDK 21 or later and JDK 1.8 or later are recommended.
+Android SDK 24 or later and JDK 1.8 or later are recommended.
 
 ## Question or issues
 If you want to evaluate more about HMS Core,

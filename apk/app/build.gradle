@@ -5,7 +5,7 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.3"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.huawei.hms.audioeditor.demo"
@@ -52,6 +52,6 @@ dependencies {
         exclude group: "com.android.support"
     }
 
-    implementation('com.huawei.hms:audio-editor-ui:1.7.0.300')
+    implementation('com.huawei.hms:audio-editor-ui:1.8.0.301')
 
 }

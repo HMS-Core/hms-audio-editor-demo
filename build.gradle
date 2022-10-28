@@ -3,11 +3,13 @@ buildscript {
     repositories {
         google()
         jcenter()
-        maven { url 'https://developer.huawei.com/repo/' }
+        maven {
+            url "https://developer.huawei.com/repo/"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.3'
-        classpath 'com.huawei.agconnect:agcp:1.6.0.300'
+        classpath 'com.huawei.agconnect:agcp:1.4.2.300'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -18,7 +20,9 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven { url 'https://developer.huawei.com/repo/' }
+        maven {
+            url "https://developer.huawei.com/repo/"
+        }
     }
 }
 
@@ -28,8 +32,8 @@ task clean(type: Delete) {
 
 ext {
 
-    //*******************************项目依赖版本********************************
-    //sdk发布版本号
+    //*******************************Project Dependent Version********************************
+    //sdk Release version number
     ae_sdk_versionCode = '20002300'
     ae_sdk_versionName = '2.0.2.300'
 

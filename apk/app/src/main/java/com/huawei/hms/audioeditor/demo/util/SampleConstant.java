@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
+ */
+
 package com.huawei.hms.audioeditor.demo.util;
 
 public class SampleConstant {
@@ -5,7 +9,6 @@ public class SampleConstant {
     public static final String EXTRA_SELECT_RESULT = "select_result";
     public static final String TRANS_AUDIO_FORMAT_TYPE = "transferFormat";
     public static final int RESULT_CODE = 200;
-
 
     /**
      * Audio Conversion Format

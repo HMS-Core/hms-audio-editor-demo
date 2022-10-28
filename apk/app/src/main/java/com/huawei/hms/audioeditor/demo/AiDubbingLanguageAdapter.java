@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
+ */
+
 package com.huawei.hms.audioeditor.demo;
 
 import android.content.Context;
@@ -13,10 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-/**
- * adapters
- * @since 2021/8/10
- */
 public class AiDubbingLanguageAdapter extends RecyclerView.Adapter<AiDubbingLanguageAdapter.LanguageViewHolder>{
     private Context context;
     private List<String> list;
@@ -38,8 +38,7 @@ public class AiDubbingLanguageAdapter extends RecyclerView.Adapter<AiDubbingLang
     @Override
     public LanguageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View inflate = LayoutInflater.from(context).inflate(R.layout.ai_dubbing_language_item, parent, false);
-        LanguageViewHolder languageViewHolder = new LanguageViewHolder(inflate);
-        return languageViewHolder;
+        return new LanguageViewHolder(inflate);
     }
 
     @Override

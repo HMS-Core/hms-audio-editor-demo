@@ -1,19 +1,18 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
  */
 
 package com.huawei.hms.audioeditor.demo.util;
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;
-import android.util.Log;
-
-import com.huawei.hms.audioeditor.sdk.util.SmartLog;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import com.huawei.hms.audioeditor.sdk.util.SmartLog;
 
 public class PCMToWav {
     private static final String TAG = PCMToWav.class.getSimpleName();
@@ -39,7 +38,7 @@ public class PCMToWav {
             } else if (mediaFormat == AudioFormat.ENCODING_PCM_8BIT) {
                 byteRate = 8 * mediaRate * channels / 8;
             } else {
-                Log.e(TAG, "mediaFormat is neither AudioFormat.ENCODING_PCM_16BIT nor AudioFormat.ENCODING_PCM_8BIT, convert failed.");
+                SmartLog.e(TAG, "mediaFormat is neither AudioFormat.ENCODING_PCM_16BIT nor AudioFormat.ENCODING_PCM_8BIT, convert failed.");
                 return "";
             }
             addWaveHeader(wav, totalAudioLen, totalDataLen, mediaRate, channels, byteRate, mediaChannel, mediaFormat);
@@ -47,18 +46,18 @@ public class PCMToWav {
                 wav.write(data);
             }
         } catch (FileNotFoundException e) {
-            Log.e(TAG, e.getMessage());
+            SmartLog.e(TAG, e.getMessage());
         } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
+            SmartLog.e(TAG, e.getMessage());
         } finally {
-            try{
-                if(pcm != null) {
+            try {
+                if (pcm != null) {
                     pcm.close();
                 }
-                if(wav!=null) {
+                if (wav != null) {
                     wav.close();
                 }
-            }catch (IOException e){
+            } catch (IOException e) {
                 SmartLog.e(TAG, e.getMessage());
             }
         }

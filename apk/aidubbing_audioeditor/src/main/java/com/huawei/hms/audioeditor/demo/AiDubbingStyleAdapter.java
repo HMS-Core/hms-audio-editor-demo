@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
+ */
+
 package com.huawei.hms.audioeditor.demo;
 
 import android.content.Context;
@@ -38,8 +42,7 @@ public class AiDubbingStyleAdapter extends RecyclerView.Adapter<AiDubbingStyleAd
     @Override
     public LanguageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View inflate = LayoutInflater.from(context).inflate(R.layout.ai_dubbing_style_item, parent, false);
-        LanguageViewHolder languageViewHolder = new LanguageViewHolder(inflate);
-        return languageViewHolder;
+        return new LanguageViewHolder(inflate);
     }
 
     @Override

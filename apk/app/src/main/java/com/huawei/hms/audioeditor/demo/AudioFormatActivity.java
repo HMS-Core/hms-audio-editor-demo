@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
  */
 
 package com.huawei.hms.audioeditor.demo;
@@ -8,7 +8,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -23,6 +22,7 @@ import com.huawei.hms.audioeditor.sdk.HAEConstant;
 import com.huawei.hms.audioeditor.sdk.HAEErrorCode;
 import com.huawei.hms.audioeditor.sdk.OnTransformCallBack;
 import com.huawei.hms.audioeditor.sdk.util.FileUtil;
+import com.huawei.hms.audioeditor.sdk.util.SmartLog;
 import com.huawei.hms.audioeditor.ui.api.AudioInfo;
 import com.huawei.hms.audioeditor.ui.common.bean.Constant;
 
@@ -41,10 +41,10 @@ import androidx.appcompat.app.AppCompatActivity;
 public class AudioFormatActivity extends AppCompatActivity {
     private static final String TAG = "AudioFormatActivity";
 
-    private final int SELECT_AUDIOS_REQUEST_CODE = 1000;
+    private static final int SELECT_AUDIOS_REQUEST_CODE = 1000;
 
-    private final String AUDIO_PATH = "audioPath";
-    private final String AUDIO_NAME = "audioName";
+    private static final String AUDIO_PATH = "audioPath";
+    private static final String AUDIO_NAME = "audioName";
 
     private ImageView backAudioFormat;
     private TextView pathAudioFormat;
@@ -62,7 +62,7 @@ public class AudioFormatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG,"onCreate");
+        SmartLog.d(TAG, "onCreate");
         setContentView(R.layout.activity_audio_format);
         initView();
         initData(savedInstanceState);
@@ -72,10 +72,9 @@ public class AudioFormatActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(TAG,"onSaveInstanceState");
-        if(mAudioList!=null && mAudioList.size()>0){
-            outState.putString(AUDIO_PATH,mAudioList.get(0));
-            outState.putString(AUDIO_NAME,audioName.getText().toString());
+        if (mAudioList != null && mAudioList.size() > 0) {
+            outState.putString(AUDIO_PATH, mAudioList.get(0));
+            outState.putString(AUDIO_NAME, audioName.getText().toString());
         }
     }
 
@@ -90,25 +89,26 @@ public class AudioFormatActivity extends AppCompatActivity {
 
     private void initData(Bundle savedInstanceState) {
         mAudioList = new ArrayList<>();
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             String oldAudioPath = savedInstanceState.getString(AUDIO_PATH);
             String oldAudioName = savedInstanceState.getString(AUDIO_NAME);
-            if(!TextUtils.isEmpty(oldAudioPath)){
+            if (!TextUtils.isEmpty(oldAudioPath)) {
                 mAudioList.add(oldAudioPath);
             }
-            audioName.setText(TextUtils.isEmpty(oldAudioName)?"":oldAudioName);
-        }else{
+            audioName.setText(TextUtils.isEmpty(oldAudioName) ? "" : oldAudioName);
+        } else {
             try {
                 Intent intent = new Intent(SampleConstant.CHOOSE_AUDIO_ACTION);
                 startActivityForResult(intent, SELECT_AUDIOS_REQUEST_CODE);
             } catch (ActivityNotFoundException e) {
                 // "can't find the choose audio activity"
+                SmartLog.e(TAG, e.getMessage());
             }
         }
         /* *  Obtaining the Storage Path  * */
         pathAudioFormat.setText(
-                String.format(
-                        Locale.ROOT, getString(R.string.save_path), FileUtil.getAudioFormatStorageDirectory(this)));
+            String.format(
+                Locale.ROOT, getString(R.string.save_path), FileUtil.getAudioFormatStorageDirectory(this)));
     }
 
     /**
@@ -124,7 +124,7 @@ public class AudioFormatActivity extends AppCompatActivity {
             String name = filePath.substring(start, end);
             String outPutPath = FileUtil.getAudioFormatStorageDirectory(getBaseContext()) + name + "." + transferFormat;
 
-            transformAudio(filePath,outPutPath);
+            transformAudio(filePath, outPutPath);
 
             // Example 2: Only the input and output audio formats (such as MP3) are transferred, and the output files are stored in the default path.
             // Only serial tasks are supported. Multiple tasks are not supported.
@@ -133,7 +133,7 @@ public class AudioFormatActivity extends AppCompatActivity {
     }
 
     // Example code 1 (directly uploading the file to the user-defined path)
-    private final void transformAudio(String srcFile,String outPutPath) {
+    private final void transformAudio(String srcFile, String outPutPath) {
         int start = srcFile.lastIndexOf("/");
         int end = srcFile.lastIndexOf(".");
         String name = srcFile.substring(start, end);
@@ -141,98 +141,98 @@ public class AudioFormatActivity extends AppCompatActivity {
         // Input file path, for example, /sdcard/Music/AudioEdit/audio/music.mp3.
         // Path of the output file (audio format (for example, aac) as the suffix), for example, /sdcard/Music/AudioEdit/format/music.aac
         HAEAudioExpansion.getInstance()
-                .transformAudio(
-                        getBaseContext(),
-                        srcFile,
-                        outPutPath,
-                        new OnTransformCallBack() {
-                            @Override
-                            public void onProgress(int progress) {
-                                isTansforming = true;
-                                progressBar.setProgress(progress);
-                            }
+            .transformAudio(
+                getBaseContext(),
+                srcFile,
+                outPutPath,
+                new OnTransformCallBack() {
+                    @Override
+                    public void onProgress(int progress) {
+                        isTansforming = true;
+                        progressBar.setProgress(progress);
+                    }
 
-                            @Override
-                            public void onFail(int errorCode) {
-                                isTansforming = false;
-                                if (errorCode == HAEErrorCode.FAIL_FILE_EXIST) {
-                                    Toast.makeText(
-                                            AudioFormatActivity.this,
-                                            getResources().getString(R.string.file_exists),
-                                            Toast.LENGTH_LONG)
-                                            .show();
-                                    EditDialogFragment.newInstance(
-                                            "",
-                                            name,
-                                            (newName, dialog) -> {
-                                                String outPutPath = FileUtil.getAudioFormatStorageDirectory(getBaseContext()) + newName + "." + transferFormat;
-                                                transformAudio(srcFile ,outPutPath);
-                                                dialog.dismiss();
-                                            })
-                                            .show(getSupportFragmentManager(), "EditDialogFragment");
-                                } else {
-                                    Toast.makeText(AudioFormatActivity.this, "ErrorCode : " + errorCode, Toast.LENGTH_SHORT)
-                                            .show();
-                                }
-                            }
+                    @Override
+                    public void onFail(int errorCode) {
+                        isTansforming = false;
+                        if (errorCode == HAEErrorCode.FAIL_FILE_EXIST) {
+                            Toast.makeText(
+                                AudioFormatActivity.this,
+                                getResources().getString(R.string.file_exists),
+                                Toast.LENGTH_LONG)
+                                .show();
+                            EditDialogFragment.newInstance(
+                                "",
+                                name,
+                                (newName, dialog) -> {
+                                    String outPutPath = FileUtil.getAudioFormatStorageDirectory(getBaseContext()) + newName + "." + transferFormat;
+                                    transformAudio(srcFile, outPutPath);
+                                    dialog.dismiss();
+                                })
+                                .show(getSupportFragmentManager(), "EditDialogFragment");
+                        } else {
+                            Toast.makeText(AudioFormatActivity.this, "ErrorCode : " + errorCode, Toast.LENGTH_SHORT)
+                                .show();
+                        }
+                    }
 
-                            @Override
-                            public void onSuccess(String outPutPath) {
-                                isTansforming = false;
-                                Toast.makeText(getBaseContext(), "Success: " + outPutPath, Toast.LENGTH_SHORT).show();
-                            }
+                    @Override
+                    public void onSuccess(String outPutPath) {
+                        isTansforming = false;
+                        Toast.makeText(getBaseContext(), "Success: " + outPutPath, Toast.LENGTH_SHORT).show();
+                    }
 
-                            @Override
-                            public void onCancel() {
-                                isTansforming = false;
-                                Toast.makeText(getBaseContext(), "Cancel", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                    @Override
+                    public void onCancel() {
+                        isTansforming = false;
+                        Toast.makeText(getBaseContext(), "Cancel", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     protected void initEvent() {
         /* *  Return to the button click event.  * */
         backAudioFormat.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        finish();
-                    }
-                });
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
 
         /* *  Format List Selection  * */
         radioGroupAudioFormat.setOnCheckedChangeListener(
-                (group, checkedId) -> {
-                    if (checkedId == R.id.radio_button_1_fragment_audio_format) {
-                        transferFormat = SampleConstant.AUDIO_TYPE_MP3;
-                    } else if (checkedId == R.id.radio_button_2_fragment_audio_format) {
-                        transferFormat = SampleConstant.AUDIO_TYPE_WAV;
-                    } else if (checkedId == R.id.radio_button_3_fragment_audio_format) {
-                        transferFormat = SampleConstant.AUDIO_TYPE_FLAC;
-                    }
-                });
+            (group, checkedId) -> {
+                if (checkedId == R.id.radio_button_1_fragment_audio_format) {
+                    transferFormat = SampleConstant.AUDIO_TYPE_MP3;
+                } else if (checkedId == R.id.radio_button_2_fragment_audio_format) {
+                    transferFormat = SampleConstant.AUDIO_TYPE_WAV;
+                } else if (checkedId == R.id.radio_button_3_fragment_audio_format) {
+                    transferFormat = SampleConstant.AUDIO_TYPE_FLAC;
+                }
+            });
 
         /* *  Conversion button click event  * */
         transferAudioFormat.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (isTansforming) {
-                            Toast.makeText(getBaseContext(), "There is a format conversion task in progress.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        /* *  Check whether the format is selected.  * */
-                        if (transferFormat.isEmpty()) {
-                            Toast.makeText(
-                                            getBaseContext(),
-                                            getString(R.string.audio_format_transfer_toast),
-                                            Toast.LENGTH_SHORT)
-                                    .show();
-                        } else {
-                            convertAllAudio();
-                        }
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isTansforming) {
+                        Toast.makeText(getBaseContext(), "There is a format conversion task in progress.", Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                });
+                    /* *  Check whether the format is selected.  * */
+                    if (transferFormat.isEmpty()) {
+                        Toast.makeText(
+                            getBaseContext(),
+                            getString(R.string.audio_format_transfer_toast),
+                            Toast.LENGTH_SHORT)
+                            .show();
+                    } else {
+                        convertAllAudio();
+                    }
+                }
+            });
     }
 
     @Override
@@ -246,7 +246,7 @@ public class AudioFormatActivity extends AppCompatActivity {
             // Path transferred in AudioInfo format
             if (data.hasExtra(Constant.EXTRA_SELECT_RESULT)) {
                 ArrayList<AudioInfo> list =
-                        (ArrayList<AudioInfo>) data.getSerializableExtra(SampleConstant.EXTRA_SELECT_RESULT);
+                    (ArrayList<AudioInfo>) data.getSerializableExtra(SampleConstant.EXTRA_SELECT_RESULT);
                 if (list != null && !list.isEmpty()) {
                     for (AudioInfo audioInfo : list) {
                         mAudioList.add(audioInfo.getAudioPath());
@@ -256,6 +256,7 @@ public class AudioFormatActivity extends AppCompatActivity {
             }
             // Transfer path as a character string.
             if (data.hasExtra(HAEConstant.AUDIO_PATH_LIST)) {
+                // mAudioList: Indicates the path that is entered from an external system. Validity verification is required.
                 mAudioList = (ArrayList<String>) data.getSerializableExtra(HAEConstant.AUDIO_PATH_LIST);
                 if (mAudioList != null && !mAudioList.isEmpty()) {
                     File file = new File(mAudioList.get(0));

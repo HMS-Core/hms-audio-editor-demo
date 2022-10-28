@@ -14,6 +14,10 @@
     <string name="main_extract">音频提取</string>
 
     <string name="main_format">格式转换</string>
+    <string name="main_title">花瓣丽音</string>
+    <string name="main_draft">草稿箱</string>
+    <string name="main_clip">音乐剪辑</string>
+    <string name="main_clip_text2">导入音频 轻松编辑</string>
     <string name="main_withdraw">音频提取</string>
     <string name="main_effect">特效</string>
     <string name="file_not_avable">该文件不可用</string>
@@ -98,6 +102,9 @@
     <string name="str_ok">确定</string>
     <string name="please_enter_text">请输入文字~</string>
     <string name="text_to_audio">AI 配音</string>
+    <string name="main_popup_window_text1">删除</string>
+    <string name="main_popup_window_text2">重命名</string>
+    <string name="main_popup_window_text3">草稿复制</string>
     <string name="queue_add_center">合成中</string>
     <string name="edit_dialog_title">请输入名称</string>
     <string name="file_exists">文件已存在，请输入新的文件名称。</string>
@@ -167,5 +174,6 @@
     <string name="beautifer_cd">唱片</string>
     <string name="beautifer_studio">录音棚</string>
     <string name="beautifer_btn">声音美化</string>
+    <string name="audio_clip_title">"音频编辑"</string>
 </resources>
 

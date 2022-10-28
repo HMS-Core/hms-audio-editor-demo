@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2020-2021. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
  */
 
 package com.huawei.hms.audioeditor.demo.widget.comment;
@@ -35,7 +35,7 @@ public abstract class RCommandAdapter<T> extends RMCommandAdapter<T> {
 
                     @Override
                     public void convert(RViewHolder holder, T t, int dataPosition, int position) {
-                        RCommandAdapter.this.convert(holder, t, dataPosition, position);
+                        RCommandAdapter.this.rcConvert(holder, t, dataPosition, position);
                     }
                 });
     }
@@ -48,5 +48,5 @@ public abstract class RCommandAdapter<T> extends RMCommandAdapter<T> {
      * @param dataPosition dataPosition
      * @param position position
      */
-    protected abstract void convert(RViewHolder holder, T t, int dataPosition, int position);
+    protected abstract void rcConvert(RViewHolder holder, T t, int dataPosition, int position);
 }

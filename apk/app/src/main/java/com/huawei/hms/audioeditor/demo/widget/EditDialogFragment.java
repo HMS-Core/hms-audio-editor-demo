@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2021-2021. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
  */
 
 package com.huawei.hms.audioeditor.demo.widget;
@@ -26,7 +26,7 @@ import com.huawei.hms.audioeditor.demo.R;
  * Pop-up window with edit box
  * @since 2021/9/9
  */
-public class EditDialogFragment extends DialogFragment implements View.OnClickListener {
+public class EditDialogFragment extends DialogFragment {
     private static final String TAG = "EditDialogFragment";
     private String title;
 
@@ -52,10 +52,10 @@ public class EditDialogFragment extends DialogFragment implements View.OnClickLi
     public View onCreateView(
             @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Dialog dialog = getDialog();
-        /* *  The dialog does not have a title.This parameter needs to be set before setContentView.
-        An error will be reported after setContentView.  * */
+
+        // The dialog does not have a title.This parameter needs to be set before setContentView.
+        // An error will be reported after setContentView.
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        /* *  Setting the Dialog Background Transparency Effect  * */
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
 
@@ -71,15 +71,9 @@ public class EditDialogFragment extends DialogFragment implements View.OnClickLi
             etName.setText(name);
         }
 
-        initListener();
+        initEvent();
 
         return view;
-    }
-
-    public void setEditTextStr(String text){
-        if (!TextUtils.isEmpty(text) && etName != null) {
-            etName.setText(text);
-        }
     }
 
     @Override
@@ -98,29 +92,24 @@ public class EditDialogFragment extends DialogFragment implements View.OnClickLi
     /**
      * Bind a click event.
      **/
-    private void initListener() {
-        tvCancel.setOnClickListener(this);
-        tvConfirm.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.tv_cancel) {
+    private void initEvent() {
+        tvCancel.setOnClickListener(v -> {
             dismiss();
-        } else if (v.getId() == R.id.tv_confirm) {
-            String name = etName.getText().toString();
-            if (TextUtils.isEmpty(name)) {
+        });
+        tvConfirm.setOnClickListener(v -> {
+            String nameStr = etName.getText().toString();
+            if (TextUtils.isEmpty(nameStr)) {
                 Toast.makeText(
-                                getContext(),
-                                getContext().getResources().getString(R.string.input_name_hint),
-                                Toast.LENGTH_SHORT)
-                        .show();
+                    getContext(),
+                    getContext().getResources().getString(R.string.input_name_hint),
+                    Toast.LENGTH_SHORT)
+                    .show();
                 return;
             }
             if (callBack != null) {
-                callBack.onConfirm(name, EditDialogFragment.this);
+                callBack.onConfirm(nameStr, EditDialogFragment.this);
             }
-        }
+        });
     }
 
     public interface RenameCallBack {

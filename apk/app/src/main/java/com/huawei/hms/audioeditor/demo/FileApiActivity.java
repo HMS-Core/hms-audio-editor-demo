@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2021-2021. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
  */
 
 package com.huawei.hms.audioeditor.demo;
@@ -48,6 +48,7 @@ import com.huawei.hms.audioeditor.sdk.bean.SeparationBean;
 import com.huawei.hms.audioeditor.sdk.bean.SeparationQueryTaskResp;
 import com.huawei.hms.audioeditor.sdk.materials.network.MaterialsDownloadCallBack;
 import com.huawei.hms.audioeditor.sdk.materials.network.SeparationCloudCallBack;
+import com.huawei.hms.audioeditor.sdk.util.SmartLog;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -88,13 +89,6 @@ public class FileApiActivity extends AppCompatActivity
     private SeekBar sbPitch;
     private Button beginFileSpeedPitch;
     private Button beginFileReduction;
-    private CheckBox rbAccompaniment;
-    private CheckBox rbVocals;
-    private CheckBox rbFiddle;
-    private CheckBox rbGuitar;
-    private CheckBox rbPiano;
-    private CheckBox rbBass;
-    private CheckBox rbDrums;
 
     private volatile boolean isProcessing;
     private boolean isFinished = false;
@@ -192,17 +186,13 @@ public class FileApiActivity extends AppCompatActivity
     // tones
     private float pitch = 1.0F;
 
-    // Maximum speed
-    private static final float MAX_SPEED_VALUE = 10.0f;
-    private static final int MAX_SPEED_PROGRESS_VALUE = 100;
+    private static final int REQUEST_CODE_FOR_SELECT_AUDIO = 1000;
 
     private ChangeVoiceOption changeVoiceOption;
 
     // Minimum value of multiple speed
     private static final float MIN_SPEED_VALUE = 0.5f;
-    private static final int MIN_SPEED_PROGRESS_VALUE = 0;
-    private final float PROGRESS_SPEED_INTERVAL = bigDiv(MAX_SPEED_VALUE - MIN_SPEED_VALUE,
-            MAX_SPEED_PROGRESS_VALUE - MIN_SPEED_PROGRESS_VALUE);
+    private static final float PROGRESS_SPEED_INTERVAL = 0.095f;
 
     private HAEChangeVoiceFile haeChangeVoiceFile;
     private HAEChangeVoiceFileCommon  haeChangeVoiceFileCommon;
@@ -213,8 +203,6 @@ public class FileApiActivity extends AppCompatActivity
     private HAEAudioSeparationAsyncFile haeAudioSeparationAsyncFile;
     private HAENoiseReductionFile haeNoiseReductionFile;
     private HAELocalAudioSeparationFile audioSeparationFile;
-
-    private int REQUEST_CODE_FOR_SELECT_AUDIO = 1000;
 
     private ConstraintLayout constraintLayout;
     private LinearLayout separationDivider;
@@ -237,6 +225,14 @@ public class FileApiActivity extends AppCompatActivity
         initAllAbility();
         initProgress();
         initSeekBar();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 
     private void initView() {
@@ -292,12 +288,12 @@ public class FileApiActivity extends AppCompatActivity
         mSbTones.setMax(54);
 
         mTvSeekValue1 = findViewById(R.id.tv_value_1);
-        mTvSeekValue1.setText(0.3 + "");
+        mTvSeekValue1.setText(String.valueOf(0.3));
         mSbTones.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 float val = (float) (i + 6) / 20;
-                mTvSeekValue1.setText(val + "");
+                mTvSeekValue1.setText(String.valueOf(val));
                 changeVoiceOption.setPitch(val);
             }
 
@@ -319,7 +315,7 @@ public class FileApiActivity extends AppCompatActivity
         localInstruments = new ArrayList<>();
         // default
         localInstruments.add(AudioSeparationType.VOCALS);
-        rbVocals = findViewById(R.id.rbVocals);
+        CheckBox rbVocals = findViewById(R.id.rbVocals);
         setCheckedChangeListener(rbVocals, AudioSeparationType.VOCALS);
 
         CheckBox rbAccomp = findViewById(R.id.rbAccomp);
@@ -366,6 +362,11 @@ public class FileApiActivity extends AppCompatActivity
     }
 
     private void initAllAbility() {
+        if (!new File(outputPath).exists()) {
+            if (!new File(outputPath).mkdirs()) {
+                SmartLog.i(TAG, "mkdirs failed");
+            }
+        }
         haeChangeVoiceFileCommon = new HAEChangeVoiceFileCommon();
         haeChangeVoiceFileCommon.changeVoiceType(VoiceTypeCommon.SEASONED);
         haeChangeVoiceFile = new HAEChangeVoiceFile();
@@ -709,7 +710,7 @@ public class FileApiActivity extends AppCompatActivity
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    SmartLog.e(TAG, e.getMessage());
                 }
             }
 
@@ -938,6 +939,18 @@ public class FileApiActivity extends AppCompatActivity
             case R.id.rb_trill_common :
                 haeChangeVoiceFileCommon.changeVoiceType(VoiceTypeCommon.TRILL);
                 break;
+            case R.id.rb_cyberpunk_common :
+                haeChangeVoiceFileCommon.changeVoiceType(VoiceTypeCommon.CYBERPUNK);
+                break;
+            case R.id.rb_war_common :
+                haeChangeVoiceFileCommon.changeVoiceType(VoiceTypeCommon.WAR);
+                break;
+            case R.id.rb_mix_common :
+                haeChangeVoiceFileCommon.changeVoiceType(VoiceTypeCommon.MIX);
+                break;
+            case R.id.rb_synth_common :
+                haeChangeVoiceFileCommon.changeVoiceType(VoiceTypeCommon.SYNTH);
+                break;
             case R.id.rb_gb :
                 haeSceneFile.setTypeOfFile(AudioParameters.ENVIRONMENT_TYPE_BROADCAST);
                 break;
@@ -1038,13 +1051,13 @@ public class FileApiActivity extends AppCompatActivity
     }
 
     private float getDefaultPitch() {
-        float[] pitch;
+        float[] pitchs;
         if (mRbMan.isChecked()) {
-            pitch = malePitch;
+            pitchs = malePitch;
         } else {
-            pitch = femalePitch;
+            pitchs = femalePitch;
         }
-        return pitch[currentVoiceType];
+        return pitchs[currentVoiceType];
     }
 
     private void resetpitch() {

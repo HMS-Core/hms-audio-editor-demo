@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2022. All rights reserved.
+ */
+
 package com.huawei.hms.audioeditor.demo;
 
 import android.annotation.SuppressLint;
@@ -9,7 +13,6 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -29,19 +32,12 @@ import com.huawei.hms.audioeditor.sdk.SpaceRenderExtensionParams;
 import com.huawei.hms.audioeditor.sdk.SpaceRenderMode;
 import com.huawei.hms.audioeditor.sdk.SpaceRenderPositionParams;
 import com.huawei.hms.audioeditor.sdk.SpaceRenderRotationParams;
-import com.huawei.hms.audioeditor.sdk.DownloadCallback;
 
-/**
- * content：
- *
- * @date 2021/9/14
- * @since 2021/9/14
- */
 public class SpaceRenderActivity extends AppCompatActivity
         implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
     private static final String TAG = "SpaceRenderActivity";
-
-    private int REQUEST_CODE_FOR_SELECT_AUDIO = 1000;
+    private static final int REQUEST_CODE_FOR_SELECT_AUDIO = 1000;
+    private static final int MODEL_ERROR = 1007;
     public Switch mFixedPositioning;
     public Switch mSwitchDT;
     public Switch mSwitchKZ;
@@ -77,7 +73,6 @@ public class SpaceRenderActivity extends AppCompatActivity
 
     private RadioGroup mRgClock;
     private int mClockwise = SpaceRenderRotationParams.CW;
-    private int MODEL_ERROR = 1007;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

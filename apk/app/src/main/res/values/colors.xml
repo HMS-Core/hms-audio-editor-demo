@@ -13,4 +13,5 @@
     <color name="primary_background">#f2f2f2</color>
     <color name="main_background">#262331</color>
     <color name="divide">#262331</color>
+    <color name="main_menu_item">#e5ffffff</color>
 </resources>

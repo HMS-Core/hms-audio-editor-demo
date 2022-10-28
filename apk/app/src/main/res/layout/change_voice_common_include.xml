@@ -51,6 +51,26 @@
                 android:id="@+id/rb_normal_common"
                 style="@style/style_api_rb"
                 android:text="@string/sound_normal"/>
+
+            <RadioButton
+                android:id="@+id/rb_mix_common"
+                style="@style/style_api_rb"
+                android:text="@string/sound_mix"/>
+
+            <RadioButton
+                android:id="@+id/rb_synth_common"
+                style="@style/style_api_rb"
+                android:text="@string/sound_segment_type_10"/>
+
+            <RadioButton
+                android:id="@+id/rb_war_common"
+                style="@style/style_api_rb"
+                android:text="@string/sound_war"/>
+
+            <RadioButton
+                android:id="@+id/rb_cyberpunk_common"
+                style="@style/style_api_rb"
+                android:text="@string/sound_cyberpunk"/>
         </RadioGroup>
 
     </HorizontalScrollView>
