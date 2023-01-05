@@ -10,6 +10,7 @@ import android.media.AudioFormat;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -37,7 +38,6 @@ import com.huawei.hms.audioeditor.sdk.engine.dubbing.HAEAiDubbingEngine;
 import com.huawei.hms.audioeditor.sdk.engine.dubbing.HAEAiDubbingError;
 import com.huawei.hms.audioeditor.sdk.engine.dubbing.HAEAiDubbingSpeaker;
 import com.huawei.hms.audioeditor.sdk.engine.dubbing.HAEAiDubbingWarn;
-import com.huawei.hms.audioeditor.sdk.util.SmartLog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -50,12 +50,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-/**
- * AI dubbing
- *
- * @date 2021/8/10
- * @since 2021/8/10
- */
 public class AiDubbingAudioActivity extends AppCompatActivity
     implements View.OnClickListener,
     SeekBar.OnSeekBarChangeListener,
@@ -99,7 +93,7 @@ public class AiDubbingAudioActivity extends AppCompatActivity
 
     private Map<String, String> temp = new HashMap<>();
 
-    private static final String AI_DUBBING_PATH = "aiDubbing";
+    private static final String AI_DUBBING_PATH = "AudioEdit" + File.separator + "aiDubbing";
     private static final String PCM_EXT = ".pcm";
     private static final String WAV_EXT = ".wav";
 
@@ -177,6 +171,7 @@ public class AiDubbingAudioActivity extends AppCompatActivity
 
             @Override
             public void onEvent(String taskId, int eventID, Bundle bundle) {
+                Log.i(TAG, "onEvent, taskId:" + taskId + " eventID:" + eventID);
                 // The synthesis is complete.
                 if (eventID == HAEAiDubbingConstants.EVENT_SYNTHESIS_COMPLETE) {
                     String pcmFile = getAudioFileNameByTask(taskId, PCM_EXT);
@@ -192,6 +187,10 @@ public class AiDubbingAudioActivity extends AppCompatActivity
                         runOnUiThread(
                             () -> {
                                 addBtn.setText(R.string.queue_add);
+                                // There is an error in the synthesis process.
+                                if (bundle != null && bundle.getBoolean(HAEAiDubbingConstants.EVENT_SYNTHESIS_INTERRUPTED)) {
+                                    return;
+                                }
                                 Toast.makeText(AiDubbingAudioActivity.this, convertWaveFile, Toast.LENGTH_SHORT)
                                     .show();
                             });
@@ -494,7 +493,7 @@ public class AiDubbingAudioActivity extends AppCompatActivity
 
     @Override
     public void onDestroy() {
-        SmartLog.e(TAG, "onDestroy");
+        Log.i(TAG, "onDestroy");
         super.onDestroy();
         if (mEngine != null) {
             mEngine.stop();
@@ -727,12 +726,17 @@ public class AiDubbingAudioActivity extends AppCompatActivity
         if (TextUtils.isEmpty(taskId) || TextUtils.isEmpty(fileType)) {
             return filePath;
         }
-        String cachePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        String cachePath = "";
+        if (WAV_EXT.equals(fileType)) {
+            cachePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getPath();
+        } else {
+            cachePath = this.getCacheDir().getPath();
+        }
         String mFolder = cachePath + File.separator + AI_DUBBING_PATH;
         File file = new File(mFolder);
         if (!file.exists()) {
             if (!file.mkdirs()) {
-                SmartLog.i(TAG, "mkdirs failed");
+                Log.i(TAG, "mkdirs failed");
             }
         }
 

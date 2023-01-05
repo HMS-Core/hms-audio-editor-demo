@@ -266,7 +266,7 @@
                 <LinearLayout
                     android:id="@+id/group_divider"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="50dp"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
@@ -375,6 +375,34 @@
                 android:id="@+id/begin_vocals_devide"
                 style="@style/style_api_btn"
                 android:text="@string/local_separation"/>
+
+            <RadioGroup
+                android:id="@+id/rg_remix_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <RadioButton
+                    android:id="@+id/rg_remix_type_ultra_surround"
+                    style="@style/style_api_rb"
+                    android:text="@string/ultra_surround"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/rg_remix_type_dynamic_beat"
+                    style="@style/style_api_rb"
+                    android:text="@string/dynamic_beat"/>
+
+                <RadioButton
+                    android:id="@+id/rg_remix_type_immersion_3d"
+                    style="@style/style_api_rb"
+                    android:text="@string/immersion_3d"/>
+            </RadioGroup>
+            <Button
+                android:id="@+id/begin_3dremx_type"
+                style="@style/style_api_btn"
+                android:text="@string/audio_spatial_effects"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

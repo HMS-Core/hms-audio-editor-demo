@@ -29,6 +29,7 @@
     <string name="select_none_audio">No audio selected</string>
     <string name="separat_success">Voice separation succeeded: %s</string>
     <string name="separat_fail">Voice separation failure</string>
+    <string name="select_none_type">No type selected</string>
     <string name="audio_format_mp3">MP3</string>
     <string name="audio_format_wav">WAV</string>
     <string name="audio_format_m4a">M4A</string>
@@ -174,4 +175,19 @@
     <string name="beautifer_studio">Studio</string>
     <string name="beautifer_btn">Start Voice Beautifier</string>
     <string name="audio_clip_title">Audio Editor</string>
+    <string name="singing_compose" priority="translator">Song Compose</string>
+    <string name="singing_compose_start" priority="translator">Start Song Compose</string>
+    <string name="sing_compose_type" priority="translator">Synthetic Type</string>
+    <string name="sing_compose_type_preset" priority="translator">Preset Template Combination</string>
+    <string name="sing_compose_type_xml" priority="translator">Composition of lyrics in XML format</string>
+    <string name="sing_timbre" priority="translator">Timbre</string>
+    <string name="sing_timbre_lyric_female" priority="translator">Lyric Pop Female</string>
+    <string name="sing_timbre_national_female" priority="translator">National Female</string>
+    <string name="sing_timbre_folk_male" priority="translator">Folk Male</string>
+    <string name="song_name" priority="translator">Song Name</string>
+    <string name="song_name1" priority="translator">一起嗨</string>
+    <string name="song_name2" priority="translator">追梦路上</string>
+    <string name="song_name3" priority="translator">水中月</string>
+    <string name="song_lyrics" priority="translator">Input Lyrics</string>
+    <string name="song_lyrics_null" priority="translator">"Lyrics is null, please input lyrics"</string>
 </resources>

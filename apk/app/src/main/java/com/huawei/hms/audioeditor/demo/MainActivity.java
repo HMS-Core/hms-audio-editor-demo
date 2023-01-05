@@ -95,6 +95,9 @@ public class MainActivity extends AppCompatActivity {
     // Basic Functions
     private static final int PERMISSION_BASE = 9;
 
+    // Song compose Functions
+    private static final int PERMISSION_TYPE_SONG = 10;
+
     // Current Permission Request Type
     private int currentPermissionType = PERMISSION_TYPE_EDIT;
 
@@ -134,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             .getExternalStorageDirectory().getAbsolutePath()}, null, null);
 
         // Setting the APIkey of the SDK
-        HAEApplication.getInstance().setApiKey("Set your APIKey");
+        HAEApplication.getInstance().setApiKey("Your apikey");
     }
 
     protected void initObject() {
@@ -180,6 +183,10 @@ public class MainActivity extends AppCompatActivity {
             new MainRecyclerViewAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(int position) {
+                    if (position < 0 || position >= mDraftList.size()) {
+                        SmartLog.w(TAG, "tab index is illegal");
+                        return;
+                    }
                     DraftInfo draftInfo = mDraftList.get(position);
                     // just use the name AudioFormatActivity, in fact will not launch thi activity
                     intentToActivity = new Intent(mContext, AudioFormatActivity.class);
@@ -250,6 +257,12 @@ public class MainActivity extends AppCompatActivity {
         spaceRender.setNameId(R.string.space_render);
         menuBeanList.add(spaceRender);
 
+        MenuBean songBase = new MenuBean();
+        songBase.setName(getResources().getString(R.string.singing_compose));
+        songBase.setImg(R.mipmap.icon_song_compose);
+        songBase.setNameId(R.string.singing_compose);
+        menuBeanList.add(songBase);
+
         MenuBean audioBase = new MenuBean();
         audioBase.setName(getResources().getString(R.string.title_audio_base));
         audioBase.setImg(R.mipmap.icon_home_format);
@@ -318,6 +331,11 @@ public class MainActivity extends AppCompatActivity {
             case R.string.space_render:
                 currentPermissionType = PERMISSION_TYPE_SPACE;
                 intentToActivity = new Intent(mContext, SpaceRenderActivity.class);
+                requestPermission();
+                break;
+            case R.string.singing_compose:
+                currentPermissionType = PERMISSION_TYPE_SONG;
+                intentToActivity = new Intent(mContext, SongSynthesisActivity.class);
                 requestPermission();
                 break;
             case R.string.title_audio_base:
@@ -549,7 +567,7 @@ public class MainActivity extends AppCompatActivity {
                     MediaData wrapper = new MediaData();
                     wrapper.setName(project.getDraftName());
                     String title = getResources()
-                        .getString(com.huawei.hms.audioeditor.ui.R.string.draft_rename_title);
+                        .getString(R.string.draft_rename_title);
                     RenameDialogFragment fragment = RenameDialogFragment.newInstance(
                         title,
                         wrapper,

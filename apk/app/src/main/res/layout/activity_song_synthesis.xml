@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#181818"
+    android:orientation="vertical">
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+
+        <TextView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@mipmap/setting_icon_back"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_14" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/singing_compose"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_17" />
+    </androidx.appcompat.widget.Toolbar>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sing_compose_type"
+        android:textColor="#FFFFFFFF"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_20"
+        android:textSize="20dp" />
+
+    <RadioGroup
+        android:id="@+id/sing_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <RadioButton
+            android:id="@+id/sing_by_xml"
+            style="@style/style_api_rb"
+            android:text="@string/sing_compose_type_xml"
+            android:checked="true"/>
+        <RadioButton
+            android:id="@+id/sing_by_preset"
+            style="@style/style_api_rb"
+            android:text="@string/sing_compose_type_preset"
+             />
+
+    </RadioGroup>
+    <TextView
+        android:id="@+id/timbre_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sing_timbre"
+        android:textColor="#FFFFFFFF"
+        android:textSize="20dp"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_20" />
+
+    <RadioGroup
+        android:id="@+id/timbre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <RadioButton
+            android:id="@+id/sing_lyric_pop_female"
+            style="@style/style_api_rb"
+            android:text="@string/sing_timbre_lyric_female"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/sing_national_style_female"
+            style="@style/style_api_rb"
+            android:text="@string/sing_timbre_national_female"/>
+
+        <RadioButton
+            android:id="@+id/sing_folk_male"
+            style="@style/style_api_rb"
+            android:text="@string/sing_timbre_folk_male"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/preset_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/song_lyrics"
+            android:textColor="#FFFFFFFF"
+            android:textSize="20dp"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_20" />
+        <com.huawei.hms.audioeditor.ui.common.utils.AudioEditText
+            android:id="@+id/et_lyrics_content"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_below="@+id/choice_timbre"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_11"
+            android:background="@color/white"
+            android:text=""
+            android:gravity="start"
+            android:padding="@dimen/dp_4"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="@dimen/sp_16" />
+
+        <TextView
+            android:id="@+id/song_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/song_name"
+            android:textColor="#FFFFFFFF"
+            android:textSize="20dp"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_20" />
+        <RadioGroup
+            android:id="@+id/song_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <RadioButton
+                android:id="@+id/song_name1"
+                style="@style/style_api_rb"
+                android:text="@string/song_name1"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/song_name2"
+                style="@style/style_api_rb"
+                android:text="@string/song_name2"/>
+
+            <RadioButton
+                android:id="@+id/song_name3"
+                style="@style/style_api_rb"
+                android:text="@string/song_name3"/>
+        </RadioGroup>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/begin_sing"
+        style="@style/style_api_btn"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_20"
+        android:text="@string/singing_compose_start"/>
+
+</LinearLayout>

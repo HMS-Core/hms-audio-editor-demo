@@ -37,6 +37,7 @@ import com.huawei.hms.audioeditor.sdk.util.SmartLog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 
@@ -118,6 +119,8 @@ public class AudioBaseActivity extends AppCompatActivity
 
     private ProgressDialog progressDialog;
     private volatile boolean isProcessing;
+
+    private List<String> waveFileList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -479,7 +482,10 @@ public class AudioBaseActivity extends AppCompatActivity
 
 
         mTvAssetLength.setText(audioLane.getAssets().size() + "");
-        latchCountdown = new CountDownLatch(validPath.size());
+        if (waveFileList.contains(path)) {
+            return;
+        }
+        waveFileList.add(path);
         new Thread(() -> {
             latchCountdown = new CountDownLatch(validPath.size());
             updateAudioCache(validPath, latchCountdown);
@@ -490,6 +496,7 @@ public class AudioBaseActivity extends AppCompatActivity
             } catch (InterruptedException e) {
                 SmartLog.e("AudioBase", "got exception " + e.getMessage());
             }
+            waveFileList.remove(path);
             if (getApplicationContext() == null) {
                 return;
             }

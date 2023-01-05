@@ -48,6 +48,11 @@ import com.huawei.hms.audioeditor.sdk.bean.SeparationBean;
 import com.huawei.hms.audioeditor.sdk.bean.SeparationQueryTaskResp;
 import com.huawei.hms.audioeditor.sdk.materials.network.MaterialsDownloadCallBack;
 import com.huawei.hms.audioeditor.sdk.materials.network.SeparationCloudCallBack;
+import com.huawei.hms.audioeditor.sdk.remix.CancelCallback;
+import com.huawei.hms.audioeditor.sdk.remix.HAE3DRemixFile;
+import com.huawei.hms.audioeditor.sdk.remix.HAE3DRemixSetting;
+import com.huawei.hms.audioeditor.sdk.remix.RemixBean;
+import com.huawei.hms.audioeditor.sdk.remix.RemixCallback;
 import com.huawei.hms.audioeditor.sdk.util.SmartLog;
 
 import java.io.File;
@@ -82,6 +87,7 @@ public class FileApiActivity extends AppCompatActivity
     private RadioGroup rgFileSoundGround;
     private Button beginFileSoundGround;
     private RadioGroup rgFileEq;
+    private RadioGroup rgFileRemix;
     private Button beginFileEq;
     private TextView tvSpeed;
     private TextView tvPitch;
@@ -105,6 +111,7 @@ public class FileApiActivity extends AppCompatActivity
     private static final int TYPE_DIVIDE_SYNC = 9;
     private static final int TYPE_DIVIDE_LOCAL = 10;
     private static final int TYPE_CHANGE_SOUND_COMMON = 11;
+    private static final int TYPE_REMIX = 12;
     private int currentType = TYPE_NONE;
 
     // Cloud-side audio source separation, separation type
@@ -112,6 +119,10 @@ public class FileApiActivity extends AppCompatActivity
 
     // Device-side audio source separation, separation type
     private List<String> localInstruments;
+
+    // 3dRmix, remix type
+    private HAE3DRemixSetting.RemixType remixType;
+
     private ProgressDialog progressDialog;
 
     private RadioButton mRbMan;
@@ -233,6 +244,22 @@ public class FileApiActivity extends AppCompatActivity
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
+        clearCache();
+    }
+
+    private void clearCache() {
+        HAE3DRemixFile.getInstance().cancel(new CancelCallback() {
+            @Override
+            public void onResult() {
+                SmartLog.i(TAG, "onResult");
+            }
+
+            @Override
+            public void onFail(int i) {
+                SmartLog.w(TAG, "onFail: " + i);
+            }
+        });
+        HAE3DRemixFile.getInstance().clearCache(getApplicationContext());
     }
 
     private void initView() {
@@ -256,6 +283,8 @@ public class FileApiActivity extends AppCompatActivity
         rgSoundTypeCommon.setOnCheckedChangeListener(this);
         rgFileEnvType = findViewById(R.id.rg_env_type);
         rgFileEnvType.setOnCheckedChangeListener(this);
+        rgFileRemix = findViewById(R.id.rg_remix_type);
+        rgFileRemix.setOnCheckedChangeListener(this);
         beginFileEvn = findViewById(R.id.begin_env);
         beginFileEvn.setOnClickListener(this);
         rgFileSoundGround = findViewById(R.id.rg_sound_ground_type);
@@ -277,6 +306,7 @@ public class FileApiActivity extends AppCompatActivity
         findViewById(R.id.rb_normal_common).setVisibility(View.GONE);
         findViewById(R.id.begin_devide_aync).setOnClickListener(this);
         findViewById(R.id.begin_vocals_devide).setOnClickListener(this);
+        findViewById(R.id.begin_3dremx_type).setOnClickListener(this);
 
         rgSoundSex = findViewById(R.id.rg_sound_sex);
         rgSoundSex.setOnCheckedChangeListener(this);
@@ -315,6 +345,9 @@ public class FileApiActivity extends AppCompatActivity
         localInstruments = new ArrayList<>();
         // default
         localInstruments.add(AudioSeparationType.VOCALS);
+
+        remixType = HAE3DRemixSetting.RemixType.ULTRA_SURROUND;
+
         CheckBox rbVocals = findViewById(R.id.rbVocals);
         setCheckedChangeListener(rbVocals, AudioSeparationType.VOCALS);
 
@@ -344,6 +377,7 @@ public class FileApiActivity extends AppCompatActivity
 
         CheckBox rbPiano = findViewById(R.id.rbPiano);
         setCheckedChangeListener(rbPiano, AudioSeparationType.PIANO);
+
         CheckBox rbAccompAcc = findViewById(R.id.rbAccompAcc);
         setCheckedChangeListener(rbAccompAcc, AudioSeparationType.LEAD_BACK_ACC);
     }
@@ -537,6 +571,9 @@ public class FileApiActivity extends AppCompatActivity
             case R.id.begin_vocals_devide :
                 beginLocalDivideAudioFile();
                 break;
+            case R.id.begin_3dremx_type :
+                begin3dRemixAudioFile();
+                break;
             case R.id.begin_env :
                 beginDealAudioFile(TYPE_ENV);
                 break;
@@ -635,6 +672,21 @@ public class FileApiActivity extends AppCompatActivity
         }
         String name = getOrgName();
         realLocalDivideAudio(name);
+    }
+
+    private void begin3dRemixAudioFile() {
+        isProcessing = true;
+        currentType = TYPE_REMIX;
+        if (TextUtils.isEmpty(filePath)) {
+            Toast.makeText(this, getResources().getString(R.string.select_none_audio), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (remixType == null) {
+            Toast.makeText(this, getResources().getString(R.string.select_none_type), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String name = getOrgName();
+        realRemixAudio(name);
     }
 
     /**
@@ -758,6 +810,63 @@ public class FileApiActivity extends AppCompatActivity
                 });
     }
 
+    // Voice remix function of the terminal test version
+    private void realRemixAudio(String name) {
+        showProgress();
+        HAE3DRemixSetting setting = new HAE3DRemixSetting.Builder()
+            .setRemixOutDir(outputPath)
+            .setRemixOutName(name)
+            .setRemixPath(filePath)
+            .setRemixType(remixType)
+            .build();
+        HAE3DRemixFile hae3DRemixFile = HAE3DRemixFile.getInstance();
+        hae3DRemixFile.start3DRemixTask(setting, new RemixCallback() {
+            @Override
+            public void onFinish(RemixBean remixBean) {
+                runOnUiThread(() -> {
+                    Toast.makeText(FileApiActivity.this,
+                        remixBean.getRemixType() + " Success: " + remixBean.getOutAudioPath(),
+                        Toast.LENGTH_SHORT).show();
+                    isProcessing = false;
+                    hideProgress();
+                });
+            }
+
+            @Override
+            public void onFail(int i) {
+                runOnUiThread(() -> {
+
+                    isProcessing = false;
+                    hideProgress();
+                    if (i != HAEErrorCode.FAIL_FILE_EXIST) {
+                        Toast.makeText(FileApiActivity.this, "ErrorCode : " + i, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(FileApiActivity.this, getResources().getString(R.string.file_exists),
+                            Toast.LENGTH_LONG).show();
+                        EditDialogFragment.newInstance("", name, (newName, dialog) -> {
+                            realRemixAudio(newName);
+                            dialog.dismiss();
+                        }).show(getSupportFragmentManager(), "EditDialogFragment");
+                    }
+                });
+            }
+
+            @Override
+            public void onCancel() {
+                runOnUiThread(() -> {
+                    isProcessing = false;
+                    Toast.makeText(FileApiActivity.this, "Cancel !", Toast.LENGTH_SHORT).show();
+                    hideProgress();
+                });
+            }
+
+            @Override
+            public void onProcess(RemixBean remixBean) {
+                SmartLog.i(TAG, "input is : " + remixBean.getInAudioPath() + "type is: " + remixBean.getRemixType() + "process is:" + remixBean.getProcess());
+            }
+        });
+    }
+
     // Voice separation function of the terminal test version
     private void realLocalDivideAudio(String name) {
         showProgress();
@@ -818,7 +927,7 @@ public class FileApiActivity extends AppCompatActivity
     private void showProgress() {
         if (progressDialog != null) {
             initProgress();
-            if (currentType == TYPE_DIVIDE || currentType == TYPE_DIVIDE_SYNC || currentType == TYPE_DIVIDE_LOCAL) {
+            if (currentType == TYPE_DIVIDE || currentType == TYPE_DIVIDE_SYNC || currentType == TYPE_DIVIDE_LOCAL || currentType == TYPE_REMIX) {
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             } else {
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -998,6 +1107,15 @@ public class FileApiActivity extends AppCompatActivity
                 break;
             case R.id.rb_chinese_style :
                 haeEqualizerFile.setEqValueOfFile(AudioParameters.EQUALIZER_CHINESE_STYLE_VALUE);
+                break;
+            case R.id.rg_remix_type_ultra_surround :
+                remixType = HAE3DRemixSetting.RemixType.ULTRA_SURROUND;
+                break;
+            case R.id.rg_remix_type_immersion_3d :
+                remixType = HAE3DRemixSetting.RemixType.IMMERSION_3D;
+                break;
+            case R.id.rg_remix_type_dynamic_beat :
+                remixType = HAE3DRemixSetting.RemixType.DYNAMIC_BEAT;
                 break;
             case R.id.rb_man :
                 changeVoiceOption.setSpeakerSex(ChangeVoiceOption.SpeakerSex.MALE);

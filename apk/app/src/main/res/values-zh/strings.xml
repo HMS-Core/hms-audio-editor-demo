@@ -26,6 +26,7 @@
     <string name="select_none_audio">未选择音频</string>
     <string name="separat_success">人声分离成功：%s</string>
     <string name="separat_fail">人声分离失败</string>
+    <string name="select_none_type">未选择类型</string>
 
     <string name="audio_format_mp3">MP3</string>
     <string name="audio_format_wav">WAV</string>
@@ -175,5 +176,21 @@
     <string name="beautifer_studio">录音棚</string>
     <string name="beautifer_btn">声音美化</string>
     <string name="audio_clip_title">"音频编辑"</string>
+    <string name="singing_compose" priority="translator">"歌声合成"</string>
+    <string name="singing_compose_start" priority="translator">"开始歌声合成"</string>
+
+    <string name="sing_compose_type" priority="translator">"合成类型"</string>
+    <string name="sing_compose_type_preset" priority="translator">"预置模板合成"</string>
+    <string name="sing_compose_type_xml" priority="translator">"歌词xml合成"</string>
+    <string name="sing_timbre" priority="translator">"音色"</string>
+    <string name="sing_timbre_lyric_female" priority="translator">"抒情流行女声"</string>
+    <string name="sing_timbre_national_female" priority="translator">"国风女声"</string>
+    <string name="sing_timbre_folk_male" priority="translator">"民谣男声"</string>
+    <string name="song_name" priority="translator">"歌名"</string>
+    <string name="song_name1" priority="translator">一起嗨</string>
+    <string name="song_name2" priority="translator">追梦路上</string>
+    <string name="song_name3" priority="translator">水中月</string>
+    <string name="song_lyrics" priority="translator">"输入歌词"</string>
+    <string name="song_lyrics_null" priority="translator">"歌词为空，请输入歌词后重试"</string>
 </resources>
 
