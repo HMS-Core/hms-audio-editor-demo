@@ -306,7 +306,6 @@ public class AiDubbingAudioActivity extends AppCompatActivity
     private void stopAiDubbing() {
         if (mEngine != null) {
             mEngine.stop();
-            mEngine = null;
         }
     }
 
