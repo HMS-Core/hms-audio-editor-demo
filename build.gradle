@@ -1,6 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
+        google()
+        jcenter()
         maven {
             url "https://developer.huawei.com/repo/"
         }
@@ -16,13 +18,11 @@ buildscript {
 
 allprojects {
     repositories {
-//        google()
-//        jcenter()
+        google()
+        jcenter()
         maven {
             url "https://developer.huawei.com/repo/"
         }
-        maven { url "https://dgg.maven.repo.cmc.tools.huawei.com/artifactory/sz-maven-public" }
-        maven { url "https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/" }
     }
 }
 
