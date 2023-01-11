@@ -8,11 +8,11 @@ import android.media.AudioFormat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.huawei.hms.audioeditor.common.network.download.DownLoadEventListener;
+import com.huawei.hms.audioeditor.common.network.download.DownloadInfo;
+import com.huawei.hms.audioeditor.common.network.download.DownloadUtil;
 import com.huawei.hms.audioeditor.common.network.http.ability.util.AppContext;
 import com.huawei.hms.audioeditor.demo.util.PCMToWav;
-import com.huawei.hms.audioeditor.sdk.ChangeSoundCallback;
-import com.huawei.hms.audioeditor.sdk.materials.network.MaterialsDownloadCallBack;
-import com.huawei.hms.audioeditor.sdk.util.FileUtil;
 
 import java.io.File;
 
@@ -103,12 +103,18 @@ public class TtsingCloudManager {
     public void downloadResource(String taskId, TtsingQueryResultBean resultBean, String saveDir, String saveName, TtsingTaskListener callback) {
         String downloadUrl = resultBean.getUrl();
         String pcmName = String.valueOf(System.currentTimeMillis());
-        TtsingRestfulApi.getInstance().downloadResource(AppContext.getContext(), downloadUrl, saveDir, pcmName, new MaterialsDownloadCallBack() {
+        String pcmTmpPath = AppContext.getContext().getCacheDir().getPath();
+        DownloadUtil.download(AppContext.getContext(), downloadUrl, pcmTmpPath, pcmName, new DownLoadEventListener() {
             @Override
-            public void onDownloadSuccess(File file) {
+            public void onProgressUpdate(int i) {
+                Log.i(TAG, "download progress:" + i);
+            }
+
+            @Override
+            public void onCompleted(DownloadInfo downloadInfo) {
                 String convertWaveFile =
                     PCMToWav.convertWaveFile(
-                        file.getAbsolutePath(),
+                        downloadInfo.getFile().getAbsolutePath(),
                         saveDir + File.separator + saveName,
                         48000,
                         AudioFormat.CHANNEL_IN_FRONT,
@@ -117,11 +123,18 @@ public class TtsingCloudManager {
             }
 
             @Override
-            public void onDownloading(int progress) {}
+            public void onError(Exception e) {
+                callback.onFail(taskId, e.getMessage());
+            }
 
             @Override
-            public void onDownloadFailed(int errorCode) {
-                callback.onFail(taskId, String.valueOf(errorCode));
+            public void onInterrupted(int i) {
+                callback.onFail(taskId, String.valueOf(i));
+            }
+
+            @Override
+            public void onDownloadExists(File file) {
+
             }
         });
     }

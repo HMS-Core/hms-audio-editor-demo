@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -16,18 +17,17 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.huawei.hms.audioeditor.common.utils.GsonUtils;
 import com.huawei.hms.audioeditor.demo.restful.TtsingCloudManager;
 import com.huawei.hms.audioeditor.demo.restful.TtsingConstant;
 import com.huawei.hms.audioeditor.demo.restful.TtsingTaskListener;
-import com.huawei.hms.audioeditor.demo.restful.bean.SongConfigBean;
 import com.huawei.hms.audioeditor.ui.common.utils.AudioEditText;
+
+import java.io.File;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SongSynthesisActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener  {
     private static final String TAG = "SongSynthesisActivity";
-    private static final String SONG_JSON_NAME = "song_config.json";
     private TextView timbreTxt;
     private Button ttsingFile;
     private RadioGroup rgFileSingType;
@@ -115,7 +115,13 @@ public class SongSynthesisActivity extends AppCompatActivity implements View.OnC
                 return;
             }
             showProgress();
-            String cachePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
+            String cachePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getPath()
+                + File.separator + "AudioEdit"
+                + File.separator + "song";
+            File dir = new File(cachePath);
+            if (!dir.exists()) {
+                Log.i(TAG, "create song compose dir: " + dir.mkdirs());
+            }
             String cacheName = System.currentTimeMillis() + ".wav";
             if (composeType == TtsingConstant.SING_COMPOSE_TYPE_PRESET && TextUtils.isEmpty(audioEditText.getText().toString())) {
                 Toast.makeText(SongSynthesisActivity.this, getResources().getString(R.string.song_lyrics_null), Toast.LENGTH_SHORT).show();
