@@ -114,7 +114,6 @@ public class SongSynthesisActivity extends AppCompatActivity implements View.OnC
             if (progressDialog != null && progressDialog.isShowing()) {
                 return;
             }
-            showProgress();
             String cachePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getPath()
                 + File.separator + "AudioEdit"
                 + File.separator + "song";
@@ -127,6 +126,7 @@ public class SongSynthesisActivity extends AppCompatActivity implements View.OnC
                 Toast.makeText(SongSynthesisActivity.this, getResources().getString(R.string.song_lyrics_null), Toast.LENGTH_SHORT).show();
                 return;
             }
+            showProgress();
             ttsingCloudManager.postTtsingAsync(songId, audioEditText.getText().toString(), cachePath, cacheName, composeType, timbreType, new TtsingTaskListener() {
                 @Override
                 public void onResult(Object result) {
