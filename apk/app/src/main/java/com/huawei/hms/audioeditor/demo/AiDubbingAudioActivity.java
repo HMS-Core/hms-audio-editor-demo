@@ -147,6 +147,7 @@ public class AiDubbingAudioActivity extends AppCompatActivity
             public void onError(String taskId, HAEAiDubbingError err) {
                 stopAiDubbing();
                 errToast(err);
+                aiDubbingMode = DubbingMode.STOP_MODE;
             }
 
             @Override
@@ -176,14 +177,13 @@ public class AiDubbingAudioActivity extends AppCompatActivity
                 if (eventID == HAEAiDubbingConstants.EVENT_SYNTHESIS_COMPLETE) {
                     String pcmFile = getAudioFileNameByTask(taskId, PCM_EXT);
                     String waveFile = getAudioFileNameByTask(taskId, WAV_EXT);
-                    final String convertWaveFile =
-                        PCMToWav.convertWaveFile(
-                            pcmFile,
-                            waveFile,
-                            16000,
-                            AudioFormat.CHANNEL_IN_MONO,
-                            AudioFormat.ENCODING_PCM_16BIT);
-                    if (isSpeechNoPreview) {
+                    final String convertWaveFile = PCMToWav.convertWaveFile(
+                        pcmFile,
+                        waveFile,
+                        16000,
+                        AudioFormat.CHANNEL_IN_MONO,
+                        AudioFormat.ENCODING_PCM_16BIT);
+                    if (aiDubbingMode == DubbingMode.SAVE_MODE) {
                         runOnUiThread(
                             () -> {
                                 addBtn.setText(R.string.queue_add);
@@ -196,6 +196,7 @@ public class AiDubbingAudioActivity extends AppCompatActivity
                             });
                         stopAiDubbing();
                     }
+                    aiDubbingMode = DubbingMode.STOP_MODE;
                 }
             }
 
@@ -524,23 +525,28 @@ public class AiDubbingAudioActivity extends AppCompatActivity
                     Toast.makeText(AiDubbingAudioActivity.this, this.getResources().getString(R.string.select_style), Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (aiDubbingMode == DubbingMode.SAVE_MODE) {
+                    Toast.makeText(AiDubbingAudioActivity.this,
+                            AiDubbingAudioActivity.this.getResources().getString(R.string.queue_add_center),
+                            Toast.LENGTH_SHORT)
+                        .show();
+                    return;
+                }
                 // Use the system player to play the cached audio.
-                isSpeechNoPreview = false;
-                isSaveSpeechToFile = false;
+                aiDubbingMode = DubbingMode.PREVIEW_MODE;
                 HAEAiDubbingConfig mConfig = generateConfig();
                 initAiDubbing(mConfig);
                 // Invoke Ai to perform voice conversion.
                 String text = editText.getText().toString();
                 if (TextUtils.isEmpty(text)) {
                     Toast.makeText(
-                        AiDubbingAudioActivity.this,
-                        AiDubbingAudioActivity.this.getResources().getString(R.string.text_to_speech_toast_1),
-                        Toast.LENGTH_SHORT)
+                            AiDubbingAudioActivity.this,
+                            AiDubbingAudioActivity.this.getResources().getString(R.string.text_to_speech_toast_1),
+                            Toast.LENGTH_SHORT)
                         .show();
-                } else {
-                    String taskId = mEngine.speak(text, aiMode);
-                    temp.put(taskId, text);
+                    return;
                 }
+                temp.put(mEngine.speak(text, aiMode), text);
                 break;
             case R.id.btn_add:
                 if (defaultLanguageCode.equals("") || defaultLanguageDesc.equals("")) {
@@ -551,29 +557,28 @@ public class AiDubbingAudioActivity extends AppCompatActivity
                     Toast.makeText(AiDubbingAudioActivity.this, this.getResources().getString(R.string.select_style), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (addBtn.getText().toString().equals(getResources().getString(R.string.queue_add_center))) {
-                    Toast.makeText(
-                        AiDubbingAudioActivity.this,
-                        AiDubbingAudioActivity.this.getResources().getString(R.string.queue_add_center),
-                        Toast.LENGTH_SHORT)
+                if (aiDubbingMode == DubbingMode.PREVIEW_MODE) {
+                    Toast.makeText(AiDubbingAudioActivity.this,
+                            AiDubbingAudioActivity.this.getResources().getString(R.string.text_to_speech_previewing),
+                            Toast.LENGTH_SHORT)
                         .show();
                     return;
                 }
                 String s = editText.getText().toString();
                 // Invoke Ai to perform voice conversion.
                 if (TextUtils.isEmpty(s)) {
-                    Toast.makeText(AiDubbingAudioActivity.this,
-                        AiDubbingAudioActivity.this.getResources().getString(R.string.text_to_speech_toast_1),
-                        Toast.LENGTH_SHORT).show();
-                } else {
-                    addBtn.setText(R.string.queue_add_center);
-                    isSaveSpeechToFile = true;
-                    isSpeechNoPreview = true;
-                    HAEAiDubbingConfig config = generateConfig();
-                    initAiDubbing(config);
-                    String taskId = mEngine.speak(s, aiMode);
-                    temp.put(taskId, s);
+                    Toast.makeText(
+                            AiDubbingAudioActivity.this,
+                            AiDubbingAudioActivity.this.getResources().getString(R.string.text_to_speech_toast_1),
+                            Toast.LENGTH_SHORT)
+                        .show();
+                    return;
                 }
+                addBtn.setText(R.string.queue_add_center);
+                aiDubbingMode = DubbingMode.SAVE_MODE;
+                HAEAiDubbingConfig config = generateConfig();
+                initAiDubbing(config);
+                temp.put(mEngine.speak(s, aiMode), s);
                 break;
             case R.id.btn_pause:
                 if (mEngine != null) {
@@ -748,8 +753,7 @@ public class AiDubbingAudioActivity extends AppCompatActivity
         return filePath;
     }
 
-    private boolean isSpeechNoPreview = false; // Whether to preview and play the returned voice streams.
-    private boolean isSaveSpeechToFile = true; // Indicates whether to save the file.
+    private DubbingMode aiDubbingMode = DubbingMode.STOP_MODE; // Indicates whether to save the file.
     private int aiMode;
 
     private void initAiDubbing(HAEAiDubbingConfig mConfig) {
@@ -772,14 +776,11 @@ public class AiDubbingAudioActivity extends AppCompatActivity
         } else {
             aiMode = HAEAiDubbingEngine.QUEUE_APPEND;
         }
-        if (isSpeechNoPreview) {
+        if (DubbingMode.SAVE_MODE == aiDubbingMode) {
             aiMode |= HAEAiDubbingEngine.EXTERNAL_PLAYBACK;
-        }
-        if (isSaveSpeechToFile) {
             aiMode |= HAEAiDubbingEngine.OPEN_STREAM;
         }
-        return new HAEAiDubbingConfig().setVolume(volumeVal).setSpeed(speedVal)
-            .setType(defaultSpeakerType).setLanguage(defaultLanguageCode);
+        return new HAEAiDubbingConfig().setVolume(volumeVal).setSpeed(speedVal).setType(defaultSpeakerType).setLanguage(defaultLanguageCode);
     }
 
     private List<TextToSpeechStyleBean> generateList(List<HAEAiDubbingSpeaker> speakerList) {
@@ -789,5 +790,11 @@ public class AiDubbingAudioActivity extends AppCompatActivity
             beanList.add(bean);
         }
         return beanList;
+    }
+
+    enum DubbingMode {
+        SAVE_MODE,
+        PREVIEW_MODE,
+        STOP_MODE
     }
 }

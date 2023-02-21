@@ -54,34 +54,175 @@
                 style="@style/audio_format_type_rb"
                 android:layout_marginStart="@dimen/dp_16"
                 android:text="@string/audio_format_flac" />
-
-            <RadioButton
-                android:visibility="gone"
-                android:id="@+id/radio_button_4_fragment_audio_format"
-                style="@style/audio_format_type_rb"
-                android:layout_marginStart="@dimen/dp_16"
-                android:text="@string/audio_format_aac" />
-
         </RadioGroup>
 
-        <TextView
-            android:id="@+id/transfer_fragment_audio_format"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#FF272032"
+            android:gravity="left"
+            android:layout_marginStart="@dimen/dp_24"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="HWtext"
+                android:gravity="center"
+                android:text="@string/transfer_samplerate"
+                android:textColor="#FFFFFFFF"
+                android:textSize="@dimen/dp_16"
+                tools:ignore="SpUsage" />
+
+            <EditText
+                android:id="@+id/transfer_fragment_audio_samplaterate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/dp_24"
+                android:fontFamily="HWtext"
+                android:minWidth="@dimen/dp_120"
+                android:inputType="number"
+                android:textColor="#FFFFFFFF"
+                android:textSize="@dimen/dp_16"
+                tools:ignore="SpUsage" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FF272032"
+            android:gravity="left"
+            android:layout_marginStart="@dimen/dp_24"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="HWtext"
+                android:gravity="center"
+                android:text="@string/transfer_channel"
+                android:textColor="#FFFFFFFF"
+                android:textSize="@dimen/dp_16"
+                tools:ignore="SpUsage" />
+
+            <EditText
+                android:id="@+id/transfer_fragment_audio_channel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/dp_24"
+                android:fontFamily="HWtext"
+                android:minWidth="@dimen/dp_120"
+                android:inputType="number"
+                android:textColor="#FFFFFFFF"
+                android:textSize="@dimen/dp_16"
+                tools:ignore="SpUsage" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FF272032"
+            android:gravity="left"
+            android:layout_marginStart="@dimen/dp_24"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="HWtext"
+                android:gravity="center"
+                android:text="@string/transfer_bitrate"
+                android:textColor="#FFFFFFFF"
+                android:textSize="@dimen/dp_16"
+                tools:ignore="SpUsage" />
+
+            <EditText
+                android:id="@+id/transfer_fragment_audio_bitrate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/dp_24"
+                android:fontFamily="HWtext"
+                android:minWidth="@dimen/dp_120"
+                android:inputType="number"
+                android:textColor="#FFFFFFFF"
+                android:textSize="@dimen/dp_16"
+                tools:ignore="SpUsage" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FF272032"
+            android:gravity="left"
+            android:layout_marginStart="@dimen/dp_24"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="HWtext"
+                android:gravity="center"
+                android:text="@string/transfer_format"
+                android:textColor="#FFFFFFFF"
+                android:textSize="@dimen/dp_16"
+                tools:ignore="SpUsage" />
+
+            <EditText
+                android:id="@+id/transfer_fragment_audio_formatedit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/dp_24"
+                android:fontFamily="HWtext"
+                android:minWidth="@dimen/dp_120"
+                android:textColor="#FFFFFFFF"
+                android:textSize="@dimen/dp_16"
+                tools:ignore="SpUsage" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginStart="@dimen/dp_24"
+            android:layout_marginEnd="@dimen/dp_24"
             android:layout_marginTop="@dimen/dp_24"
             android:layout_marginBottom="@dimen/dp_24"
-            android:background="@drawable/bg_save_audio_export"
-            android:fontFamily="HWtext"
+            android:background="#FF272032"
             android:gravity="center"
-            android:minWidth="@dimen/dp_120"
-            android:paddingStart="@dimen/dp_57"
-            android:paddingTop="@dimen/dp_8"
-            android:paddingEnd="@dimen/dp_57"
-            android:paddingBottom="@dimen/dp_8"
-            android:text="@string/transfer_btn"
-            android:textColor="#FFFFFFFF"
-            android:textSize="@dimen/dp_16"
-            tools:ignore="SpUsage" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/transfer_fragment_audio_format"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/dp_24"
+                android:background="@drawable/bg_save_audio_export"
+                android:fontFamily="HWtext"
+                android:gravity="center"
+                android:paddingStart="@dimen/dp_8"
+                android:paddingTop="@dimen/dp_8"
+                android:paddingEnd="@dimen/dp_8"
+                android:paddingBottom="@dimen/dp_8"
+                android:text="@string/transfer_btn"
+                android:textColor="#FFFFFFFF"
+                android:textSize="@dimen/dp_16"
+                tools:ignore="SpUsage" />
+
+            <TextView
+                android:id="@+id/transfer_fragment_audio_base_format"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/dp_24"
+                android:background="@drawable/bg_save_audio_export"
+                android:fontFamily="HWtext"
+                android:gravity="center"
+                android:paddingStart="@dimen/dp_8"
+                android:paddingTop="@dimen/dp_8"
+                android:paddingEnd="@dimen/dp_8"
+                android:paddingBottom="@dimen/dp_8"
+                android:text="@string/transfer_base"
+                android:textColor="#FFFFFFFF"
+                android:textSize="@dimen/dp_16"
+                tools:ignore="SpUsage" />
+        </LinearLayout>
     </LinearLayout>
 
     <RelativeLayout

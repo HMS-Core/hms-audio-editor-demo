@@ -11,6 +11,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- SDK 33 Storage Permissions -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
 
     <application
         android:allowBackup="false"
@@ -22,7 +25,7 @@
         android:theme="@style/Theme.VideoEditDemo">
         <activity android:name=".FileApiActivity" android:screenOrientation="portrait"/>
         <activity android:name=".StreamApiActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".AudioFilePickerActivity">
+        <activity android:name=".AudioFilePickerActivity" android:exported="true">
             <intent-filter>
                 <action android:name="com.huawei.hms.audioeditor.chooseaudio" />
 
@@ -30,7 +33,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".SettingActivity" />
-        <activity android:name=".MainActivity" android:screenOrientation="portrait">
+        <activity android:name=".MainActivity" android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

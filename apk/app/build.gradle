@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.huawei.hms.audioeditor.demo"
         minSdkVersion 24
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode Integer.parseInt(rootProject.ext.ae_apk_versionCode)
         versionName rootProject.ext.ae_apk_versionName
 
@@ -54,7 +54,5 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
-
-    implementation('com.huawei.hms:audio-editor-ui:1.9.0.300')
-
+    implementation('com.huawei.hms:audio-editor-ui:' + ae_apk_versionName)
 }

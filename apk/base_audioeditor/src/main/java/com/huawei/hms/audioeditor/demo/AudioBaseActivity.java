@@ -37,7 +37,6 @@ import com.huawei.hms.audioeditor.sdk.util.SmartLog;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 

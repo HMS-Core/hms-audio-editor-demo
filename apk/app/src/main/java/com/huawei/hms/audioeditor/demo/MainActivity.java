@@ -101,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
     // Current Permission Request Type
     private int currentPermissionType = PERMISSION_TYPE_EDIT;
 
+    private static final String[] PERMISSIONS33 =
+        new String[]{Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.READ_MEDIA_VIDEO};
+
     private static final String[] PERMISSIONS =
         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -137,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
             .getExternalStorageDirectory().getAbsolutePath()}, null, null);
 
         // Setting the APIkey of the SDK
-        HAEApplication.getInstance().setApiKey("Your apikey");
+        HAEApplication.getInstance().setApiKey("Set your APIKey");
     }
 
     protected void initObject() {
@@ -175,9 +178,7 @@ public class MainActivity extends AppCompatActivity {
                     intentToActivity = new Intent();
                     intentToActivity.putExtra(
                         Constant.EXTRA_AUDIO_CLIP_SHOW_TYPE, Constant.AUDIO_CLIP_SHOW_TYPE_SELECT);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        requestPermissions(PERMISSIONS, PERMISSION_REQUESTS_AUDIO_IMPORT);
-                    }
+                    requestPermission();
                 }));
         mainRecyclerViewAdapter.setOnItemClickListener(
             new MainRecyclerViewAdapter.OnItemClickListener() {
@@ -193,9 +194,7 @@ public class MainActivity extends AppCompatActivity {
                     intentToActivity.putExtra(
                         Constant.EXTRA_AUDIO_CLIP_SHOW_TYPE, Constant.AUDIO_CLIP_SHOW_TYPE_CLIP_FROM_DRAFT);
                     intentToActivity.putExtra(DRAFT_ID, draftInfo.getDraftId());
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        requestPermissions(PERMISSIONS, PERMISSION_REQUESTS_AUDIO_IMPORT);
-                    }
+                    requestPermission();
                 }
 
                 @Override
@@ -348,7 +347,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions(PERMISSIONS33, PERMISSION_REQUESTS_AUDIO_IMPORT);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(PERMISSIONS, PERMISSION_REQUESTS_AUDIO_IMPORT);
         } else {
             toActivity();
@@ -378,7 +379,11 @@ public class MainActivity extends AppCompatActivity {
         int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUESTS) {
-            PermissionUtils.onRequestMorePermissionsResult(mContext, PERMISSIONS,
+            String[] permission = PERMISSIONS;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                permission = PERMISSIONS33;
+            }
+            PermissionUtils.onRequestMorePermissionsResult(mContext, permission,
                 new PermissionUtils.PermissionCheckCallBack() {
                     @Override
                     public void onHasPermission() {

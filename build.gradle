@@ -34,39 +34,6 @@ ext {
 
     //*******************************Project Dependent Version********************************
     //sdk Release version number
-    ae_sdk_versionCode = '20002300'
-    ae_sdk_versionName = '2.0.2.300'
-
-    ae_apk_versionCode = '20002300'
-    ae_apk_versionName= '2.0.2.300'
-
-}
-
-//sdk
-if ( null != System.getenv('ve_versionCode') && (!System.getenv('ve_versionCode').isEmpty())) {
-    ext.ve_sdk_versionCode = System.getenv('ve_versionCode')
-}
-
-if ( null != System.getenv('ve_versionName') && (!System.getenv('ve_versionName').isEmpty())) {
-    ext.ve_sdk_versionName = System.getenv('ve_versionName')
-}
-
-if ( null != System.getenv('ve_versionCode') && (!System.getenv('ve_versionCode').isEmpty())) {
-    ext.ve_apk_versionCode = System.getenv('ve_versionCode')
-}
-
-if ( null != System.getenv('ve_versionName') && (!System.getenv('ve_versionName').isEmpty())) {
-    ext.ve_apk_versionName = System.getenv('ve_versionName')
-}
-
-if (null != System.getenv('needHwSign') && (!System.getenv('needHwSign').isEmpty())) {
-    ext.needHwSign = System.getenv('needHwSign')
-}
-
-if (null != System.getenv('useRemoteImplementation') && (!System.getenv('useRemoteImplementation').isEmpty())) {
-    ext.useRemoteImplementation = System.getenv('useRemoteImplementation')
-}
-
-if (null != System.getenv('ve_Common_model') && (!System.getenv('ve_Common_model').isEmpty())) {
-    ext.ve_Common_model = System.getenv('ve_Common_model')
+    ae_apk_versionCode = '11000300'
+    ae_apk_versionName= '1.10.0.300'
 }

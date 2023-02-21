@@ -21,6 +21,8 @@ HUAWEI Audio Editor Kit provides a wide range of audio editing capabilities, inc
 - Reduces the quasi-steady-state noises and sudden loud noises in audio collected from two microphones, and repairs and enhances the human voice to improve the audio quality.
 - Extracts audio from video files in formats like MP4.
 - Converts audio format to MP3, WAV, or FLAC.
+- Supports AI dubbing: converts text into voice of different timbres.
+- Supports song synthesis: Generates beautiful songs based on the input lyrics (only in China).
 
 
 ## Project directory structure
@@ -28,19 +30,21 @@ HUAWEI Audio Editor Kit provides a wide range of audio editing capabilities, inc
 ```
 |-- apk
     |-- app
-	    |-- com.huawei.audioeditor.demo.apk
-		    |-- MainActivity // Audio Editor UI SDK entry, format conversion entry, and audio extraction entry
-	        |-- AudioFormatActivity  // Demo Format Conversion
+	    |-- com.huawei.hms.audioeditor.demo
+		    |-- MainActivity // Audio Editor UI SDK entry, format conversion entry, and audio extraction entry.
+	        |-- AudioFormatActivity  // Demo Format Conversion.
 		    |-- AudioFilePickerActivity  // Select the audio file and list for the demo.
-		    |-- FileApiActivity  // Interfaces of Demo Function Files
-		    |-- StreamApiActivity  // Streaming Interfaces of Demo Functions
-	        |-- AudioBaseActivity  // Integration of basic demo functions
-	|-- base_edit_audio
-	    |-- com.huawei.audioeditor.demo.apk
-	        |-- AudioBaseActivity  // Integration of basic demo functions
+		    |-- FileApiActivity  // Interfaces of Demo Function Files.
+		    |-- StreamApiActivity  // Streaming Interfaces of Demo Functions.
+	        |-- AudioBaseActivity  // Integration of basic demo functions.
+	        |-- AiDubbingAudioActivity  // AI dubbing integration.
+	        |-- SongSynthesisActivity  // Song synthesis function integration.
+	|-- base_audioeditor
+	    |-- com.huawei.hms.audioeditor.demo
+	        |-- AudioBaseActivity  // Integration of basic demo functions.
 	|-- aidubbing_audioeditor
-            |-- com.huawei.audioeditor.demo.apk
-                |-- AiDubbingAudioActivity  // AI dubbing functions
+        |-- com.huawei.hms.audioeditor.demo
+            |-- AiDubbingAudioActivity  // AI dubbing functions.
 ```
 
 

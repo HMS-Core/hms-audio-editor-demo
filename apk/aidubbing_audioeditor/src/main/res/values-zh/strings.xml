@@ -59,6 +59,7 @@
     <string name="error_80005">英文音色不能配音中文</string>
     <string name="error_2002">不支持的文本</string>
     <string name="text_to_speech_toast_1">请输入文字</string>
+    <string name="text_to_speech_previewing" priority="translator">正在试听，请试听结束后重试</string>
     <string name="select_lan" priority="translator">请选择语言</string>
     <string name="select_style" priority="translator">请选择风格</string>
 

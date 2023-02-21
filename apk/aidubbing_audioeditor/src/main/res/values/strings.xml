@@ -58,6 +58,7 @@
     <string name="error_80005" priority="LT">Unable to use Chinese with this voice.</string>
     <string name="error_2002" priority="LT">Contains unsupported characters.</string>
     <string name="text_to_speech_toast_1" priority="translator">Enter some text.</string>
+    <string name="text_to_speech_previewing" priority="translator">Previewing. Please try again after the preview is complete.</string>
     <string name="select_lan" priority="translator">Please select a language.</string>
     <string name="select_style" priority="translator">Please select a style.</string>
 </resources>

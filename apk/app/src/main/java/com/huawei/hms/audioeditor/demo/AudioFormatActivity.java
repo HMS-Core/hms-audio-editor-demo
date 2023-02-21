@@ -8,7 +8,9 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
@@ -21,6 +23,8 @@ import com.huawei.hms.audioeditor.sdk.HAEAudioExpansion;
 import com.huawei.hms.audioeditor.sdk.HAEConstant;
 import com.huawei.hms.audioeditor.sdk.HAEErrorCode;
 import com.huawei.hms.audioeditor.sdk.OnTransformCallBack;
+import com.huawei.hms.audioeditor.sdk.bean.HAEAudioFormat;
+import com.huawei.hms.audioeditor.sdk.bean.HAEAudioTransformConfig;
 import com.huawei.hms.audioeditor.sdk.util.FileUtil;
 import com.huawei.hms.audioeditor.sdk.util.SmartLog;
 import com.huawei.hms.audioeditor.ui.api.AudioInfo;
@@ -50,9 +54,15 @@ public class AudioFormatActivity extends AppCompatActivity {
     private TextView pathAudioFormat;
     private RadioGroup radioGroupAudioFormat;
     private TextView transferAudioFormat;
+    private TextView transferAudioBaseFormat;
     private TextView audioName;
     private ProgressBar progressBar;
     private String transferFormat = "";
+
+    private EditText editTextSampleRate;
+    private EditText editTextChannel;
+    private EditText editTextBitRate;
+    private EditText editTextFormat;
 
     // Whether the format conversion task is in progress
     private boolean isTansforming = false;
@@ -83,8 +93,13 @@ public class AudioFormatActivity extends AppCompatActivity {
         pathAudioFormat = findViewById(R.id.path_fragment_audio_format);
         radioGroupAudioFormat = findViewById(R.id.radio_group_fragment_audio_format);
         transferAudioFormat = findViewById(R.id.transfer_fragment_audio_format);
+        transferAudioBaseFormat = findViewById(R.id.transfer_fragment_audio_base_format);
         progressBar = findViewById(R.id.progress_recycler_view_layout_audio_format_item);
         audioName = findViewById(R.id.audio_name);
+        editTextSampleRate = findViewById(R.id.transfer_fragment_audio_samplaterate);
+        editTextChannel = findViewById(R.id.transfer_fragment_audio_channel);
+        editTextBitRate = findViewById(R.id.transfer_fragment_audio_bitrate);
+        editTextFormat = findViewById(R.id.transfer_fragment_audio_formatedit);
     }
 
     private void initData(Bundle savedInstanceState) {
@@ -153,7 +168,7 @@ public class AudioFormatActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFail(int errorCode) {
+                    public void onFail(int errorCode, String errorMsg) {
                         isTansforming = false;
                         if (errorCode == HAEErrorCode.FAIL_FILE_EXIST) {
                             Toast.makeText(
@@ -205,12 +220,25 @@ public class AudioFormatActivity extends AppCompatActivity {
             (group, checkedId) -> {
                 if (checkedId == R.id.radio_button_1_fragment_audio_format) {
                     transferFormat = SampleConstant.AUDIO_TYPE_MP3;
+                    editTextFormat.setText(SampleConstant.AUDIO_TYPE_MP3);
                 } else if (checkedId == R.id.radio_button_2_fragment_audio_format) {
                     transferFormat = SampleConstant.AUDIO_TYPE_WAV;
+                    editTextFormat.setText(SampleConstant.AUDIO_TYPE_WAV);
                 } else if (checkedId == R.id.radio_button_3_fragment_audio_format) {
                     transferFormat = SampleConstant.AUDIO_TYPE_FLAC;
+                    editTextFormat.setText(SampleConstant.AUDIO_TYPE_FLAC);
                 }
             });
+
+        /* *  Conversion button click event  * */
+        transferAudioBaseFormat.setOnClickListener(v -> {
+            if (isTansforming) {
+                Toast.makeText(getBaseContext(), "There is a format conversion task in progress.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            /* *  Check whether the format is selected.  * */
+            convertBaseAudioFormat();
+        });
 
         /* *  Conversion button click event  * */
         transferAudioFormat.setOnClickListener(
@@ -263,6 +291,9 @@ public class AudioFormatActivity extends AppCompatActivity {
                     audioName.setText(file.getName());
                 }
             }
+            if (mAudioList != null && mAudioList.size() > 0) {
+                getAndShowFormat(mAudioList.get(0));
+            }
         }
     }
 
@@ -272,5 +303,120 @@ public class AudioFormatActivity extends AppCompatActivity {
         if (isTansforming) {
             HAEAudioExpansion.getInstance().cancelTransformAudio();
         }
+    }
+
+    private void getAndShowFormat(String audioPath) {
+        HAEAudioFormat audioInfos = HAEAudioExpansion.getInstance().getAudioFormat(audioPath);
+        if (audioInfos == null || !audioInfos.isValidAudio()) {
+            SmartLog.e(TAG, "the path:" + audioPath + " is not support");
+            editTextBitRate.setText("-1");
+            editTextBitRate.setEnabled(false);
+            editTextSampleRate.setText("-1");
+            editTextSampleRate.setEnabled(false);
+            editTextChannel.setText("-1");
+            editTextChannel.setEnabled(false);
+            editTextFormat.setText("");
+            editTextFormat.setEnabled(false);
+            return;
+        }
+        editTextFormat.setText(audioInfos.getFormat());
+        editTextFormat.setEnabled(true);
+        editTextBitRate.setText(String.valueOf(audioInfos.getBitRate()));
+        editTextBitRate.setEnabled(true);
+        editTextSampleRate.setText(String.valueOf(audioInfos.getSampleRate()));
+        editTextSampleRate.setEnabled(true);
+        editTextChannel.setText(String.valueOf(audioInfos.getChannels()));
+        editTextChannel.setEnabled(true);
+    }
+
+    private void transAudioFormat(String inFilePath, String outPutPath, HAEAudioTransformConfig config) {
+        int start = inFilePath.lastIndexOf("/");
+        int end = inFilePath.lastIndexOf(".");
+        String name = inFilePath.substring(start, end);
+        HAEAudioExpansion.getInstance().transformAudio(inFilePath, outPutPath, config, new OnTransformCallBack() {
+            @Override
+            public void onProgress(int progress) {
+                isTansforming = true;
+                progressBar.setProgress(progress);
+                Log.i(TAG, "transformAudioFormat onProgress:" + progress);
+            }
+
+            @Override
+            public void onFail(int errorCode, String msg) {
+                isTansforming = false;
+                Log.e(TAG, "transformAudioFormat onFail, code:" + errorCode + " msg:" + msg);
+                if (errorCode == HAEErrorCode.FAIL_FILE_EXIST) {
+                    Toast.makeText(
+                            AudioFormatActivity.this,
+                            getResources().getString(R.string.file_exists),
+                            Toast.LENGTH_LONG)
+                        .show();
+                    EditDialogFragment.newInstance(
+                            "",
+                            name,
+                            (newName, dialog) -> {
+                                int end = outPutPath.lastIndexOf(".");
+                                String format = outPutPath.substring(end);
+                                String outPutPath = FileUtil.getAudioFormatStorageDirectory(getBaseContext()) + newName + "_" +
+                                    config.getSampleRate() + "_" +
+                                    config.getBitRate() + "_" +
+                                    config.getChannels() + "_" + format;
+                                transAudioFormat(inFilePath, outPutPath, config);
+                                dialog.dismiss();
+                            })
+                        .show(getSupportFragmentManager(), "EditDialogFragment");
+                }
+                runOnUiThread(() ->Toast.makeText(getBaseContext(), "ErrorCode : " + errorCode + " ErrorMsg：" + msg, Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onSuccess(String path) {
+                isTansforming = false;
+                Log.i(TAG, "transformAudioFormat onSuccess, path:" + path);
+                runOnUiThread(() -> Toast.makeText(getBaseContext(), "Success: " + path, Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onCancel() {
+                isTansforming = false;
+                Log.w(TAG, "transformAudioFormat onCancel");
+                runOnUiThread(() -> Toast.makeText(getBaseContext(), "Cancel", Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    private void convertBaseAudioFormat() {
+        if (mAudioList == null || mAudioList.size() == 0) {
+            Toast.makeText(getBaseContext(),
+                getString(R.string.tranfer_error_nopath),
+                Toast.LENGTH_SHORT).show();
+            return;
+        }
+        int sampleRate = 0;
+        int bitRate = 0;
+        int channel = 0;
+        if (!TextUtils.isEmpty(editTextSampleRate.getText())) {
+            sampleRate = Integer.parseInt(editTextSampleRate.getText().toString());
+        }
+        if (!TextUtils.isEmpty(editTextBitRate.getText())) {
+            bitRate = Integer.parseInt(editTextBitRate.getText().toString());
+        }
+        if (!TextUtils.isEmpty(editTextChannel.getText())) {
+            channel = Integer.parseInt(editTextChannel.getText().toString());
+        }
+        HAEAudioTransformConfig config = new HAEAudioTransformConfig();
+        config.setBitRate(bitRate);
+        config.setChannels(channel);
+        config.setSampleRate(sampleRate);
+        String filePath = mAudioList.get(0);
+        int start = filePath.lastIndexOf("/");
+        int end = filePath.lastIndexOf(".");
+        String name = filePath.substring(start, end);
+        String format = editTextFormat.getText().toString();
+        String outPutPath = FileUtil.getAudioFormatStorageDirectory(getBaseContext()) + name + "_" +
+            sampleRate + "_" +
+            bitRate + "_" +
+            channel + "_." + format;
+        transAudioFormat(filePath, outPutPath, config);
     }
 }

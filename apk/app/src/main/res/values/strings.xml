@@ -35,9 +35,16 @@
     <string name="audio_format_m4a">M4A</string>
     <string name="audio_format_aac">AAC</string>
     <string name="audio_format_flac">FLAC</string>
-    <string name="transfer_btn">Transform</string>
+    <string name="transfer_btn">Transform Encoder Format</string>
+    <string name="transfer_base">Transform Base Format</string>
     <string name="format_title">Audio format conversion</string>
+    <string name="transfer_samplerate">Sample Rate</string>
+    <string name="transfer_bitrate">Bit Rate</string>
+    <string name="transfer_channel">Channels</string>
+    <string name="transfer_format">Format</string>
     <string name="save_path">Saved to %s.</string>
+    <string name="tranfer_error_nopath">Path Not Exit</string>
+
     <string name="main_change_sound">Streaming interface</string>
     <string name="flow_api_title">Flow interface</string>
     <string name="change_sound_title">Change sound</string>
@@ -105,6 +112,7 @@
     <string name="please_enter_text">Please enter the text ~</string>
     <string name="text_to_audio">AI dubbing</string>
     <string name="queue_add_center">Synthesis</string>
+    <string name="text_to_speech_previewing" priority="translator">Previewing. Please try again after the preview is complete.</string>
     <string name="edit_dialog_title">Please enter a name.</string>
     <string name="file_exists">The file already exists. Please enter a new file name.</string>
     <string name="material_tag">Materials</string>

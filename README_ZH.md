@@ -21,26 +21,29 @@
 - 支持降噪功能，对双麦录制导入的音频中的稳态噪声或者突发噪声进行处理，并对语音进行修复和增强，提升语音信号质量。
 - 支持音频提取功能，从MP4等格式的视频中提取出音频进行编辑。
 - 支持格式转换功能，支持音频转换为MP3、WAV、FLAC的格式。
-
+- 支持AI配音功能：将文本转换成不同音色的语音。
+- 支持歌声合成功能：根据输入歌词生成优美歌曲（仅支持中国区调用）。
 
 ## 工程目录结构
 
 ```
 |-- apk
     |-- app
-	    |-- com.huawei.audioeditor.demo.apk
+	    |-- com.huawei.hms.audioeditor.demo
 		    |-- MainActivity // Audio Editor UI SDK 入口,格式转换入口,音频提取入口
 	        |-- AudioFormatActivity  // Demo格式转换
 		    |-- AudioFilePickerActivity  // Demo选择音频文件、列表
 		    |-- FileApiActivity  // demo 各功能文件接口
 		    |-- StreamApiActivity  // demo 各功能流式接口
 	        |-- AudioBaseActivity  // demo 基础功能集成
+	        |-- AiDubbingAudioActivity  // demo AI配音集成
+	        |-- SongSynthesisActivity  // demo 歌声合成功能集成
 	|-- base_audioeditor
-	    |-- com.huawei.audioeditor.demo.apk
+	    |-- com.huawei.hms.audioeditor.demo
 	        |-- AudioBaseActivity  // demo 基础功能集成
 	|-- aidubbing_audioeditor
-        |-- com.huawei.audioeditor.demo.apk
-            |-- AiDubbingAudioActivity  // AI 配音 集成
+        |-- com.huawei.hms.audioeditor.demo
+            |-- AiDubbingAudioActivity  // demo AI配音集成
 ```
 
 ## 运行步骤
