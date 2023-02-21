@@ -30,19 +30,19 @@ HUAWEI Audio Editor Kit provides a wide range of audio editing capabilities, inc
 ```
 |-- apk
     |-- app
-	    |-- com.huawei.hms.audioeditor.demo
-		    |-- MainActivity // Audio Editor UI SDK entry, format conversion entry, and audio extraction entry.
-	        |-- AudioFormatActivity  // Demo Format Conversion.
-		    |-- AudioFilePickerActivity  // Select the audio file and list for the demo.
-		    |-- FileApiActivity  // Interfaces of Demo Function Files.
-		    |-- StreamApiActivity  // Streaming Interfaces of Demo Functions.
-	        |-- AudioBaseActivity  // Integration of basic demo functions.
-	        |-- AiDubbingAudioActivity  // AI dubbing integration.
-	        |-- SongSynthesisActivity  // Song synthesis function integration.
-	|-- base_audioeditor
-	    |-- com.huawei.hms.audioeditor.demo
-	        |-- AudioBaseActivity  // Integration of basic demo functions.
-	|-- aidubbing_audioeditor
+        |-- com.huawei.hms.audioeditor.demo
+            |-- MainActivity // Audio Editor UI SDK entry, format conversion entry, and audio extraction entry.
+            |-- AudioFormatActivity  // Demo Format Conversion.
+            |-- AudioFilePickerActivity  // Select the audio file and list for the demo.
+            |-- FileApiActivity  // Interfaces of Demo Function Files.
+            |-- StreamApiActivity  // Streaming Interfaces of Demo Functions.
+            |-- AudioBaseActivity  // Integration of basic demo functions.
+            |-- AiDubbingAudioActivity  // AI dubbing integration.
+            |-- SongSynthesisActivity  // Song synthesis function integration.
+    |-- base_audioeditor
+        |-- com.huawei.hms.audioeditor.demo
+            |-- AudioBaseActivity  // Integration of basic demo functions.
+    |-- aidubbing_audioeditor
         |-- com.huawei.hms.audioeditor.demo
             |-- AiDubbingAudioActivity  // AI dubbing functions.
 ```

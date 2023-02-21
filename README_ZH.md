@@ -29,19 +29,19 @@
 ```
 |-- apk
     |-- app
-	    |-- com.huawei.hms.audioeditor.demo
-		    |-- MainActivity // Audio Editor UI SDK 入口,格式转换入口,音频提取入口
-	        |-- AudioFormatActivity  // Demo格式转换
-		    |-- AudioFilePickerActivity  // Demo选择音频文件、列表
-		    |-- FileApiActivity  // demo 各功能文件接口
-		    |-- StreamApiActivity  // demo 各功能流式接口
-	        |-- AudioBaseActivity  // demo 基础功能集成
-	        |-- AiDubbingAudioActivity  // demo AI配音集成
-	        |-- SongSynthesisActivity  // demo 歌声合成功能集成
-	|-- base_audioeditor
-	    |-- com.huawei.hms.audioeditor.demo
-	        |-- AudioBaseActivity  // demo 基础功能集成
-	|-- aidubbing_audioeditor
+        |-- com.huawei.hms.audioeditor.demo
+            |-- MainActivity // Audio Editor UI SDK 入口,格式转换入口,音频提取入口
+            |-- AudioFormatActivity  // Demo格式转换
+            |-- AudioFilePickerActivity  // Demo选择音频文件、列表
+            |-- FileApiActivity  // demo 各功能文件接口
+            |-- StreamApiActivity  // demo 各功能流式接口
+            |-- AudioBaseActivity  // demo 基础功能集成
+            |-- AiDubbingAudioActivity  // demo AI配音集成
+            |-- SongSynthesisActivity  // demo 歌声合成功能集成
+    |-- base_audioeditor
+        |-- com.huawei.hms.audioeditor.demo
+            |-- AudioBaseActivity  // demo 基础功能集成
+    |-- aidubbing_audioeditor
         |-- com.huawei.hms.audioeditor.demo
             |-- AiDubbingAudioActivity  // demo AI配音集成
 ```
