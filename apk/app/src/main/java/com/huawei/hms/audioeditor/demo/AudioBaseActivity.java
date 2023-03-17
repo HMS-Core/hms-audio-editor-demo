@@ -291,7 +291,7 @@ public class AudioBaseActivity extends AppCompatActivity
             isProcessing = false;
             runOnUiThread(() -> {
                 hideProgress();
-                Toast.makeText(AudioBaseActivity.this, "Finish", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AudioBaseActivity.this, "Finish, save to:" + musicPath, Toast.LENGTH_SHORT).show();
             });
         }
 
