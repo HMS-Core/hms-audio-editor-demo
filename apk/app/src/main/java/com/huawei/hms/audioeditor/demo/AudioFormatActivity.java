@@ -365,8 +365,9 @@ public class AudioFormatActivity extends AppCompatActivity {
                                 dialog.dismiss();
                             })
                         .show(getSupportFragmentManager(), "EditDialogFragment");
+                } else {
+                    runOnUiThread(() ->Toast.makeText(getBaseContext(), "ErrorCode : " + errorCode + " ErrorMsg：" + msg, Toast.LENGTH_SHORT).show());
                 }
-                runOnUiThread(() ->Toast.makeText(getBaseContext(), "ErrorCode : " + errorCode + " ErrorMsg：" + msg, Toast.LENGTH_SHORT).show());
             }
 
             @Override
