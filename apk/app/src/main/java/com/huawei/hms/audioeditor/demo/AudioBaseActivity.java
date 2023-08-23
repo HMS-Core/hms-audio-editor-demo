@@ -255,7 +255,7 @@ public class AudioBaseActivity extends AppCompatActivity
                 break;
             case R.id.asset_fade:
                 // Set Fade-in and Fade-out
-                boolean success2 = audioLane.setAudioAssetFade(audioAsset.getIndex(), fadeInTime, fadeOutTime);
+                boolean success2 = audioLane.setAudioAssetFade(audioAsset.getIndex(), fadeInTime * 1000, fadeOutTime * 1000);
                 // Get Fade-In and Fade-Out
                 int inTime = audioAsset.getFadeInTimeMs();
                 int outTime = audioAsset.getFadeOutTimeMs();
