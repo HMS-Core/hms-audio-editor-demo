@@ -34,6 +34,6 @@ ext {
 
     //*******************************Project Dependent Version********************************
     //sdk Release version number
-    ae_apk_versionCode = '11100300'
-    ae_apk_versionName= '1.11.0.300'
+    ae_apk_versionCode = '11100302'
+    ae_apk_versionName= '1.11.0.302'
 }
